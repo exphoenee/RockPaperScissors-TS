@@ -13,6 +13,5 @@ export default function getAppElements(): (Element | Element[] | null)[] {
     }
     return acc;
   }, {});
-  console.log(domElems);
   return domElems;
 }
