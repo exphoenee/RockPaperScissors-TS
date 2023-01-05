@@ -107,7 +107,7 @@ class Game {
           img.src = URL.createObjectURL(blob);
           img.alt = `image: ${fileName.split(".")[0]}`;
           img.classList.remove("loader-image");
-          const loaded = img.addEventListener(
+          img.addEventListener(
             "load",
             () => {
               this.appSettings.imageLoaded++;
@@ -140,10 +140,13 @@ class Game {
   }
 
   setScores() {
-    const results = {};
+    const results: statisticsType = { player: {}, computer: {}} ;
     Object.keys(this.statistics).forEach((player) => {
-      results[player] = Object.keys(this.statistics[player]).reduce(
-        (sum, threw) => sum + +this.statistics[player][threw],
+      results[player as keyof statisticsType] = Object.keys(
+        this.statistics[player as keyof statisticsType]
+      ).reduce(
+        (sum, threw) =>
+          sum + +this.statistics[player as keyof statisticsType].[threw],
         0
       );
     });
