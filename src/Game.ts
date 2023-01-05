@@ -1,35 +1,64 @@
-import gameType from "./constants/games";
-import dictionaty from "./constants/dictionary";
-
+/* utils */
 import getAppElements from "./utils/getAppElements";
 
+/* constants */
+import games from "./constants/games";
+import dictionaty from "./constants/dictionary";
+
+/* tpyes */
+import ruleType from "./constants/games";
+import statisticsType from "./types/statistics.type";
+
 class Game {
+  private appSettings: {
+    baseURL: string;
+    developerMode: boolean;
+    thema: string;
+    language: string;
+    playerNames: string[];
+    imageLoaded: number;
+    imageCount: number;
+    popupTimeout: number;
+    statisticMode: string;
+  };
+  private rules: any; //TODO: find out the type (typeof ruleType)[];
+  private localhosts: string[];
+  private playing: string;
+  private gameInProgress: boolean;
+  private dictionary: Object;
+  private statistics: statisticsType;
+  private userChoiceIndex: number;
+  private userChoice: any; //TODO: find the type
+  private computerChoiceIndex: number;
+  private computerChoice: any; //TODO: find the type
+  private computerRollLength: number;
+  private elem: any; //TODO: find the type
+
   constructor() {
-    this.baseURL = window.location.origin;
-
     this.localhosts = ["localhost", "127.0.0.1"];
-
-    this.developerMode = this.checkRunsLocal();
-
-    console.log("Developer mode: " + this.developerMode);
-
-    this.rules = gameType.find((game) => game.name === "Classic").rules;
+    this.playing = "Classic";
+    this.rules =
+      games.find((game) => game.name === this.playing)?.rules || games[0].rules;
 
     this.appSettings = {
+      baseURL: window.location.origin,
+      developerMode: this.checkRunsLocal(),
       thema: localStorage.getItem("thema") || "ligth",
       language: localStorage.getItem("language") || "hu",
       playerNames: ["player", "computer"],
       imageLoaded: 0,
+      imageCount: 0,
+      popupTimeout: 3,
       statisticMode: localStorage.getItem("statisctics") || "values",
     };
 
-    console.log(this.appSettings.language);
+    console.log(this.appSettings);
 
     this.gameInProgress = false;
 
     this.dictionary = dictionaty;
 
-    this.statistics = {};
+    this.statistics = { player: {}, computer: {} };
 
     this.userChoiceIndex = Math.floor(Math.random() * this.rules.length);
     this.userChoice = this.rules[this.userChoiceIndex];
@@ -37,7 +66,7 @@ class Game {
     this.computerChoice = this.rules[this.computerChoiceIndex];
     this.computerRollLength = 15;
 
-    this.popupTimeout = 3;
+    this.appSettings.popupTimeout = 3;
 
     this.getDomELements();
 
@@ -45,8 +74,9 @@ class Game {
   }
 
   private checkRunsLocal() {
+    console.log(this.appSettings);
     const hostedLocal = this.localhosts.find(
-      (host) => this.baseURL.indexOf(host) > -1
+      (host) => this.appSettings.baseURL.indexOf(host) > -1
     );
     return !!hostedLocal;
   }
@@ -56,39 +86,45 @@ class Game {
   }
 
   private initializeImages() {
-    const images = Array.from(document.querySelectorAll(".loader-image"));
-    this.imageCount = images.length;
-    images.forEach((image) => this.asynImageLoader(image));
+    const images = Array.from(document.querySelectorAll(".loader-image")); //TODO: images collect into the this.elem?
+    this.appSettings.imageCount = images.length;
+    images.forEach((image: any) => this.asynImageLoader(image)); //TODO: image type
   }
 
-  private asynImageLoader(img) {
+  private asynImageLoader(img: HTMLImageElement) {
     const fileName = img.dataset.filename;
 
-    const url = `${this.baseURL}/${
-      this.developerMode ? "" : "RockPaperScissors/"
+    console.log(this.appSettings);
+
+    const url = `${this.appSettings.baseURL}/${
+      this.appSettings.developerMode ? "" : "RockPaperScissors/"
     }${fileName}`;
 
-    fetch(url).then((response) =>
-      response.blob().then((blob) => {
-        img.src = URL.createObjectURL(blob);
-        img.alt = `image: ${fileName.split(".")[0]}`;
-        img.classList.remove("loader-image");
-        const loaded = img.addEventListener(
-          "load",
-          () => {
-            this.appSettings.imageLoaded++;
-            if (this.appSettings.imageLoaded === this.imageCount) {
-              this.elem.app.classList.remove("off");
-              this.elem.loaderScreen.classList.add("off");
-              this.elem.loaderScreen.addEventListener("transitionend", () =>
-                this.elem.loaderScreen.remove()
-              );
-            }
-          },
-          { once: true }
-        );
-      })
-    );
+    fileName &&
+      fetch(url).then((response) =>
+        response.blob().then((blob) => {
+          console.log(this);
+          img.src = URL.createObjectURL(blob);
+          img.alt = `image: ${fileName.split(".")[0]}`;
+          img.classList.remove("loader-image");
+          const loaded = img.addEventListener(
+            "load",
+            () => {
+              this.appSettings.imageLoaded++;
+              if (
+                this.appSettings.imageLoaded === this.appSettings.imageCount
+              ) {
+                this.elem.app.classList.remove("off");
+                this.elem.loaderScreen.classList.add("off");
+                this.elem.loaderScreen.addEventListener("transitionend", () =>
+                  this.elem.loaderScreen.remove()
+                );
+              }
+            },
+            { once: true }
+          );
+        })
+      );
   }
 
   private initTitleChange() {
@@ -463,7 +499,7 @@ class Game {
       this.computerChoice.value + "T"
     )}</p>`;
     this.elem.resultModal.classList.add("show");
-    for (let i = this.popupTimeout; i >= 0; i--) {
+    for (let i = this.appSettings.popupTimeout; i >= 0; i--) {
       setTimeout(() => {
         if (i === 0) {
           this.elem.resultCounter.innerHTML =
@@ -476,7 +512,7 @@ class Game {
             "popupTimeout"
           )}...`;
         }
-      }, (this.popupTimeout - i) * 3000);
+      }, (this.appSettings.popupTimeout - i) * 3000);
     }
   }
 
