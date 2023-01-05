@@ -1,13 +1,13 @@
-type ruleTypes = { value: string; beats: string[] }[];
-type gameTypes = { name: string; rules: ruleTypes }[];
+export type ruleType = { value: string; beats: string[] };
+export type gameType = { name: string; rules: ruleType[] }[];
 
-const games: gameTypes = [
+const games: gameType = [
   {
     name: "Classic",
     rules: [
       { value: "rock", beats: ["scissors"] },
       { value: "paper", beats: ["rock"] },
-      { value: "scissors", beats:[ "paper"] },
+      { value: "scissors", beats: ["paper"] },
     ],
   },
   {
