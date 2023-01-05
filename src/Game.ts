@@ -33,6 +33,7 @@ class Game {
   private computerChoice: any; //TODO: find the type
   private computerRollLength: number;
   private elem: any; //TODO: find the type
+  rulesDescription: string;
 
   constructor() {
     this.localhosts = ["localhost", "127.0.0.1"];
@@ -42,7 +43,7 @@ class Game {
 
     this.appSettings = {
       baseURL: window.location.origin,
-      developerMode: this.checkRunsLocal(),
+      developerMode: true,
       thema: localStorage.getItem("thema") || "ligth",
       language: localStorage.getItem("language") || "hu",
       playerNames: ["player", "computer"],
@@ -52,33 +53,29 @@ class Game {
       statisticMode: localStorage.getItem("statisctics") || "values",
     };
 
-    console.log(this.appSettings);
-
-    this.gameInProgress = false;
-
+    /* texts */
     this.dictionary = dictionaty;
 
-    this.statistics = { player: {}, computer: {} };
+    /* generated texts */
+    this.rulesDescription = "";
 
+    /* Game state */
+    this.gameInProgress = false;
+    this.statistics = { player: {}, computer: {} };
     this.userChoiceIndex = Math.floor(Math.random() * this.rules.length);
     this.userChoice = this.rules[this.userChoiceIndex];
     this.computerChoiceIndex = Math.floor(Math.random() * this.rules.length);
     this.computerChoice = this.rules[this.computerChoiceIndex];
     this.computerRollLength = 15;
 
-    this.appSettings.popupTimeout = 3;
-
-    this.getDomELements();
-
     this.initialize();
   }
 
   private checkRunsLocal() {
-    console.log(this.appSettings);
     const hostedLocal = this.localhosts.find(
       (host) => this.appSettings.baseURL.indexOf(host) > -1
     );
-    return !!hostedLocal;
+    this.appSettings.developerMode = !!hostedLocal;
   }
 
   private getDomELements() {
@@ -94,8 +91,6 @@ class Game {
   private asynImageLoader(img: HTMLImageElement) {
     const fileName = img.dataset.filename;
 
-    console.log(this.appSettings);
-
     const url = `${this.appSettings.baseURL}/${
       this.appSettings.developerMode ? "" : "RockPaperScissors/"
     }${fileName}`;
@@ -103,7 +98,6 @@ class Game {
     fileName &&
       fetch(url).then((response) =>
         response.blob().then((blob) => {
-          console.log(this);
           img.src = URL.createObjectURL(blob);
           img.alt = `image: ${fileName.split(".")[0]}`;
           img.classList.remove("loader-image");
@@ -140,13 +134,13 @@ class Game {
   }
 
   setScores() {
-    const results: statisticsType = { player: {}, computer: {}} ;
+    const results: statisticsType = { player: {}, computer: {} };
     Object.keys(this.statistics).forEach((player) => {
       results[player as keyof statisticsType] = Object.keys(
         this.statistics[player as keyof statisticsType]
       ).reduce(
         (sum, threw) =>
-          sum + +this.statistics[player as keyof statisticsType].[threw],
+          sum + +this.statistics[player as keyof statisticsType]?.[threw], //TODO: fix the any type
         0
       );
     });
@@ -473,7 +467,6 @@ class Game {
   }
 
   generateRules() {
-    console.log(this.elem.settings);
     this.rulesDescription = `
     <h2>${this.getTranslation("gameRules")}:</h2>
     <p>${this.getTranslation("rulesDesc")}</p>
@@ -560,8 +553,10 @@ class Game {
   }
 
   initialize() {
-    this.initializeImages();
     window.onload = () => {
+      this.initializeImages();
+      this.getDomELements();
+      this.checkRunsLocal();
       this.initilizeTheme();
       this.initializeStatistics();
       this.initializeButtons();
