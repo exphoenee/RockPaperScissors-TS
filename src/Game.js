@@ -1,3 +1,6 @@
+import gameType from "./constants/games";
+import dictionaty from "./constants/dictionary";
+
 class Game {
   constructor() {
     this.baseURL = window.location.origin;
@@ -8,118 +11,21 @@ class Game {
 
     console.log("Developer mode: " + this.developerMode);
 
-    this.rules = [
-      { value: "rock", beats: ["scissors", "lizard"] },
-      { value: "paper", beats: ["rock", "spock"] },
-      { value: "scissors", beats: ["paper", "lizard"] },
-      { value: "lizard", beats: ["paper", "spock"] },
-      { value: "spock", beats: ["rock", "scissors"] },
-    ];
+    this.rules = gameType.find(game=>game.name === "Classic").rules;
 
-    this.language = localStorage.getItem("language") || "hu";
-    this.darkmode = localStorage.getItem("darkmode") || "ligth";
-    this.playerNames = ["player", "computer"];
-    this.imageLoaded = 0;
-    this.statisticMode = "values";
+    this.appSettings = {
+      thema: localStorage.getItem("thema") || "ligth",
+      language: localStorage.getItem("language") || "hu",
+      playerNames: ["player", "computer"],
+      imageLoaded: 0,
+      statisticMode: localStorage.getItem("statisctics") || "values",
+    };
+
+    console.log(this.appSettings.language);
+
     this.gameInProgress = false;
 
-    this.dictionary = {
-      en: {
-        rock: "rock",
-        paper: "paper",
-        scissors: "scissors",
-        lizard: "lizard",
-        spock: "Spock",
-        paperT: "paper",
-        scissorsT: "scissors",
-        lizardT: "lizard",
-        spockT: "Spock",
-        gameRules: "Game rules",
-        rulesDesc:
-          'Use the arrows to set your threw,<br />then click to "check" to start the game!',
-        beats: "beats",
-        and: "and",
-        popupInstruction: "Click the popup to close it!",
-        youThrew: "You threw",
-        CPUThrew: "CPU threw",
-        popupClosing: "Closing popup...",
-        popupClosingIn: "Closing in",
-        popupTimeout: "seconds",
-        resultTie: "It's a tie!",
-        resultPlayerWon: "You won!",
-        resultComputerWon: "Computer wins!",
-        computerName: "Computer",
-        playerName: "Player",
-        summary: "Summary",
-        threws: "Threws",
-        wins: "wins",
-        error: "Error! You must select a valid option!",
-      },
-      de: {
-        rock: "Stein",
-        paper: "Papier",
-        scissors: "Schere",
-        lizard: "Echse",
-        spock: "Spock",
-        gameRules: "Spielregeln",
-        paperT: "Papier",
-        scissorsT: "Schere",
-        lizardT: "Echse",
-        spockT: "Spock",
-        gameRules: "Spielregeln",
-        rulesDesc:
-          'Benutze die Pfeile, um deinen Wurf einzustellen, <br /> dann klicke auf "Häkchen", um das Spiel zu starten!',
-        beats: "schlägt",
-        and: "und",
-        popupInstruction: "Klick auf das Popup-Fenster, um zu schließen!",
-        youThrew: "Du hast geworfen",
-        CPUThrew: "Der Computer hat geworfen",
-        popupClosing: "Das Popup wird geschlossen!",
-        popupClosingIn: "Schließt in",
-        popupTimeout: "Sekunden",
-        resultTie: "Unentschieden!",
-        resultPlayerWon: "Du hast gewonnen!",
-        resultComputerWon: "Der Computer hat gewonnen!",
-        computerName: "Komputer",
-        playerName: "Spieler",
-        summary: "Insgesammt",
-        threws: "geworfen",
-        wins: "Gewinnt",
-        error: "Fehler! Du musst eine gültige Option auswählen!",
-      },
-      hu: {
-        rock: "kő",
-        paper: "papír",
-        scissors: "olló",
-        lizard: "gyík",
-        spock: "Spock",
-        rockT: "követ",
-        paperT: "papírt",
-        scissorsT: "ollót",
-        lizardT: "gyíkot",
-        spockT: "Spockot",
-        gameRules: "Játékszabályok",
-        rulesDesc:
-          'A nyilakkal a válaszd ki amit mutatni akarsz,<br />majd kattintson a "pipa" gombra a játék indításához!',
-        beats: "üti",
-        and: "és",
-        popupInstruction: "Kattints a felugró ablakra a bezáráshoz!",
-        youThrew: "Te mutattál",
-        CPUThrew: "A CPU mutatott",
-        popupClosing: "A felugró ablak bezárása...",
-        popupClosingIn: "Bezáródik",
-        popupTimeout: "másodperc múlva",
-        resultTie: "Döntetlen!",
-        resultPlayerWon: "Nyertél!",
-        resultComputerWon: "A CPU nyert!",
-        computerName: "Számítógép",
-        playerName: "Játékos",
-        summary: "Összesen",
-        threws: "Mutatott",
-        wins: "Nyert",
-        error: "Hiba! Érvénytelen választás!",
-      },
-    };
+    this.dictionary = dictionaty;
 
     this.statistics = {};
 
@@ -142,11 +48,55 @@ class Game {
   }
 
   getDomELements() {
+    const appElements = [
+      { name: "app", id: "app" },
+      { name: "menu", id: "menu" },
+      { name: "settings", id: "settings" },
+      { name: "loaderScreen", id: "loader-screen" },
+      { name: "favicon", id: "favicon" },
+      { name: "startButton", class: ".start.button" },
+      { name: "nextButton", class: ".next.button" },
+      { name: "prevButton", class: ".prev.button" },
+      { name: "rulesButton", class: ".rules.button" },
+      { name: "statButton", class: ".statistics.button" },
+      { name: "langButton", class: ".language.button" },
+      { name: "licensingButton", class: ".licensing.button" },
+      { name: "statisticsButton", class: ".statistics.button" },
+      { name: "settingsButton", class: ".settings.button" },
+      { name: "lightdark", class: ".lightdark.button" },
+      { name: "rulesModal", class: ".rules.modal" },
+      { name: "resultModal", class: ".result.modal" },
+      { name: "languageModal", class: ".language.modal" },
+      { name: "statisticsModal", class: ".statistics.modal" },
+      { name: "licensingModal", class: ".licensing.modal" },
+      { name: "allModals", class: ".modal" },
+      { name: "allCloseButtons", classes: ".closeButton" },
+      { name: "statisticsClose", class: ".statistics.closeButton" },
+      { name: "rulesClose", class: ".rules.closeButton" },
+      { name: "languageClose", class: ".language.closeButton" },
+      { name: "resultClose", class: ".result.closeButton" },
+      { name: "licensingClose", class: ".licensing.closeButton" },
+      { name: "resultClose", class: ".result.closeButton" },
+      { name: "statisticsTable", class: "#statistics-table" },
+      { name: "statisticsInput", id: "statistics-input" },
+      {name: resultContainer, class: ".result-container"},
+    {name: "resultCounter", class: ".counter"},
+    {name: "langChange", classes: ".language-button",},
+    {name: "playerName", class: "#player-name"},
+    {name: "computerName", class: "#computer-name"},
+    {name: "computerWins", class: ".computer-wins"},
+    {name: "userWins", class: ".user-wins"},
+    {name: "mainTitle", class: "#main-title"},
+    {name: "playerImages", classes: ".images.player",},
+      {name: "computerImages", classes: ".images.computer",}
+
+    ];
+
     this.app = document.getElementById("app");
     this.menu = document.getElementById("menu");
     this.settings = document.getElementById("settings");
     this.loaderScreen = document.getElementById("loader-screen");
-    this.favicon = document.querySelector("#favicon");
+    this.favicon = document.getElementById("favicon");
 
     //buttons
     this.startButton = document.querySelector(".start.button");
@@ -227,8 +177,8 @@ class Game {
         const loaded = img.addEventListener(
           "load",
           () => {
-            this.imageLoaded++;
-            if (this.imageLoaded === this.imageCount) {
+            this.appSettings.imageLoaded++;
+            if (this.appSettings.imageLoaded === this.imageCount) {
               this.app.classList.remove("off");
               this.loaderScreen.classList.add("off");
               this.loaderScreen.addEventListener("transitionend", () =>
@@ -312,7 +262,7 @@ class Game {
     }
   }
 
-  lightChange() {
+  themeChange() {
     const changeDark = [
       this.app.parentElement,
       this.app,
@@ -353,7 +303,7 @@ class Game {
       { button: this.prevButton, action: this.prevThrew.bind(this) },
       { button: this.startButton, action: this.startGame.bind(this) },
       { button: this.settingsButton, action: this.showMenu.bind(this) },
-      { button: this.lightdark, action: this.lightChange.bind(this) },
+      { button: this.lightdark, action: this.themeChange.bind(this) },
     ];
 
     buttonActions.forEach(({ button, action }) =>
@@ -411,7 +361,7 @@ class Game {
 
     this.langChange.forEach((lc) => {
       lc.addEventListener("click", (e) => {
-        this.language = lc.dataset.lang;
+        this.appSettings.language = lc.dataset.lang;
         this.updateLang();
       });
     });
@@ -448,7 +398,7 @@ class Game {
         .map((item) => item.name === userChoiceObj.name)
         .reduce((acc, curr) => (acc += +curr)) > 0
         ? userChoiceObj
-        : alert(this.dictionary[this.language].error);
+        : alert(this.dictionary[this.appSettings.language].error);
   }
 
   //Get computer's choice
@@ -493,7 +443,7 @@ class Game {
   initStatisticsMode() {
     this.statisticsInput.addEventListener("change", (e) => {
       e.preventDefault();
-      this.statisticMode = this.statisticsInput.value;
+      this.appSettings.statisticMode = this.statisticsInput.value;
       this.createStatistics();
     });
   }
@@ -501,7 +451,7 @@ class Game {
   createStatistics() {
     const header = [
       "wins",
-      ...this.playerNames.map((pn) => pn + "Name"),
+      ...this.appSettings.playerNames.map((pn) => pn + "Name"),
       "summary",
     ];
 
@@ -518,7 +468,7 @@ class Game {
             <tr>
               <td class="player-cell">${this.getTranslation(threw)}</td>
               <td class="player-cell" style="text-align:center">${
-                this.statisticMode === "values"
+                this.appSettings.statisticMode === "values"
                   ? +this.statistics["player"][threw]
                   : (
                       (+this.statistics["player"][threw] / allGame) *
@@ -526,7 +476,7 @@ class Game {
                     ).toFixed(1) + "%"
               }</td>
               <td class="computer-cell" style="text-align:center">${
-                this.statisticMode === "values"
+                this.appSettings.statisticMode === "values"
                   ? +this.statistics["computer"][threw]
                   : (
                       (+this.statistics["computer"][threw] / allGame) *
@@ -534,7 +484,7 @@ class Game {
                     ).toFixed(1) + "%"
               }</td>
               <td class="summary-cell" style="text-align:center">${
-                this.statisticMode === "values"
+                this.appSettings.statisticMode === "values"
                   ? +this.statistics["computer"][threw] +
                     +this.statistics["computer"][threw]
                   : (
@@ -550,14 +500,14 @@ class Game {
         <tfoot>
           <tr>${[
             this.getTranslation("summary"),
-            this.statisticMode === "values"
+            this.appSettings.statisticMode === "values"
               ? +this.userWins.innerHTML
               : ((+this.userWins.innerHTML / allGame) * 100).toFixed(1) + "%",
-            this.statisticMode === "values"
+            this.appSettings.statisticMode === "values"
               ? +this.computerWins.innerHTML
               : ((+this.computerWins.innerHTML / allGame) * 100).toFixed(1) +
                 "%",
-            this.statisticMode === "values"
+            this.appSettings.statisticMode === "values"
               ? +this.computerWins.innerHTML + +this.userWins.innerHTML
               : "100%",
           ]
@@ -570,7 +520,7 @@ class Game {
   }
 
   getTranslation(string) {
-    return this.dictionary[this.language][string];
+    return this.dictionary[this.appSettings.language][string];
   }
 
   getChoice(userChoice) {
@@ -582,6 +532,7 @@ class Game {
   }
 
   generateRules() {
+    console.log(this.settings);
     this.rulesDescription = `
     <h2>${this.getTranslation("gameRules")}:</h2>
     <p>${this.getTranslation("rulesDesc")}</p>
@@ -637,15 +588,15 @@ class Game {
     this.playerName.innerHTML = this.getTranslation("playerName");
     this.computerName.innerHTML = this.getTranslation("computerName");
     this.mainTitle.innerHTML = this.getTitle();
-    document.documentElement.setAttribute("lang", this.language);
-    localStorage.setItem("language", this.language);
+    document.documentElement.setAttribute("lang", this.appSettings.language);
+    localStorage.setItem("language", this.appSettings.language);
   }
 
   initializeStatistics() {
     const oldStat = localStorage.getItem("statistics");
     oldStat
       ? (this.statistics = JSON.parse(oldStat))
-      : this.playerNames.forEach((player) => {
+      : this.appSettings.playerNames.forEach((player) => {
           this.statistics[player] = {};
           this.rules.forEach((item) => {
             this.statistics[player][item.value] = 0;
@@ -659,24 +610,24 @@ class Game {
     localStorage.setItem("statistics", JSON.stringify(this.statistics));
   }
 
-  initilizeDarkmode() {
-    if (this.darkmode === "true") {
-      this.lightChange();
+  initilizeTheme() {
+    if (this.appSettings.thema === "true") {
+      this.themeChange();
     }
   }
 
   initialize() {
     this.initializeImages();
     window.onload = () => {
-      this.initilizeDarkmode();
+      this.initilizeTheme();
       this.initializeStatistics();
       this.initializeButtons();
       this.initializeModals();
       this.setUserChoiceImage();
       this.setComputerChoiceImage();
       this.updateLang();
-      this.initTitleChange();
-      this.initStatisticsMode();
+      // this.initTitleChange();
+      // this.initStatisticsMode();
     };
   }
 }
