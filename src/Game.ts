@@ -11,6 +11,9 @@ import elemType from "./types/elem.type";
 /* enums */
 import { gameNames } from "./types/game.type";
 
+/* utils */
+import  isType  from "./utils/isType";
+
 class Game {
   private appSettings: {
     baseURL: string;
@@ -30,9 +33,9 @@ class Game {
   private dictionary: dictionaryType;
   private statistics: statisticsType;
   private userChoiceIndex: number;
-  private userChoice: ruleType; //TODO: find the type
+  private userChoice: ruleType;
   private computerChoiceIndex: number;
-  private opponentChoice: ruleType; //TODO: find the type
+  private opponentChoice: ruleType;
   private computerRollLength: number;
   private elem: elemType;
   rulesDescription: string;
@@ -72,7 +75,7 @@ class Game {
     /* Game state */
     this.resultText = "";
     this.gameInProgress = false;
-    this.statistics = { ...this.initStatistics() };
+    this.statistics = [...this.initStatistics()];
 
     this.userChoiceIndex = Math.floor(Math.random() * this.rules.length);
     this.userChoice = this.rules[this.userChoiceIndex];
@@ -88,29 +91,6 @@ class Game {
       (host) => this.appSettings.baseURL.indexOf(host) > -1
     );
     this.appSettings.developerMode = !!hostedLocally;
-  }
-
-  private initStatistics(): statisticsType {
-    return games.reduce((acc: statisticsType, game) => {
-      const gameStatistics = {
-        name: game.name,
-        values: {
-          opponent: game.rules.reduce(
-            (acc: { [key: string]: number }, rule) => {
-              acc[rule.value] = 0;
-              return acc;
-            },
-            {}
-          ),
-          player: game.rules.reduce((acc: { [key: string]: number }, rule) => {
-            acc[rule.value] = 0;
-            return acc;
-          }, {}),
-        },
-      };
-      acc.push(gameStatistics);
-      return acc;
-    }, []);
   }
 
   private getDomELements() {
@@ -203,6 +183,40 @@ class Game {
     }, 1000);
   }
 
+  private initStatistics(): statisticsType {
+    let statistics
+    statistics = games.map((game) => {
+      return {
+        name: game.name,
+        values: {
+          opponent: game.rules.reduce(
+            (acc: { [key: string]: number }, rule) => {
+              acc[rule.value] = 0;
+              return acc;
+            },
+            {}
+          ),
+          player: game.rules.reduce((acc: { [key: string]: number }, rule) => {
+            acc[rule.value] = 0;
+            return acc;
+          }, {}),
+        },
+      };
+    });
+
+    const oldStatStr = localStorage.getItem("statistics");
+    const oldStat = oldStatStr ? JSON.parse(oldStatStr) : {};
+
+    if (isType(oldStat, statistics)) {
+      console.log(true);
+      return oldStat;
+    }
+
+    this.setScores();
+
+    return statistics;
+  }
+
   setScores() {
     const results: { [key: string]: number } = {};
 
@@ -213,16 +227,15 @@ class Game {
     const { values } = currentStatistics;
 
     Object.keys(currentStatistics.values).forEach((player) => {
-      const value = Object.keys(values[player]).reduce(
+      results[player] = Object.keys(values[player]).reduce(
         (sum: number, threw: Object) => sum + +values[player]?.[threw],
         0
       );
-      results[player] = value;
     });
     console.log(results);
 
-    this.elem.single.opponentWins.innerHTML = results.opponent;
-    this.elem.single.userWins.innerHTML = results.player;
+    this.elem.single.opponentWins.innerHTML = String(results.opponent);
+    this.elem.single.userWins.innerHTML = String(results.player);
   }
 
   nextThrew() {
@@ -643,21 +656,6 @@ class Game {
     localStorage.setItem("language", this.appSettings.language);
   }
 
-  //TODO: here is something wrong!
-  initializeStatistics() {
-    const oldStat = localStorage.getItem("statistics");
-    oldStat
-      ? (this.statistics = JSON.parse(oldStat))
-      : this.appSettings.playerNames.forEach((player) => {
-          this.statistics[this.playing][player] = {};
-          this.rules.forEach((item) => {
-            this.statistics[this.playing][player][item.value] = 0;
-          });
-        });
-
-    this.setScores();
-  }
-
   updateStatistics() {
     localStorage.setItem("statistics", JSON.stringify(this.statistics));
   }
@@ -682,7 +680,6 @@ class Game {
       this.updateLang();
       this.initTitleChange();
 
-      this.initializeStatistics();
       this.setUserChoiceImage();
       this.setComputerChoiceImage();
       this.initStatisticsMode();
