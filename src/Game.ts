@@ -28,7 +28,7 @@ class Game {
     popupTimeout: number;
     statisticMode: string;
   };
-  private rules: any; //TODO: find out the type (typeof ruleType)[];
+  private rules: ruleType[];
   private localhosts: string[];
   private playing: string;
   private gameInProgress: boolean;
@@ -221,7 +221,6 @@ class Game {
     const oldStat = oldStatStr ? JSON.parse(oldStatStr) : {};
 
     if (isType(oldStat, statistics)) statistics = oldStat;
-
 
     return statistics;
   }
