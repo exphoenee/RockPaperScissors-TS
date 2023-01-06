@@ -527,9 +527,9 @@ class Game {
     ) as gameStatisticsType;
 
     const calculation = (value: number): string => {
-      if (this.appSettings.statisticMode === "values") {
+      if (this.appSettings.statisticMode === statModes.VALUE) {
         return String(value);
-      } else if (this.appSettings.statisticMode === "percent") {
+      } else if (this.appSettings.statisticMode === statModes.PERCENT) {
         return ((value / allGame) * 100).toFixed(1) + "%";
       }
       return "Error!";
@@ -563,13 +563,9 @@ class Game {
         <tfoot>
           <tr>${[
             this.getTranslation("summary"),
-            this.appSettings.statisticMode === "values"
-              ? +playerScore
-              : ((+playerScore / allGame) * 100).toFixed(1) + "%",
-            this.appSettings.statisticMode === "values"
-              ? +opponentScore
-              : ((+opponentScore / allGame) * 100).toFixed(1) + "%",
-            this.appSettings.statisticMode === "values" ? +allGame : "100%",
+            calculation(playerScore),
+            calculation(opponentScore),
+            calculation(allGame),
           ]
             .map((footer) => `<th>${footer}</th>`)
             .join("")}</tr>
