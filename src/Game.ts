@@ -207,18 +207,15 @@ class Game {
     const oldStatStr = localStorage.getItem("statistics");
     const oldStat = oldStatStr ? JSON.parse(oldStatStr) : {};
 
-    if (isType(oldStat, statistics)) {
-      console.log(true);
-      return oldStat;
-    }
-
-    this.setScores();
+    if (isType(oldStat, statistics)) statistics = oldStat;
 
     return statistics;
   }
 
   setScores() {
     const results: { [key: string]: number } = {};
+
+    console.log(this.statistics);
 
     const currentStatistics = this.statistics.find(
       (game) => game.name === this.playing
@@ -274,7 +271,6 @@ class Game {
           if (i === 0) {
             this.gameInProgress = false;
             this.determineWinner();
-            this.initializeStatistics();
             this.showResult();
           }
         }, 10 * (this.computerRollLength + 1 - i) * (this.computerRollLength + 1 - i));
@@ -683,6 +679,7 @@ class Game {
       this.setUserChoiceImage();
       this.setComputerChoiceImage();
       this.initStatisticsMode();
+      this.setScores();
     };
   }
 }
