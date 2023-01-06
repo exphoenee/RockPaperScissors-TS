@@ -1,10 +1,4 @@
-export type ruleType = { value: string; beats: string[] };
-export type gameType = { name: string; rules: ruleType[] }[];
-
-export enum gameNames {
-  CLASSIC = "Classic",
-  BIG_BANG_THEORY = "Big Bang Theory",
-}
+import { gameNames, gameType } from "../types/game.type";
 
 const games: gameType = [
   {
