@@ -464,7 +464,10 @@ class Game {
   initStatisticsMode() {
     this.elem.single.statisticsInput.addEventListener("change", (e: Event) => {
       e.preventDefault();
-      this.appSettings.statisticMode = this.elem.single.statisticsInput.value;
+
+      const statSelector = this.elem.single.statisticsInput as HTMLInputElement;
+
+      this.appSettings.statisticMode = statSelector.value;
       this.createStatistics();
     });
   }
@@ -477,7 +480,7 @@ class Game {
     ];
 
     const allGame =
-      +this.elem.single.computerWins.innerHTML +
+      +this.elem.single.opponentWins.innerHTML +
       +this.elem.single.userWins.innerHTML;
 
     const currentGameStat = this.statistics.find(
@@ -536,13 +539,13 @@ class Game {
                   100
                 ).toFixed(1) + "%",
             this.appSettings.statisticMode === "values"
-              ? +this.elem.single.computerWins.innerHTML
+              ? +this.elem.single.opponentName.innerHTML
               : (
-                  (+this.elem.single.computerWins.innerHTML / allGame) *
+                  (+this.elem.single.opponentName.innerHTML / allGame) *
                   100
                 ).toFixed(1) + "%",
             this.appSettings.statisticMode === "values"
-              ? +this.elem.single.computerWins.innerHTML +
+              ? +this.elem.single.opponentName.innerHTML +
                 +this.elem.single.userWins.innerHTML
               : "100%",
           ]
@@ -565,18 +568,22 @@ class Game {
     <h2>${this.getTranslation("gameRules")}:</h2>
     <p>${this.getTranslation("rulesDesc")}</p>
     ${this.rules
-      .map(
-        (c) =>
-          `<p>${this.getTranslation(c.value)} ${this.getTranslation(
-            "beats"
-          )} ${c.beats
-            .map((b) => this.getTranslation(b + "T"))
-            .join(` ${this.getTranslation("and")} `)}.</p>`
-      )
+      .map((rule: ruleType) => {
+        return `<p>${this.getTranslation(rule.value)} ${this.getTranslation(
+          "beats"
+        )} ${rule.beats
+          .map((beating) => this.getTranslation(beating + "T"))
+          .join(` ${this.getTranslation("and")} `)}.</p>`;
+      })
       .join("")}
     <p style="color: red">${this.getTranslation("popupInstruction")}</p>`;
-    this.elem.single.rulesModal.querySelector(".rules-text").innerHTML =
-      this.rulesDescription;
+
+    const rulesText = this.elem.single.rulesModal.querySelector(".rules-text");
+    if (rulesText) {
+      rulesText.innerHTML = this.rulesDescription;
+    } else {
+      throw new Error("Rules text not found");
+    }
   }
 
   showResult() {
@@ -607,8 +614,9 @@ class Game {
   }
 
   getTitle() {
+    console.log(this.rules);
     return this.rules
-      .map((threw) => this.getTranslation(threw.value))
+      .map((threw: ruleType) => this.getTranslation(threw.value))
       .join(", ");
   }
 
