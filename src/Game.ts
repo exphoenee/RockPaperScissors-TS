@@ -8,6 +8,7 @@ import appElements, { appElementType } from "./constants/appElements";
 /* tpyes */
 import ruleType from "./constants/games";
 import statisticsType from "./types/statistics.type";
+import elemType, { singleElemType, multiElemType } from "./types/elemType";
 
 class Game {
   private appSettings: {
@@ -32,7 +33,7 @@ class Game {
   private computerChoiceIndex: number;
   private computerChoice: any; //TODO: find the type
   private computerRollLength: number;
-  private elem: any; //TODO: find the type
+  private elem: elemType;
   rulesDescription: string;
   private modalMap: {
     activator: HTMLButtonElement[];
@@ -45,7 +46,7 @@ class Game {
     this.rules =
       games.find((game) => game.name === this.playing)?.rules || games[0].rules;
 
-    this.elem = []; //initilaized later
+    this.elem = { single: [{}], multi: [{}] }; //initilaized later
     this.modalMap = []; //initilaized later
 
     this.appSettings = {
@@ -79,25 +80,37 @@ class Game {
   }
 
   private checkRunsLocal() {
-    const hostedLocal = this.localhosts.find(
+    const hostedLocally = this.localhosts.find(
       (host) => this.appSettings.baseURL.indexOf(host) > -1
     );
-    this.appSettings.developerMode = !!hostedLocal;
+    this.appSettings.developerMode = !!hostedLocally;
   }
 
   private getDomELements() {
-    this.elem = appElements.reduce((acc: Object, el: appElementType) => {
-      if (el.id) {
-        acc[el.name] = document.getElementById(el.id);
-      } else if (el.class) {
-        acc[el.name] = document.querySelector(el.class);
-      } else if (el.classes) {
-        acc[el.name] = Array.from(document.querySelectorAll(el.classes));
-      } else {
-        console.error(el.name, "is missing!");
-      }
-      return acc;
-    }, {});
+    this.elem = appElements.reduce(
+      (acc: elemType, el: appElementType) => {
+        if (el.id) {
+          const elem = document.getElementById(el.id);
+          if (elem) {
+            acc.single[el.name as keyof appElementType] = elem;
+          } else throw new Error(`Element ${el.name} is missing!`);
+        } else if (el.class) {
+          const elem = document.querySelector(el.class);
+          if (elem) {
+            acc.single[el.name as keyof appElementType] = elem;
+          } else throw new Error(`Element ${el.name} is missing!`);
+        } else if (el.classes) {
+          const elems = Array.from(document.querySelectorAll(el.classes));
+          if (elems) {
+            acc.multi[el.name as keyof appElementType] = elems;
+          } else throw new Error(`Element ${el.name} is missing!`);
+        } else {
+          console.error(el.name, "is missing!");
+        }
+        return acc;
+      },
+      { sinlge: [], multi: [] } as elemType
+    );
   }
 
   private initializeImages() {
@@ -134,11 +147,21 @@ class Game {
               if (
                 this.appSettings.imageLoaded === this.appSettings.imageCount
               ) {
-                this.elem.app.classList.remove("off");
-                this.elem.loaderScreen.classList.add("off");
-                this.elem.loaderScreen.addEventListener("transitionend", () =>
-                  this.elem.loaderScreen.remove()
-                );
+                if (
+                  this.elem.app instanceof Element &&
+                  this.elem.loaderScreen instanceof Element
+                ) {
+                  this.elem.app.classList.remove("off");
+                  this.elem.loaderScreen.classList.add("off");
+                  this.elem.loaderScreen.addEventListener(
+                    "transitionend",
+                    () =>
+                      this.elem.loaderScreen instanceof Element &&
+                      this.elem.loaderScreen.remove()
+                  );
+                } else if (Array.isArray(this.elem.app)) {
+                  throw new Error("app or loadscreen is not an element");
+                }
               }
             },
             { once: true }
