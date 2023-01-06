@@ -34,6 +34,10 @@ class Game {
   private computerRollLength: number;
   private elem: any; //TODO: find the type
   rulesDescription: string;
+  private modalMap: {
+    activator: HTMLButtonElement[];
+    modal: Element;
+  }[];
 
   constructor() {
     this.localhosts = ["localhost", "127.0.0.1"];
@@ -68,6 +72,29 @@ class Game {
     this.computerChoice = this.rules[this.computerChoiceIndex];
     this.computerRollLength = 15;
 
+    /* DOM elements */
+    this.getDomELements();
+
+    /* Modal initialization */
+    this.modalMap = [
+      {
+        activator: [this.elem.rulesButton],
+        modal: this.elem.rulesModal,
+      },
+      {
+        activator: [this.elem.langButton],
+        modal: this.elem.languageModal,
+      },
+      {
+        activator: [this.elem.licensingButton],
+        modal: this.elem.licensingModal,
+      },
+      {
+        activator: [this.elem.statisticsButton],
+        modal: this.elem.statisticsModal,
+      },
+    ];
+
     this.initialize();
   }
 
@@ -83,9 +110,17 @@ class Game {
   }
 
   private initializeImages() {
-    const images = Array.from(document.querySelectorAll(".loader-image")); //TODO: images collect into the this.elem?
+    const images: HTMLImageElement[] = Array.from(
+      document.querySelectorAll(".loader-image") as NodeListOf<HTMLImageElement>
+    );
+    const loaderImage = document.getElementById(
+      "#loader-image"
+    ) as HTMLImageElement;
     this.appSettings.imageCount = images.length;
-    images.forEach((image: any) => this.asynImageLoader(image)); //TODO: image type
+    images.forEach((image: HTMLImageElement) => {
+      image.src = loaderImage?.src || "";
+      this.asynImageLoader(image);
+    });
   }
 
   private asynImageLoader(img: HTMLImageElement) {
@@ -139,8 +174,11 @@ class Game {
       results[player as keyof statisticsType] = Object.keys(
         this.statistics[player as keyof statisticsType]
       ).reduce(
-        (sum, threw) =>
-          sum + +this.statistics[player as keyof statisticsType]?.[threw], //TODO: fix the any type
+        (sum: number, threw: Object) =>
+          sum +
+          +this.statistics[player as keyof statisticsType]?.[
+            threw as keyof Object
+          ],
         0
       );
     });
@@ -193,7 +231,7 @@ class Game {
     }
   }
 
-  themeChange() {
+  changeThema() {
     const changeDark = [
       this.elem.app.parentElement,
       this.elem.app,
@@ -205,23 +243,27 @@ class Game {
       this.elem.settings,
       this.elem.statisticsInput,
     ];
+
     changeDark.forEach((elem) => elem.classList.toggle("dark"));
     localStorage.setItem(
       "darkmode",
       this.elem.app.parentElement.classList.contains("dark")
     );
 
-    Array.from(this.elem.lightdark.children).forEach((icon) => {
-      icon.classList.toggle("on");
-      icon.classList.toggle("off");
-    });
+    Array.from(this.elem.themaButton.children as NodeListOf<Element>).forEach(
+      (icon: Element) => {
+        icon?.classList?.toggle("on");
+        icon?.classList?.toggle("off");
+      }
+    );
   }
 
   showMenu() {
     this.elem.settings.classList.toggle("out");
   }
 
-  initButton(button, cb) {
+  initButton(button: HTMLButtonElement, cb: () => void) {
+    console.log(button, cb);
     button.addEventListener("click", (e) => {
       e.preventDefault();
       cb();
@@ -234,7 +276,7 @@ class Game {
       { button: this.elem.prevButton, action: this.prevThrew.bind(this) },
       { button: this.elem.startButton, action: this.startGame.bind(this) },
       { button: this.elem.settingsButton, action: this.showMenu.bind(this) },
-      { button: this.elem.lightdark, action: this.themeChange.bind(this) },
+      { button: this.elem.themaButton, action: this.changeThema.bind(this) },
     ];
 
     buttonActions.forEach(({ button, action }) =>
@@ -255,38 +297,21 @@ class Game {
   }
 
   closeAllModals() {
-    this.elem.allModals.forEach((modal) => modal.classList.remove("show"));
+    this.elem.allModals.forEach((modal: Element) =>
+      modal.classList.remove("show")
+    );
   }
 
   initCloseButtons() {
-    this.elem.allCloseButtons.forEach((button) =>
+    this.elem.allCloseButtons.forEach((button: HTMLButtonElement) =>
       button.addEventListener("click", () => this.closeAllModals())
     );
   }
 
   initializeModals() {
-    const modalMaps = [
-      {
-        activator: [this.elem.rulesButton],
-        modal: this.elem.rulesModal,
-      },
-      {
-        activator: [this.elem.langButton],
-        modal: this.elem.languageModal,
-      },
-      {
-        activator: [this.elem.licensingButton],
-        modal: this.elem.licensingModal,
-      },
-      {
-        activator: [this.elem.statisticsButton],
-        modal: this.elem.statisticsModal,
-      },
-    ];
-
     this.initCloseButtons();
 
-    modalMaps.forEach(({ activator, modal }) => {
+    this.modalMap.forEach(({ activator, modal }) => {
       this.initModal(activator, modal);
     });
 
@@ -546,26 +571,25 @@ class Game {
     localStorage.setItem("statistics", JSON.stringify(this.statistics));
   }
 
-  initilizeTheme() {
+  initilizethema() {
     if (this.appSettings.thema === "true") {
-      this.themeChange();
+      this.changeThema();
     }
   }
 
   initialize() {
     window.onload = () => {
       this.initializeImages();
-      this.getDomELements();
       this.checkRunsLocal();
-      this.initilizeTheme();
+      this.initilizethema();
       this.initializeStatistics();
       this.initializeButtons();
       this.initializeModals();
       this.setUserChoiceImage();
       this.setComputerChoiceImage();
       this.updateLang();
-      // this.initTitleChange();
-      // this.initStatisticsMode();
+      this.initTitleChange();
+      this.initStatisticsMode();
     };
   }
 }
