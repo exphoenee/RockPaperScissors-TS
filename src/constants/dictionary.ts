@@ -1,3 +1,9 @@
+export enum usedLangs {
+  ENGLISH = "en",
+  GERMAN = "de",
+  HUNGARIAN = "hu",
+}
+
 export type dictionaryType = {
   en: {
     [key: string]: string;
