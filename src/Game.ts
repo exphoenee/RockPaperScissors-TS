@@ -1,9 +1,9 @@
 /* utils */
-import getAppElements from "./utils/getAppElements";
 
 /* constants */
 import games from "./constants/games";
 import dictionaty from "./constants/dictionary";
+import appElements, { appElementType } from "./constants/appElements";
 
 /* tpyes */
 import ruleType from "./constants/games";
@@ -45,6 +45,9 @@ class Game {
     this.rules =
       games.find((game) => game.name === this.playing)?.rules || games[0].rules;
 
+    this.elem = []; //initilaized later
+    this.modalMap = []; //initilaized later
+
     this.appSettings = {
       baseURL: window.location.origin,
       developerMode: true,
@@ -72,29 +75,6 @@ class Game {
     this.computerChoice = this.rules[this.computerChoiceIndex];
     this.computerRollLength = 15;
 
-    /* DOM elements */
-    this.getDomELements();
-
-    /* Modal initialization */
-    this.modalMap = [
-      {
-        activator: [this.elem.rulesButton],
-        modal: this.elem.rulesModal,
-      },
-      {
-        activator: [this.elem.langButton],
-        modal: this.elem.languageModal,
-      },
-      {
-        activator: [this.elem.licensingButton],
-        modal: this.elem.licensingModal,
-      },
-      {
-        activator: [this.elem.statisticsButton],
-        modal: this.elem.statisticsModal,
-      },
-    ];
-
     this.initialize();
   }
 
@@ -106,7 +86,18 @@ class Game {
   }
 
   private getDomELements() {
-    this.elem = getAppElements();
+    this.elem = appElements.reduce((acc: Object, el: appElementType) => {
+      if (el.id) {
+        acc[el.name] = document.getElementById(el.id);
+      } else if (el.class) {
+        acc[el.name] = document.querySelector(el.class);
+      } else if (el.classes) {
+        acc[el.name] = Array.from(document.querySelectorAll(el.classes));
+      } else {
+        console.error(el.name, "is missing!");
+      }
+      return acc;
+    }, {});
   }
 
   private initializeImages() {
@@ -206,10 +197,9 @@ class Game {
 
   startGame() {
     if (
-      this.elem.allModals.reduce(
-        (acc, curr) => curr.classList.contains("show") + acc,
-        0
-      ) === 0 &&
+      this.elem.allModals.every(
+        (curr: Element) => !curr.classList.contains("show")
+      ) &&
       this.gameInProgress === false
     ) {
       this.gameInProgress = true;
@@ -263,7 +253,6 @@ class Game {
   }
 
   initButton(button: HTMLButtonElement, cb: () => void) {
-    console.log(button, cb);
     button.addEventListener("click", (e) => {
       e.preventDefault();
       cb();
@@ -309,6 +298,26 @@ class Game {
   }
 
   initializeModals() {
+    /* Modal initialization */
+    this.modalMap = [
+      {
+        activator: [this.elem.rulesButton],
+        modal: this.elem.rulesModal,
+      },
+      {
+        activator: [this.elem.langButton],
+        modal: this.elem.languageModal,
+      },
+      {
+        activator: [this.elem.licensingButton],
+        modal: this.elem.licensingModal,
+      },
+      {
+        activator: [this.elem.statisticsButton],
+        modal: this.elem.statisticsModal,
+      },
+    ];
+
     this.initCloseButtons();
 
     this.modalMap.forEach(({ activator, modal }) => {
@@ -571,7 +580,7 @@ class Game {
     localStorage.setItem("statistics", JSON.stringify(this.statistics));
   }
 
-  initilizethema() {
+  initilizeThema() {
     if (this.appSettings.thema === "true") {
       this.changeThema();
     }
@@ -580,15 +589,20 @@ class Game {
   initialize() {
     window.onload = () => {
       this.initializeImages();
+      /* DOM elements */
+      this.getDomELements();
+
       this.checkRunsLocal();
-      this.initilizethema();
-      this.initializeStatistics();
+      this.initilizeThema();
       this.initializeButtons();
       this.initializeModals();
-      this.setUserChoiceImage();
-      this.setComputerChoiceImage();
+
       this.updateLang();
       this.initTitleChange();
+
+      this.initializeStatistics();
+      this.setUserChoiceImage();
+      this.setComputerChoiceImage();
       this.initStatisticsMode();
     };
   }
