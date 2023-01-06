@@ -6,7 +6,7 @@ import dictionaty from "./constants/dictionary";
 import appElements, { appElementType } from "./constants/appElements";
 
 /* tpyes */
-import statisticsType from "./types/statistics.type";
+import statisticsType, { gameStatisticsType } from "./types/statistics.type";
 import elemType from "./types/elemType";
 
 class Game {
@@ -30,7 +30,7 @@ class Game {
   private userChoiceIndex: number;
   private userChoice: ruleType; //TODO: find the type
   private computerChoiceIndex: number;
-  private computerChoice: ruleType; //TODO: find the type
+  private opponentChoice: ruleType; //TODO: find the type
   private computerRollLength: number;
   private elem: elemType;
   rulesDescription: string;
@@ -68,13 +68,19 @@ class Game {
     this.rulesDescription = "";
 
     /* Game state */
-    this.resultText = null;
+    this.resultText = "";
     this.gameInProgress = false;
-    this.statistics = { player: {}, computer: {} };
+    this.statistics = games.map((game) => {
+      return {
+        name: game.name,
+        values: { player: {}, opponent: {} },
+      } as gameStatisticsType;
+    });
+
     this.userChoiceIndex = Math.floor(Math.random() * this.rules.length);
     this.userChoice = this.rules[this.userChoiceIndex];
     this.computerChoiceIndex = Math.floor(Math.random() * this.rules.length);
-    this.computerChoice = this.rules[this.computerChoiceIndex];
+    this.opponentChoice = this.rules[this.computerChoiceIndex];
     this.computerRollLength = 15;
 
     this.initialize();
@@ -177,19 +183,27 @@ class Game {
   }
 
   setScores() {
-    const results: statisticsType = { player: {}, computer: {} };
-    Object.keys(this.statistics).forEach((player) => {
-      results[player as keyof statisticsType] = Object.keys(
-        this.statistics[player as keyof statisticsType]
-      ).reduce(
-        (sum: number, threw: Object) =>
-          sum +
-          +this.statistics[player as keyof statisticsType]?.[
-            threw as keyof Object
-          ],
-        0
-      );
-    });
+    const results: gameStatisticsType = {
+      name: "",
+      values: { player: {}, opponent: {} },
+    };
+
+    console.log(this.statistics.find((game) => game.name === this.playing));
+
+    // Object.keys(
+    //   this.statistics.find((game) => game.name === this.playing)
+    // ).forEach((player) => {
+    //   results[player as keyof statisticsType] = Object.keys(
+    //     this.statistics[player as keyof statisticsType]
+    //   ).reduce(
+    //     (sum: number, threw: Object) =>
+    //       sum +
+    //       +this.statistics[player as keyof statisticsType]?.[
+    //         threw as keyof Object
+    //       ],
+    //     0
+    //   );
+    // });
     this.elem.single.computerWins.innerHTML = results.computer;
     this.elem.single.userWins.innerHTML = results.player;
   }
@@ -225,7 +239,7 @@ class Game {
           this.computerChoiceIndex = Math.floor(
             Math.random() * this.rules.length
           );
-          this.computerChoice = this.rules[this.computerChoiceIndex];
+          this.opponentChoice = this.rules[this.computerChoiceIndex];
           this.setComputerChoiceImage();
           if (i === 0) {
             this.gameInProgress = false;
@@ -381,7 +395,7 @@ class Game {
   }
 
   setComputerChoiceImage() {
-    this.setHidden(this.elem.multi.computerImages, this.computerChoice);
+    this.setHidden(this.elem.multi.computerImages, this.opponentChoice);
   }
 
   setHidden(images: HTMLImageElement[], choiced: ruleType) {
@@ -395,37 +409,40 @@ class Game {
   determineWinner() {
     let playerWins = null;
     this.resultText = this.getTranslation("resultTie");
-    if (this.userChoice.beats.includes(this.computerChoice.value)) {
+    if (this.userChoice.beats.includes(this.opponentChoice.value)) {
       playerWins = true;
       this.resultText = this.getTranslation("resultPlayerWon");
     }
-    if (this.computerChoice.beats.includes(this.userChoice.value)) {
+    if (this.opponentChoice.beats.includes(this.userChoice.value)) {
       playerWins = false;
-      this.resultText = this.getTranslation("resultComputerWon");
+      this.resultText = this.getTranslation("resultOpponentWon");
     }
     this.setScores();
     this.calculateStatistics(playerWins);
   }
 
-  calculateStatistics(playerWins) {
-    let winner, looser;
+  calculateStatistics(playerWins: boolean | null) {
     if (playerWins === true) {
-      winner = this.userChoice.value;
-      looser = this.computerChoice.value;
-      this.statistics["player"][winner] = this.statistics["player"][winner] + 1;
+      this.statistics[this.playing].player = {
+        ...this.statistics[this.playing].player,
+        [this.userChoice.value]:
+          this.statistics[this.playing].player[this.userChoice.value] + 1 || 1,
+      };
     }
     if (playerWins === false) {
-      winner = this.computerChoice.value;
-      looser = this.userChoice.value;
-      this.statistics["computer"][winner] =
-        this.statistics["computer"][winner] + 1;
+      this.statistics[this.playing].opponent = {
+        ...this.statistics[this.playing].opponent,
+        [this.opponentChoice.value]:
+          this.statistics[this.playing].opponent[this.opponentChoice.value] +
+            1 || 1,
+      };
     }
     this.updateStatistics();
     this.createStatistics();
   }
 
   initStatisticsMode() {
-    this.elem.single.statisticsInput.addEventListener("change", (e) => {
+    this.elem.single.statisticsInput.addEventListener("change", (e: Event) => {
       e.preventDefault();
       this.appSettings.statisticMode = this.elem.single.statisticsInput.value;
       this.createStatistics();
@@ -443,39 +460,45 @@ class Game {
       +this.elem.single.computerWins.innerHTML +
       +this.elem.single.userWins.innerHTML;
 
-    const table = `<table><thead>
+    const currentGameStat = this.statistics.find(
+      (game) => game.name === this.playing
+    ) as gameStatisticsType;
+
+    const table =
+      currentGameStat &&
+      `<table><thead>
       <tr>${header
         .map((col, index) => `<th>${this.getTranslation(col)}</th>`)
         .join("")}</tr>
       </thead><tbody>
-      ${Object.keys(this.statistics["player"])
+      ${Object.keys(currentGameStat.values.player)
         .map((threw) => {
           return `
             <tr>
               <td class="player-cell">${this.getTranslation(threw)}</td>
               <td class="player-cell" style="text-align:center">${
                 this.appSettings.statisticMode === "values"
-                  ? +this.statistics["player"][threw]
+                  ? +currentGameStat.values.player[threw]
                   : (
-                      (+this.statistics["player"][threw] / allGame) *
+                      (+currentGameStat.values.player[threw] / allGame) *
                       100
                     ).toFixed(1) + "%"
               }</td>
               <td class="computer-cell" style="text-align:center">${
                 this.appSettings.statisticMode === "values"
-                  ? +this.statistics["computer"][threw]
+                  ? +currentGameStat.values.opponent[threw]
                   : (
-                      (+this.statistics["computer"][threw] / allGame) *
+                      (+currentGameStat.values.opponent[threw] / allGame) *
                       100
                     ).toFixed(1) + "%"
               }</td>
               <td class="summary-cell" style="text-align:center">${
                 this.appSettings.statisticMode === "values"
-                  ? +this.statistics["computer"][threw] +
-                    +this.statistics["computer"][threw]
+                  ? +currentGameStat.values.opponent[threw] +
+                    +currentGameStat.values.opponent[threw]
                   : (
-                      ((+this.statistics["player"][threw] +
-                        +this.statistics["computer"][threw]) /
+                      ((+currentGameStat.values.player[threw] +
+                        +currentGameStat.values.opponent[threw]) /
                         allGame) *
                       100
                     ).toFixed(1) + "%"
@@ -511,8 +534,8 @@ class Game {
     this.elem.single.statisticsTable.innerHTML = table;
   }
 
-  getTranslation(string) {
-    return this.dictionary[this.appSettings.language][string];
+  getTranslation(text: string) {
+    return this.dictionary[this.appSettings.language][text];
   }
 
   getChoice(userChoice) {
@@ -549,7 +572,7 @@ class Game {
       this.userChoice.value + "T"
     )}</p>
     <p>${this.getTranslation("CPUThrew")} ${this.getTranslation(
-      this.computerChoice.value + "T"
+      this.opponentChoice.value + "T"
     )}</p>`;
     this.elem.single.resultModal.classList.add("show");
     for (let i = this.appSettings.popupTimeout; i >= 0; i--) {
@@ -579,8 +602,8 @@ class Game {
     this.generateRules();
     this.createStatistics();
     this.elem.single.playerName.innerHTML = this.getTranslation("playerName");
-    this.elem.single.computerName.innerHTML =
-      this.getTranslation("computerName");
+    this.elem.single.OpponentName.innerHTML =
+      this.getTranslation("OpponentName");
     this.elem.single.mainTitle.innerHTML = this.getTitle();
     document.documentElement.setAttribute("lang", this.appSettings.language);
     localStorage.setItem("language", this.appSettings.language);
