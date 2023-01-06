@@ -10,6 +10,13 @@ export type gameStatisticsType = {
   };
 };
 
+export enum statModes {
+  VALUE = "value",
+  PERCENT = "percent",
+}
+
+
+
 type statisticsType = gameStatisticsType[];
 
 export default statisticsType;
