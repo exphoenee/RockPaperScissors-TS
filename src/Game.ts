@@ -2,12 +2,15 @@
 
 /* constants */
 import games, { ruleType } from "./constants/games";
-import dictionaty from "./constants/dictionary";
+import dictionaty, { dictionaryType } from "./constants/dictionary";
 import appElements, { appElementType } from "./constants/appElements";
 
 /* tpyes */
 import statisticsType, { gameStatisticsType } from "./types/statistics.type";
 import elemType from "./types/elemType";
+
+/* enums */
+import { gameNames } from "./constants/games";
 
 class Game {
   private appSettings: {
@@ -25,7 +28,7 @@ class Game {
   private localhosts: string[];
   private playing: string;
   private gameInProgress: boolean;
-  private dictionary: Object;
+  private dictionary: dictionaryType;
   private statistics: statisticsType;
   private userChoiceIndex: number;
   private userChoice: ruleType; //TODO: find the type
@@ -42,7 +45,7 @@ class Game {
 
   constructor() {
     this.localhosts = ["localhost", "127.0.0.1"];
-    this.playing = "Classic";
+    this.playing = gameNames.CLASSIC;
     this.rules =
       games.find((game) => game.name === this.playing)?.rules || games[0].rules;
 
@@ -178,7 +181,8 @@ class Game {
       document.title =
         choiceName[0].toUpperCase() + choiceName.substring(1) + "!";
 
-      this.elem.single.favicon.href = `./media/${choice.value}.png`;
+      const favicon = this.elem.single.favicon as HTMLImageElement;
+      favicon.src = `./media/${choice.value}.png`;
     }, 1000);
   }
 
@@ -204,8 +208,8 @@ class Game {
     //     0
     //   );
     // });
-    this.elem.single.computerWins.innerHTML = results.computer;
-    this.elem.single.userWins.innerHTML = results.player;
+    this.elem.single.opponentWins.innerHTML = results.values.opponent;
+    this.elem.single.userWins.innerHTML = results.values.player;
   }
 
   nextThrew() {
@@ -265,18 +269,17 @@ class Game {
       this.elem.single.statisticsInput,
     ];
 
-    changeDark.forEach((elem) => elem.classList.toggle("dark"));
-    localStorage.setItem(
-      "darkmode",
-      this.elem.single.app.parentElement.classList.contains("dark")
-    );
+    changeDark.forEach((elem) => elem && elem.classList.toggle("dark"));
+    if (this.elem.single.app) {
+      localStorage.setItem("darkmode", this.appSettings.thema);
+    }
 
-    Array.from(
-      this.elem.single.themaButton.children as NodeListOf<Element>
-    ).forEach((icon: Element) => {
-      icon?.classList?.toggle("on");
-      icon?.classList?.toggle("off");
-    });
+    Array.from(this.elem.single.themaButton.children).forEach(
+      (icon: Element) => {
+        icon?.classList?.toggle("on");
+        icon?.classList?.toggle("off");
+      }
+    );
   }
 
   showMenu() {
@@ -315,12 +318,12 @@ class Game {
     ];
 
     buttonActions.forEach(({ button, action }) =>
-      this.initButton(button, action)
+      this.initButton(button as HTMLButtonElement, action)
     );
   }
 
   initModal(
-    activator: HTMLButtonElement | HTMLButtonElement[],
+    activator: HTMLButtonElement, // | HTMLButtonElement[],
     modal: Element
   ) {
     this.makeArray(activator).forEach((elem) => {
@@ -341,7 +344,7 @@ class Game {
   }
 
   initCloseButtons() {
-    this.elem.multi.allCloseButtons.forEach((button: HTMLButtonElement) =>
+    this.elem.multi.allCloseButtons.forEach((button) =>
       button.addEventListener("click", () => this.closeAllModals())
     );
   }
@@ -422,20 +425,25 @@ class Game {
   }
 
   calculateStatistics(playerWins: boolean | null) {
-    if (playerWins === true) {
-      this.statistics[this.playing].player = {
-        ...this.statistics[this.playing].player,
-        [this.userChoice.value]:
-          this.statistics[this.playing].player[this.userChoice.value] + 1 || 1,
-      };
-    }
-    if (playerWins === false) {
-      this.statistics[this.playing].opponent = {
-        ...this.statistics[this.playing].opponent,
-        [this.opponentChoice.value]:
-          this.statistics[this.playing].opponent[this.opponentChoice.value] +
-            1 || 1,
-      };
+    const currentGameStat = this.statistics.find(
+      (game) => game.name === this.playing
+    );
+
+    if (currentGameStat) {
+      if (playerWins === true) {
+        currentGameStat.values.player = {
+          ...currentGameStat.values.player,
+          [this.userChoice.value as keyof statisticsType]:
+            currentGameStat.values.player[this.userChoice.value] + 1 || 1,
+        };
+      }
+      if (playerWins === false) {
+        currentGameStat.values.opponent = {
+          ...currentGameStat.values.opponent,
+          [this.opponentChoice.value as keyof statisticsType]:
+            currentGameStat.values.opponent[this.opponentChoice.value] + 1 || 1,
+        };
+      }
     }
     this.updateStatistics();
     this.createStatistics();
@@ -468,7 +476,7 @@ class Game {
       currentGameStat &&
       `<table><thead>
       <tr>${header
-        .map((col, index) => `<th>${this.getTranslation(col)}</th>`)
+        .map((col) => `<th>${this.getTranslation(col)}</th>`)
         .join("")}</tr>
       </thead><tbody>
       ${Object.keys(currentGameStat.values.player)
@@ -535,14 +543,8 @@ class Game {
   }
 
   getTranslation(text: string) {
-    return this.dictionary[this.appSettings.language][text];
-  }
-
-  getChoice(userChoice) {
-    return this.rules[
-      Object.keys(this.rules).filter(
-        (c) => this.rules[c].value === userChoice.toLowerCase()
-      )[0]
+    return this.dictionary[this.appSettings.language as keyof dictionaryType][
+      text
     ];
   }
 
@@ -602,8 +604,8 @@ class Game {
     this.generateRules();
     this.createStatistics();
     this.elem.single.playerName.innerHTML = this.getTranslation("playerName");
-    this.elem.single.OpponentName.innerHTML =
-      this.getTranslation("OpponentName");
+    this.elem.single.opponentName.innerHTML =
+      this.getTranslation("opponentName");
     this.elem.single.mainTitle.innerHTML = this.getTitle();
     document.documentElement.setAttribute("lang", this.appSettings.language);
     localStorage.setItem("language", this.appSettings.language);
