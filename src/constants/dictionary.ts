@@ -1,4 +1,16 @@
-const dictionary = {
+export type dictionaryType = {
+  en: {
+    [key: string]: string;
+  };
+  de: {
+    [key: string]: string;
+  };
+  hu: {
+    [key: string]: string;
+  };
+};
+
+const dictionary: dictionaryType = {
   en: {
     rock: "rock",
     paper: "paper",
@@ -23,7 +35,7 @@ const dictionary = {
     resultTie: "It's a tie!",
     resultPlayerWon: "You won!",
     resultOpponentWon: "Computer wins!",
-    OpponentName: "Computer",
+    opponentName: "Computer",
     playerName: "Player",
     summary: "Summary",
     threws: "Threws",
@@ -95,5 +107,4 @@ const dictionary = {
   },
 };
 
-
-    export default dictionary;
+export default dictionary;
