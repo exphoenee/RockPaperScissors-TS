@@ -187,29 +187,25 @@ class Game {
   }
 
   setScores() {
-    const results: gameStatisticsType = {
-      name: "",
-      values: { player: {}, opponent: {} },
-    };
+    const results: { [key: string]: number } = {};
 
-    console.log(this.statistics.find((game) => game.name === this.playing));
+    const currentStatistics = this.statistics.find(
+      (game) => game.name === this.playing
+    ) || { values: { player: {}, opponent: {} } };
 
-    // Object.keys(
-    //   this.statistics.find((game) => game.name === this.playing)
-    // ).forEach((player) => {
-    //   results[player as keyof statisticsType] = Object.keys(
-    //     this.statistics[player as keyof statisticsType]
-    //   ).reduce(
-    //     (sum: number, threw: Object) =>
-    //       sum +
-    //       +this.statistics[player as keyof statisticsType]?.[
-    //         threw as keyof Object
-    //       ],
-    //     0
-    //   );
-    // });
-    this.elem.single.opponentWins.innerHTML = results.values.opponent;
-    this.elem.single.userWins.innerHTML = results.values.player;
+    const { values } = currentStatistics;
+
+    Object.keys(currentStatistics.values).forEach((player) => {
+      const value = Object.keys(values[player]).reduce(
+        (sum: number, threw: Object) => sum + +values[player]?.[threw],
+        0
+      );
+      results[player] = value;
+    });
+    console.log(results);
+
+    this.elem.single.opponentWins.innerHTML = results.opponent;
+    this.elem.single.userWins.innerHTML = results.player;
   }
 
   nextThrew() {
@@ -614,7 +610,6 @@ class Game {
   }
 
   getTitle() {
-    console.log(this.rules);
     return this.rules
       .map((threw: ruleType) => this.getTranslation(threw.value))
       .join(", ");
@@ -631,14 +626,15 @@ class Game {
     localStorage.setItem("language", this.appSettings.language);
   }
 
+  //TODO: here is something wrong!
   initializeStatistics() {
     const oldStat = localStorage.getItem("statistics");
     oldStat
       ? (this.statistics = JSON.parse(oldStat))
       : this.appSettings.playerNames.forEach((player) => {
-          this.statistics[player] = {};
+          this.statistics[this.playing][player] = {};
           this.rules.forEach((item) => {
-            this.statistics[player][item.value] = 0;
+            this.statistics[this.playing][player][item.value] = 0;
           });
         });
 
