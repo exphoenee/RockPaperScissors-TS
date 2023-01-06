@@ -322,10 +322,7 @@ class Game {
     );
   }
 
-  initModal(
-    activator: HTMLButtonElement, // | HTMLButtonElement[],
-    modal: Element
-  ) {
+  initModal(activator: HTMLButtonElement[], modal: Element) {
     this.makeArray(activator).forEach((elem) => {
       elem.addEventListener("click", () => {
         const modalShowed = modal.classList.contains("show");
@@ -353,19 +350,19 @@ class Game {
     /* Modal initialization */
     this.modalMap = [
       {
-        activator: [this.elem.single.rulesButton],
+        activator: [this.elem.single.rulesButton as HTMLButtonElement],
         modal: this.elem.single.rulesModal,
       },
       {
-        activator: [this.elem.single.langButton],
+        activator: [this.elem.single.langButton as HTMLButtonElement],
         modal: this.elem.single.languageModal,
       },
       {
-        activator: [this.elem.single.licensingButton],
+        activator: [this.elem.single.licensingButton as HTMLButtonElement],
         modal: this.elem.single.licensingModal,
       },
       {
-        activator: [this.elem.single.statisticsButton],
+        activator: [this.elem.single.statisticsButton as HTMLButtonElement],
         modal: this.elem.single.statisticsModal,
       },
     ];
@@ -376,10 +373,19 @@ class Game {
       this.initModal(activator, modal);
     });
 
-    this.elem.multi.langChange.forEach((lc: HTMLButtonElement) => {
+    this.elem.multi.langChange.forEach((lc) => {
       lc.addEventListener("click", (e) => {
         e.preventDefault();
-        this.appSettings.language = lc.dataset.lang || "hu";
+
+        interface MyElement extends HTMLElement {
+          dataset: {
+            [key: string]: string;
+          };
+        }
+
+        const modlc = lc as MyElement;
+
+        this.appSettings.language = modlc.dataset?.lang || "hu";
         this.updateLang();
       });
     });
@@ -394,11 +400,17 @@ class Game {
   }
 
   setUserChoiceImage() {
-    this.setHidden(this.elem.multi.playerImages, this.userChoice);
+    this.setHidden(
+      this.elem.multi.playerImages as HTMLImageElement[],
+      this.userChoice
+    );
   }
 
   setComputerChoiceImage() {
-    this.setHidden(this.elem.multi.computerImages, this.opponentChoice);
+    this.setHidden(
+      this.elem.multi.computerImages as HTMLImageElement[],
+      this.opponentChoice
+    );
   }
 
   setHidden(images: HTMLImageElement[], choiced: ruleType) {
