@@ -186,10 +186,11 @@ class Game {
   }
 
   private initStatMode() {
-    const statMode = localStorage.getItem("statMode");
+    const statMode = localStorage.getItem("statisticMode");
     if (statMode) {
       this.appSettings.statisticMode = statMode;
       const statSelector = this.elem.single.statisticsInput as HTMLInputElement;
+
       statSelector.value = statMode;
     }
   }
@@ -221,7 +222,6 @@ class Game {
 
     if (isType(oldStat, statistics)) statistics = oldStat;
 
-    this.initStatMode();
 
     return statistics;
   }
@@ -668,6 +668,7 @@ class Game {
       this.initilizeThema();
       this.initializeButtons();
       this.initializeModals();
+      this.initStatMode();
 
       this.updateLang();
       this.initTitleChange();
