@@ -1,16 +1,15 @@
-/* utils */
-
 /* constants */
-import games, { ruleType } from "./constants/games";
+import games from "./constants/games";
 import dictionaty, { dictionaryType } from "./constants/dictionary";
 import appElements, { appElementType } from "./constants/appElements";
 
 /* tpyes */
+import { ruleType } from "./types/game.type";
 import statisticsType, { gameStatisticsType } from "./types/statistics.type";
-import elemType from "./types/elemType";
+import elemType from "./types/elem.type";
 
 /* enums */
-import { gameNames } from "./constants/games";
+import { gameNames } from "./types/game.type";
 
 class Game {
   private appSettings: {
@@ -73,12 +72,7 @@ class Game {
     /* Game state */
     this.resultText = "";
     this.gameInProgress = false;
-    this.statistics = games.map((game) => {
-      return {
-        name: game.name,
-        values: { player: {}, opponent: {} },
-      } as gameStatisticsType;
-    });
+    this.statistics = { ...this.initStatistics() };
 
     this.userChoiceIndex = Math.floor(Math.random() * this.rules.length);
     this.userChoice = this.rules[this.userChoiceIndex];
@@ -94,6 +88,29 @@ class Game {
       (host) => this.appSettings.baseURL.indexOf(host) > -1
     );
     this.appSettings.developerMode = !!hostedLocally;
+  }
+
+  private initStatistics(): statisticsType {
+    return games.reduce((acc: statisticsType, game) => {
+      const gameStatistics = {
+        name: game.name,
+        values: {
+          opponent: game.rules.reduce(
+            (acc: { [key: string]: number }, rule) => {
+              acc[rule.value] = 0;
+              return acc;
+            },
+            {}
+          ),
+          player: game.rules.reduce((acc: { [key: string]: number }, rule) => {
+            acc[rule.value] = 0;
+            return acc;
+          }, {}),
+        },
+      };
+      acc.push(gameStatistics);
+      return acc;
+    }, []);
   }
 
   private getDomELements() {
