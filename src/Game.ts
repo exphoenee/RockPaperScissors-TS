@@ -87,30 +87,30 @@ class Game {
   }
 
   private getDomELements() {
-    this.elem = appElements.reduce(
-      (acc: elemType, el: appElementType) => {
-        if (el.id) {
-          const elem = document.getElementById(el.id);
-          if (elem) {
-            acc.single[el.name as keyof appElementType] = elem;
-          } else throw new Error(`Element ${el.name} is missing!`);
-        } else if (el.class) {
-          const elem = document.querySelector(el.class);
-          if (elem) {
-            acc.single[el.name as keyof appElementType] = elem;
-          } else throw new Error(`Element ${el.name} is missing!`);
-        } else if (el.classes) {
-          const elems = Array.from(document.querySelectorAll(el.classes));
-          if (elems) {
-            acc.multi[el.name as keyof appElementType] = elems;
-          } else throw new Error(`Element ${el.name} is missing!`);
-        } else {
-          console.error(el.name, "is missing!");
-        }
-        return acc;
-      },
-      { sinlge: [], multi: [] } as elemType
-    );
+    this.elem = appElements.reduce((acc: elemType, el: appElementType) => {
+      if (el.id) {
+        const elem = document.getElementById(el.id);
+        if (elem) {
+          acc.single = { ...acc.single, [el.name]: elem };
+          acc.single[el.name as keyof appElementType] = elem;
+        } else throw new Error(`Element ${el.name} is missing!`);
+      } else if (el.class) {
+        const elem = document.querySelector(el.class);
+        if (elem) {
+          acc.single = { ...acc.single, [el.name]: elem };
+          acc.single[el.name as keyof appElementType] = elem;
+        } else throw new Error(`Element ${el.name} is missing!`);
+      } else if (el.classes) {
+        const elems = Array.from(document.querySelectorAll(el.classes));
+        if (elems) {
+          acc.multi = { ...acc.multi, [el.name]: elems };
+          acc.multi[el.name as keyof appElementType] = elems;
+        } else throw new Error(`Element ${el.name} is missing!`);
+      } else {
+        console.error(el.name, "is missing!");
+      }
+      return acc;
+    }, {} as elemType);
   }
 
   private initializeImages() {
@@ -147,21 +147,14 @@ class Game {
               if (
                 this.appSettings.imageLoaded === this.appSettings.imageCount
               ) {
-                if (
-                  this.elem.app instanceof Element &&
-                  this.elem.loaderScreen instanceof Element
-                ) {
-                  this.elem.app.classList.remove("off");
-                  this.elem.loaderScreen.classList.add("off");
-                  this.elem.loaderScreen.addEventListener(
-                    "transitionend",
-                    () =>
-                      this.elem.loaderScreen instanceof Element &&
-                      this.elem.loaderScreen.remove()
-                  );
-                } else if (Array.isArray(this.elem.app)) {
-                  throw new Error("app or loadscreen is not an element");
-                }
+                this.elem.single.app.classList.remove("off");
+                this.elem.single.loaderScreen.classList.add("off");
+                this.elem.single.loaderScreen.addEventListener(
+                  "transitionend",
+                  () =>
+                    this.elem.single.loaderScreen instanceof Element &&
+                    this.elem.single.loaderScreen.remove()
+                );
               }
             },
             { once: true }
@@ -178,7 +171,7 @@ class Game {
       document.title =
         choiceName[0].toUpperCase() + choiceName.substring(1) + "!";
 
-      this.elem.favicon.href = `./media/${choice.value}.png`;
+      this.elem.single.favicon.href = `./media/${choice.value}.png`;
     }, 1000);
   }
 
@@ -196,8 +189,8 @@ class Game {
         0
       );
     });
-    this.elem.computerWins.innerHTML = results.computer;
-    this.elem.userWins.innerHTML = results.player;
+    this.elem.single.computerWins.innerHTML = results.computer;
+    this.elem.single.userWins.innerHTML = results.player;
   }
 
   nextThrew() {
@@ -220,7 +213,7 @@ class Game {
 
   startGame() {
     if (
-      this.elem.allModals.every(
+      this.elem.multi.allModals.every(
         (curr: Element) => !curr.classList.contains("show")
       ) &&
       this.gameInProgress === false
@@ -246,24 +239,24 @@ class Game {
 
   changeThema() {
     const changeDark = [
-      this.elem.app.parentElement,
-      this.elem.app,
-      this.elem.rulesModal,
-      this.elem.resultModal,
-      this.elem.languageModal,
-      this.elem.licensingModal,
-      this.elem.statisticsModal,
-      this.elem.settings,
-      this.elem.statisticsInput,
+      this.elem.single.app.parentElement,
+      this.elem.single.app,
+      this.elem.single.rulesModal,
+      this.elem.single.resultModal,
+      this.elem.single.languageModal,
+      this.elem.single.licensingModal,
+      this.elem.single.statisticsModal,
+      this.elem.single.settings,
+      this.elem.single.statisticsInput,
     ];
 
     changeDark.forEach((elem) => elem.classList.toggle("dark"));
     localStorage.setItem(
       "darkmode",
-      this.elem.app.parentElement.classList.contains("dark")
+      this.elem.single.app.parentElement.classList.contains("dark")
     );
 
-    Array.from(this.elem.themaButton.children as NodeListOf<Element>).forEach(
+    Array.from(this.elem.single.themaButton.children as NodeListOf<Element>).forEach(
       (icon: Element) => {
         icon?.classList?.toggle("on");
         icon?.classList?.toggle("off");
@@ -272,7 +265,7 @@ class Game {
   }
 
   showMenu() {
-    this.elem.settings.classList.toggle("out");
+    this.elem.single.settings.classList.toggle("out");
   }
 
   initButton(button: HTMLButtonElement, cb: () => void) {
@@ -284,11 +277,11 @@ class Game {
 
   initializeButtons() {
     const buttonActions = [
-      { button: this.elem.nextButton, action: this.nextThrew.bind(this) },
-      { button: this.elem.prevButton, action: this.prevThrew.bind(this) },
-      { button: this.elem.startButton, action: this.startGame.bind(this) },
-      { button: this.elem.settingsButton, action: this.showMenu.bind(this) },
-      { button: this.elem.themaButton, action: this.changeThema.bind(this) },
+      { button: this.elem.single.nextButton, action: this.nextThrew.bind(this) },
+      { button: this.elem.single.prevButton, action: this.prevThrew.bind(this) },
+      { button: this.elem.single.startButton, action: this.startGame.bind(this) },
+      { button: this.elem.single.settingsButton, action: this.showMenu.bind(this) },
+      { button: this.elem.single.themaButton, action: this.changeThema.bind(this) },
     ];
 
     buttonActions.forEach(({ button, action }) =>
@@ -309,13 +302,13 @@ class Game {
   }
 
   closeAllModals() {
-    this.elem.allModals.forEach((modal: Element) =>
+    this.elem.multi.allModals.forEach((modal: Element) =>
       modal.classList.remove("show")
     );
   }
 
   initCloseButtons() {
-    this.elem.allCloseButtons.forEach((button: HTMLButtonElement) =>
+    this.elem.multi.allCloseButtons.forEach((button: HTMLButtonElement) =>
       button.addEventListener("click", () => this.closeAllModals())
     );
   }
@@ -324,20 +317,20 @@ class Game {
     /* Modal initialization */
     this.modalMap = [
       {
-        activator: [this.elem.rulesButton],
-        modal: this.elem.rulesModal,
+        activator: [this.elem.single.rulesButton],
+        modal: this.elem.single.rulesModal,
       },
       {
-        activator: [this.elem.langButton],
-        modal: this.elem.languageModal,
+        activator: [this.elem.single.langButton],
+        modal: this.elem.single.languageModal,
       },
       {
-        activator: [this.elem.licensingButton],
-        modal: this.elem.licensingModal,
+        activator: [this.elem.single.licensingButton],
+        modal: this.elem.single.licensingModal,
       },
       {
-        activator: [this.elem.statisticsButton],
-        modal: this.elem.statisticsModal,
+        activator: [this.elem.single.statisticsButton],
+        modal: this.elem.single.statisticsModal,
       },
     ];
 
@@ -347,7 +340,7 @@ class Game {
       this.initModal(activator, modal);
     });
 
-    this.elem.langChange.forEach((lc) => {
+    this.elem.multi.langChange.forEach((lc) => {
       lc.addEventListener("click", (e) => {
         this.appSettings.language = lc.dataset.lang;
         this.updateLang();
@@ -364,11 +357,11 @@ class Game {
   }
 
   setUserChoiceImage() {
-    this.setHidden(this.elem.playerImages, this.userChoice);
+    this.setHidden(this.elem.multi.playerImages, this.userChoice);
   }
 
   setComputerChoiceImage() {
-    this.setHidden(this.elem.computerImages, this.computerChoice);
+    this.setHidden(this.elem.multi.computerImages, this.computerChoice);
   }
 
   setHidden(images, choiced) {
@@ -429,9 +422,9 @@ class Game {
   }
 
   initStatisticsMode() {
-    this.elem.statisticsInput.addEventListener("change", (e) => {
+    this.elem.single.statisticsInput.addEventListener("change", (e) => {
       e.preventDefault();
-      this.appSettings.statisticMode = this.elem.statisticsInput.value;
+      this.appSettings.statisticMode = this.elem.single.statisticsInput.value;
       this.createStatistics();
     });
   }
@@ -444,7 +437,7 @@ class Game {
     ];
 
     const allGame =
-      +this.elem.computerWins.innerHTML + +this.elem.userWins.innerHTML;
+      +this.elem.single.computerWins.innerHTML + +this.elem.single.userWins.innerHTML;
 
     const table = `<table><thead>
       <tr>${header
@@ -490,17 +483,17 @@ class Game {
           <tr>${[
             this.getTranslation("summary"),
             this.appSettings.statisticMode === "values"
-              ? +this.elem.userWins.innerHTML
-              : ((+this.elem.userWins.innerHTML / allGame) * 100).toFixed(1) +
+              ? +this.elem.single.userWins.innerHTML
+              : ((+this.elem.single.userWins.innerHTML / allGame) * 100).toFixed(1) +
                 "%",
             this.appSettings.statisticMode === "values"
-              ? +this.elem.computerWins.innerHTML
-              : ((+this.elem.computerWins.innerHTML / allGame) * 100).toFixed(
+              ? +this.elem.single.computerWins.innerHTML
+              : ((+this.elem.single.computerWins.innerHTML / allGame) * 100).toFixed(
                   1
                 ) + "%",
             this.appSettings.statisticMode === "values"
-              ? +this.elem.computerWins.innerHTML +
-                +this.elem.userWins.innerHTML
+              ? +this.elem.single.computerWins.innerHTML +
+                +this.elem.single.userWins.innerHTML
               : "100%",
           ]
             .map((footer) => `<th>${footer}</th>`)
@@ -508,7 +501,7 @@ class Game {
         </tfoot>
       </tbody></table>`;
 
-    this.elem.statisticsTable.innerHTML = table;
+    this.elem.single.statisticsTable.innerHTML = table;
   }
 
   getTranslation(string) {
@@ -538,12 +531,12 @@ class Game {
       )
       .join("")}
     <p style="color: red">${this.getTranslation("popupInstruction")}</p>`;
-    this.elem.rulesModal.querySelector(".rules-text").innerHTML =
+    this.elem.single.rulesModal.querySelector(".rules-text").innerHTML =
       this.rulesDescription;
   }
 
   showResult() {
-    this.elem.resultContainer.innerHTML = `
+    this.elem.single.resultContainer.innerHTML = `
     <h2>${this.result}</h2>
     <p>${this.getTranslation("youThrew")} ${this.getTranslation(
       this.userChoice.value + "T"
@@ -551,15 +544,15 @@ class Game {
     <p>${this.getTranslation("CPUThrew")} ${this.getTranslation(
       this.computerChoice.value + "T"
     )}</p>`;
-    this.elem.resultModal.classList.add("show");
+    this.elem.single.resultModal.classList.add("show");
     for (let i = this.appSettings.popupTimeout; i >= 0; i--) {
       setTimeout(() => {
         if (i === 0) {
-          this.elem.resultCounter.innerHTML =
+          this.elem.single.resultCounter.innerHTML =
             this.getTranslation("popupClosing");
-          this.elem.resultModal.classList.remove("show");
+          this.elem.single.resultModal.classList.remove("show");
         } else {
-          this.elem.resultCounter.innerHTML = `${this.getTranslation(
+          this.elem.single.resultCounter.innerHTML = `${this.getTranslation(
             "popupClosingIn"
           )} <span style="width:1.2rem;display:inline-block;">${i}</span> ${this.getTranslation(
             "popupTimeout"
@@ -578,9 +571,9 @@ class Game {
   updateLang() {
     this.generateRules();
     this.createStatistics();
-    this.elem.playerName.innerHTML = this.getTranslation("playerName");
-    this.elem.computerName.innerHTML = this.getTranslation("computerName");
-    this.elem.mainTitle.innerHTML = this.getTitle();
+    this.elem.single.playerName.innerHTML = this.getTranslation("playerName");
+    this.elem.single.computerName.innerHTML = this.getTranslation("computerName");
+    this.elem.single.mainTitle.innerHTML = this.getTitle();
     document.documentElement.setAttribute("lang", this.appSettings.language);
     localStorage.setItem("language", this.appSettings.language);
   }
