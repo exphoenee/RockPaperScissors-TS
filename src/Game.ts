@@ -1,14 +1,13 @@
 /* utils */
 
 /* constants */
-import games from "./constants/games";
+import games, { ruleType } from "./constants/games";
 import dictionaty from "./constants/dictionary";
 import appElements, { appElementType } from "./constants/appElements";
 
 /* tpyes */
-import ruleType from "./constants/games";
 import statisticsType from "./types/statistics.type";
-import elemType, { singleElemType, multiElemType } from "./types/elemType";
+import elemType from "./types/elemType";
 
 class Game {
   private appSettings: {
@@ -29,9 +28,9 @@ class Game {
   private dictionary: Object;
   private statistics: statisticsType;
   private userChoiceIndex: number;
-  private userChoice: any; //TODO: find the type
+  private userChoice: ruleType; //TODO: find the type
   private computerChoiceIndex: number;
-  private computerChoice: any; //TODO: find the type
+  private computerChoice: ruleType; //TODO: find the type
   private computerRollLength: number;
   private elem: elemType;
   rulesDescription: string;
@@ -39,6 +38,7 @@ class Game {
     activator: HTMLButtonElement[];
     modal: Element;
   }[];
+  private resultText;
 
   constructor() {
     this.localhosts = ["localhost", "127.0.0.1"];
@@ -68,6 +68,7 @@ class Game {
     this.rulesDescription = "";
 
     /* Game state */
+    this.resultText = null;
     this.gameInProgress = false;
     this.statistics = { player: {}, computer: {} };
     this.userChoiceIndex = Math.floor(Math.random() * this.rules.length);
@@ -256,12 +257,12 @@ class Game {
       this.elem.single.app.parentElement.classList.contains("dark")
     );
 
-    Array.from(this.elem.single.themaButton.children as NodeListOf<Element>).forEach(
-      (icon: Element) => {
-        icon?.classList?.toggle("on");
-        icon?.classList?.toggle("off");
-      }
-    );
+    Array.from(
+      this.elem.single.themaButton.children as NodeListOf<Element>
+    ).forEach((icon: Element) => {
+      icon?.classList?.toggle("on");
+      icon?.classList?.toggle("off");
+    });
   }
 
   showMenu() {
@@ -277,11 +278,26 @@ class Game {
 
   initializeButtons() {
     const buttonActions = [
-      { button: this.elem.single.nextButton, action: this.nextThrew.bind(this) },
-      { button: this.elem.single.prevButton, action: this.prevThrew.bind(this) },
-      { button: this.elem.single.startButton, action: this.startGame.bind(this) },
-      { button: this.elem.single.settingsButton, action: this.showMenu.bind(this) },
-      { button: this.elem.single.themaButton, action: this.changeThema.bind(this) },
+      {
+        button: this.elem.single.nextButton,
+        action: this.nextThrew.bind(this),
+      },
+      {
+        button: this.elem.single.prevButton,
+        action: this.prevThrew.bind(this),
+      },
+      {
+        button: this.elem.single.startButton,
+        action: this.startGame.bind(this),
+      },
+      {
+        button: this.elem.single.settingsButton,
+        action: this.showMenu.bind(this),
+      },
+      {
+        button: this.elem.single.themaButton,
+        action: this.changeThema.bind(this),
+      },
     ];
 
     buttonActions.forEach(({ button, action }) =>
@@ -289,7 +305,10 @@ class Game {
     );
   }
 
-  initModal(activator, modal) {
+  initModal(
+    activator: HTMLButtonElement | HTMLButtonElement[],
+    modal: Element
+  ) {
     this.makeArray(activator).forEach((elem) => {
       elem.addEventListener("click", () => {
         const modalShowed = modal.classList.contains("show");
@@ -340,15 +359,16 @@ class Game {
       this.initModal(activator, modal);
     });
 
-    this.elem.multi.langChange.forEach((lc) => {
+    this.elem.multi.langChange.forEach((lc: HTMLButtonElement) => {
       lc.addEventListener("click", (e) => {
-        this.appSettings.language = lc.dataset.lang;
+        e.preventDefault();
+        this.appSettings.language = lc.dataset.lang || "hu";
         this.updateLang();
       });
     });
   }
 
-  makeArray(arr) {
+  makeArray<T>(arr: T | T[]): T[] {
     if (Array.isArray(arr)) {
       return arr;
     } else {
@@ -364,41 +384,24 @@ class Game {
     this.setHidden(this.elem.multi.computerImages, this.computerChoice);
   }
 
-  setHidden(images, choiced) {
+  setHidden(images: HTMLImageElement[], choiced: ruleType) {
     images.forEach((img) => img.classList.add("hidden"));
     images
       .filter((img) => img.id === choiced.value)[0]
       .classList.remove("hidden");
   }
 
-  //Get user's choice
-  getUserChoice(userInputStr) {
-    const userChoiceObj = this.getChoice(userInputStr);
-    this.userChoice =
-      this.rules
-        .map((item) => item.name === userChoiceObj.name)
-        .reduce((acc, curr) => (acc += +curr)) > 0
-        ? userChoiceObj
-        : alert(this.dictionary[this.appSettings.language].error);
-  }
-
-  //Get computer's choice
-  getComputerChoice() {
-    this.computerChoice =
-      this.rules[Math.floor(Math.random() * this.rules.length)];
-  }
-
   //Compare & determine the winner
   determineWinner() {
     let playerWins = null;
-    this.result = this.getTranslation("resultTie");
+    this.resultText = this.getTranslation("resultTie");
     if (this.userChoice.beats.includes(this.computerChoice.value)) {
       playerWins = true;
-      this.result = this.getTranslation("resultPlayerWon");
+      this.resultText = this.getTranslation("resultPlayerWon");
     }
     if (this.computerChoice.beats.includes(this.userChoice.value)) {
       playerWins = false;
-      this.result = this.getTranslation("resultComputerWon");
+      this.resultText = this.getTranslation("resultComputerWon");
     }
     this.setScores();
     this.calculateStatistics(playerWins);
@@ -437,7 +440,8 @@ class Game {
     ];
 
     const allGame =
-      +this.elem.single.computerWins.innerHTML + +this.elem.single.userWins.innerHTML;
+      +this.elem.single.computerWins.innerHTML +
+      +this.elem.single.userWins.innerHTML;
 
     const table = `<table><thead>
       <tr>${header
@@ -484,13 +488,16 @@ class Game {
             this.getTranslation("summary"),
             this.appSettings.statisticMode === "values"
               ? +this.elem.single.userWins.innerHTML
-              : ((+this.elem.single.userWins.innerHTML / allGame) * 100).toFixed(1) +
-                "%",
+              : (
+                  (+this.elem.single.userWins.innerHTML / allGame) *
+                  100
+                ).toFixed(1) + "%",
             this.appSettings.statisticMode === "values"
               ? +this.elem.single.computerWins.innerHTML
-              : ((+this.elem.single.computerWins.innerHTML / allGame) * 100).toFixed(
-                  1
-                ) + "%",
+              : (
+                  (+this.elem.single.computerWins.innerHTML / allGame) *
+                  100
+                ).toFixed(1) + "%",
             this.appSettings.statisticMode === "values"
               ? +this.elem.single.computerWins.innerHTML +
                 +this.elem.single.userWins.innerHTML
@@ -537,7 +544,7 @@ class Game {
 
   showResult() {
     this.elem.single.resultContainer.innerHTML = `
-    <h2>${this.result}</h2>
+    <h2>${this.resultText}</h2>
     <p>${this.getTranslation("youThrew")} ${this.getTranslation(
       this.userChoice.value + "T"
     )}</p>
@@ -572,7 +579,8 @@ class Game {
     this.generateRules();
     this.createStatistics();
     this.elem.single.playerName.innerHTML = this.getTranslation("playerName");
-    this.elem.single.computerName.innerHTML = this.getTranslation("computerName");
+    this.elem.single.computerName.innerHTML =
+      this.getTranslation("computerName");
     this.elem.single.mainTitle.innerHTML = this.getTitle();
     document.documentElement.setAttribute("lang", this.appSettings.language);
     localStorage.setItem("language", this.appSettings.language);
