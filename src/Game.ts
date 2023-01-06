@@ -10,9 +10,11 @@ import elemType from "./types/elem.type";
 
 /* enums */
 import { gameNames } from "./types/game.type";
+import { statModes } from "./types/statistics.type";
+import { usedLangs } from "./constants/dictionary";
 
 /* utils */
-import  isType  from "./utils/isType";
+import isType from "./utils/isType";
 
 class Game {
   private appSettings: {
@@ -58,12 +60,12 @@ class Game {
       baseURL: window.location.origin,
       developerMode: true,
       thema: localStorage.getItem("thema") || "ligth",
-      language: localStorage.getItem("language") || "hu",
-      playerNames: ["player", "computer"],
+      language: localStorage.getItem("language") || usedLangs.HUNGARIAN,
+      playerNames: ["player", "opponent"],
       imageLoaded: 0,
       imageCount: 0,
       popupTimeout: 3,
-      statisticMode: localStorage.getItem("statisctics") || "values",
+      statisticMode: localStorage.getItem("statMode") || statModes.VALUE,
     };
 
     /* texts */
@@ -183,8 +185,18 @@ class Game {
     }, 1000);
   }
 
+  private initStatMode() {
+    const statMode = localStorage.getItem("statMode");
+    if (statMode) {
+      this.appSettings.statisticMode = statMode;
+      const statSelector = this.elem.single.statisticsInput as HTMLInputElement;
+      statSelector.value = statMode;
+    }
+  }
+
   private initStatistics(): statisticsType {
-    let statistics
+    let statistics: statisticsType;
+
     statistics = games.map((game) => {
       return {
         name: game.name,
@@ -209,33 +221,36 @@ class Game {
 
     if (isType(oldStat, statistics)) statistics = oldStat;
 
+    this.initStatMode();
+
     return statistics;
   }
 
-  setScores() {
-    const results: { [key: string]: number } = {};
-
-    console.log(this.statistics);
-
-    const currentStatistics = this.statistics.find(
+  private calculateScore() {
+    const playerStat = this.statistics.find(
       (game) => game.name === this.playing
-    ) || { values: { player: {}, opponent: {} } };
+    ).values;
 
-    const { values } = currentStatistics;
+    const playerScore = Object.values(playerStat.player).reduce(
+      (acc, val) => acc + val,
+      0
+    );
 
-    Object.keys(currentStatistics.values).forEach((player) => {
-      results[player] = Object.keys(values[player]).reduce(
-        (sum: number, threw: Object) => sum + +values[player]?.[threw],
-        0
-      );
-    });
-    console.log(results);
-
-    this.elem.single.opponentWins.innerHTML = String(results.opponent);
-    this.elem.single.userWins.innerHTML = String(results.player);
+    const opponentScore = Object.values(playerStat.opponent).reduce(
+      (acc, val) => acc + val,
+      0
+    );
+    return { opponentScore, playerScore };
   }
 
-  nextThrew() {
+  private setScores() {
+    const { opponentScore, playerScore } = this.calculateScore();
+
+    this.elem.single.opponentWins.innerHTML = String(opponentScore);
+    this.elem.single.userWins.innerHTML = String(playerScore);
+  }
+
+  private nextThrew() {
     this.userChoiceIndex++;
     if (this.userChoiceIndex > this.rules.length - 1) {
       this.userChoiceIndex = 0;
@@ -244,7 +259,7 @@ class Game {
     this.setUserChoiceImage();
   }
 
-  prevThrew() {
+  private prevThrew() {
     this.userChoiceIndex--;
     if (this.userChoiceIndex < 0) {
       this.userChoiceIndex = this.rules.length - 1;
@@ -253,7 +268,7 @@ class Game {
     this.setUserChoiceImage();
   }
 
-  startGame() {
+  private startGame() {
     if (
       this.elem.multi.allModals.every(
         (curr: Element) => !curr.classList.contains("show")
@@ -278,7 +293,7 @@ class Game {
     }
   }
 
-  changeThema() {
+  private changeThema() {
     const changeDark = [
       this.elem.single.app.parentElement,
       this.elem.single.app,
@@ -304,18 +319,18 @@ class Game {
     );
   }
 
-  showMenu() {
+  private showMenu() {
     this.elem.single.settings.classList.toggle("out");
   }
 
-  initButton(button: HTMLButtonElement, cb: () => void) {
+  private initButton(button: HTMLButtonElement, cb: () => void) {
     button.addEventListener("click", (e) => {
       e.preventDefault();
       cb();
     });
   }
 
-  initializeButtons() {
+  private initializeButtons() {
     const buttonActions = [
       {
         button: this.elem.single.nextButton,
@@ -344,7 +359,7 @@ class Game {
     );
   }
 
-  initModal(activator: HTMLButtonElement[], modal: Element) {
+  private initModal(activator: HTMLButtonElement[], modal: Element) {
     this.makeArray(activator).forEach((elem) => {
       elem.addEventListener("click", () => {
         const modalShowed = modal.classList.contains("show");
@@ -356,19 +371,19 @@ class Game {
     });
   }
 
-  closeAllModals() {
+  private closeAllModals() {
     this.elem.multi.allModals.forEach((modal: Element) =>
       modal.classList.remove("show")
     );
   }
 
-  initCloseButtons() {
+  private initCloseButtons() {
     this.elem.multi.allCloseButtons.forEach((button) =>
       button.addEventListener("click", () => this.closeAllModals())
     );
   }
 
-  initializeModals() {
+  private initializeModals() {
     /* Modal initialization */
     this.modalMap = [
       {
@@ -413,7 +428,7 @@ class Game {
     });
   }
 
-  makeArray<T>(arr: T | T[]): T[] {
+  private makeArray<T>(arr: T | T[]): T[] {
     if (Array.isArray(arr)) {
       return arr;
     } else {
@@ -421,21 +436,21 @@ class Game {
     }
   }
 
-  setUserChoiceImage() {
+  private setUserChoiceImage() {
     this.setHidden(
       this.elem.multi.playerImages as HTMLImageElement[],
       this.userChoice
     );
   }
 
-  setComputerChoiceImage() {
+  private setComputerChoiceImage() {
     this.setHidden(
       this.elem.multi.computerImages as HTMLImageElement[],
       this.opponentChoice
     );
   }
 
-  setHidden(images: HTMLImageElement[], choiced: ruleType) {
+  private setHidden(images: HTMLImageElement[], choiced: ruleType) {
     images.forEach((img) => img.classList.add("hidden"));
     images
       .filter((img) => img.id === choiced.value)[0]
@@ -443,7 +458,7 @@ class Game {
   }
 
   //Compare & determine the winner
-  determineWinner() {
+  private determineWinner() {
     let playerWins = null;
     this.resultText = this.getTranslation("resultTie");
     if (this.userChoice.beats.includes(this.opponentChoice.value)) {
@@ -458,7 +473,7 @@ class Game {
     this.calculateStatistics(playerWins);
   }
 
-  calculateStatistics(playerWins: boolean | null) {
+  private calculateStatistics(playerWins: boolean | null) {
     const currentGameStat = this.statistics.find(
       (game) => game.name === this.playing
     );
@@ -483,31 +498,42 @@ class Game {
     this.createStatistics();
   }
 
-  initStatisticsMode() {
+  private setStatisticsMode() {
     this.elem.single.statisticsInput.addEventListener("change", (e: Event) => {
       e.preventDefault();
 
       const statSelector = this.elem.single.statisticsInput as HTMLInputElement;
 
       this.appSettings.statisticMode = statSelector.value;
+      localStorage.setItem("statisticMode", statSelector.value);
+
       this.createStatistics();
     });
   }
 
-  createStatistics() {
+  private createStatistics() {
+    const { opponentScore, playerScore } = this.calculateScore();
+
     const header = [
       "wins",
       ...this.appSettings.playerNames.map((pn) => pn + "Name"),
       "summary",
     ];
 
-    const allGame =
-      +this.elem.single.opponentWins.innerHTML +
-      +this.elem.single.userWins.innerHTML;
+    const allGame = +opponentScore + +playerScore;
 
     const currentGameStat = this.statistics.find(
       (game) => game.name === this.playing
     ) as gameStatisticsType;
+
+    const calculation = (value: number): string => {
+      if (this.appSettings.statisticMode === "values") {
+        return String(value);
+      } else if (this.appSettings.statisticMode === "percent") {
+        return ((value / allGame) * 100).toFixed(1) + "%";
+      }
+      return "Error!";
+    };
 
     const table =
       currentGameStat &&
@@ -521,33 +547,16 @@ class Game {
           return `
             <tr>
               <td class="player-cell">${this.getTranslation(threw)}</td>
-              <td class="player-cell" style="text-align:center">${
-                this.appSettings.statisticMode === "values"
-                  ? +currentGameStat.values.player[threw]
-                  : (
-                      (+currentGameStat.values.player[threw] / allGame) *
-                      100
-                    ).toFixed(1) + "%"
-              }</td>
-              <td class="computer-cell" style="text-align:center">${
-                this.appSettings.statisticMode === "values"
-                  ? +currentGameStat.values.opponent[threw]
-                  : (
-                      (+currentGameStat.values.opponent[threw] / allGame) *
-                      100
-                    ).toFixed(1) + "%"
-              }</td>
-              <td class="summary-cell" style="text-align:center">${
-                this.appSettings.statisticMode === "values"
-                  ? +currentGameStat.values.opponent[threw] +
-                    +currentGameStat.values.opponent[threw]
-                  : (
-                      ((+currentGameStat.values.player[threw] +
-                        +currentGameStat.values.opponent[threw]) /
-                        allGame) *
-                      100
-                    ).toFixed(1) + "%"
-              }</td>
+              <td class="player-cell" style="text-align:center">${calculation(
+                currentGameStat.values.player[threw]
+              )}</td>
+              <td class="computer-cell" style="text-align:center">${calculation(
+                currentGameStat.values.opponent[threw]
+              )}</td>
+              <td class="summary-cell" style="text-align:center">${calculation(
+                currentGameStat.values.player[threw] +
+                  currentGameStat.values.opponent[threw]
+              )}</td>
             </tr>`;
         })
         .join("")}
@@ -555,21 +564,12 @@ class Game {
           <tr>${[
             this.getTranslation("summary"),
             this.appSettings.statisticMode === "values"
-              ? +this.elem.single.userWins.innerHTML
-              : (
-                  (+this.elem.single.userWins.innerHTML / allGame) *
-                  100
-                ).toFixed(1) + "%",
+              ? +playerScore
+              : ((+playerScore / allGame) * 100).toFixed(1) + "%",
             this.appSettings.statisticMode === "values"
-              ? +this.elem.single.opponentName.innerHTML
-              : (
-                  (+this.elem.single.opponentName.innerHTML / allGame) *
-                  100
-                ).toFixed(1) + "%",
-            this.appSettings.statisticMode === "values"
-              ? +this.elem.single.opponentName.innerHTML +
-                +this.elem.single.userWins.innerHTML
-              : "100%",
+              ? +opponentScore
+              : ((+opponentScore / allGame) * 100).toFixed(1) + "%",
+            this.appSettings.statisticMode === "values" ? +allGame : "100%",
           ]
             .map((footer) => `<th>${footer}</th>`)
             .join("")}</tr>
@@ -579,13 +579,13 @@ class Game {
     this.elem.single.statisticsTable.innerHTML = table;
   }
 
-  getTranslation(text: string) {
+  private getTranslation(text: string) {
     return this.dictionary[this.appSettings.language as keyof dictionaryType][
       text
     ];
   }
 
-  generateRules() {
+  private generateRules() {
     this.rulesDescription = `
     <h2>${this.getTranslation("gameRules")}:</h2>
     <p>${this.getTranslation("rulesDesc")}</p>
@@ -608,7 +608,7 @@ class Game {
     }
   }
 
-  showResult() {
+  private showResult() {
     this.elem.single.resultContainer.innerHTML = `
     <h2>${this.resultText}</h2>
     <p>${this.getTranslation("youThrew")} ${this.getTranslation(
@@ -635,13 +635,13 @@ class Game {
     }
   }
 
-  getTitle() {
+  private getTitle() {
     return this.rules
       .map((threw: ruleType) => this.getTranslation(threw.value))
       .join(", ");
   }
 
-  updateLang() {
+  private updateLang() {
     this.generateRules();
     this.createStatistics();
     this.elem.single.playerName.innerHTML = this.getTranslation("playerName");
@@ -652,17 +652,17 @@ class Game {
     localStorage.setItem("language", this.appSettings.language);
   }
 
-  updateStatistics() {
+  private updateStatistics() {
     localStorage.setItem("statistics", JSON.stringify(this.statistics));
   }
 
-  initilizeThema() {
+  private initilizeThema() {
     if (this.appSettings.thema === "true") {
       this.changeThema();
     }
   }
 
-  initialize() {
+  private initialize() {
     window.onload = () => {
       this.initializeImages();
       /* DOM elements */
@@ -678,7 +678,7 @@ class Game {
 
       this.setUserChoiceImage();
       this.setComputerChoiceImage();
-      this.initStatisticsMode();
+      this.setStatisticsMode();
       this.setScores();
     };
   }
