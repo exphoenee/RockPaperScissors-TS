@@ -7,7 +7,7 @@ const settingMenuMap = {
   tag: "div",
   attrs: {
     id: "menu",
-    class: "out",
+    // class: "out",
   },
   children: menuButtonsMap.map((btn) => buttonMap(btn)),
 };
