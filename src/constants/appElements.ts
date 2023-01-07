@@ -5,6 +5,7 @@ export type appElementType = {
   classes?: string;
 };
 
+
 const appElements: appElementType[] = [
   { name: "app", id: "app" },
   { name: "menu", id: "menu" },
