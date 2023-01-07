@@ -1,32 +1,12 @@
-type buttonMapProps = {
+import buttonImageMap from "./buttonImageMap";
+
+export type buttonMapType = {
   className: string[];
   fileName: string | [];
-  imageClass?: string;
+  imageClass?: string | [];
 };
 
-const buttonImageMap = (
-  fileName: string,
-  className: string,
-  imageClass: string
-) => {
-  return {
-    tag: "img",
-    attrs: {
-      class: imageClass,
-      src: "./media.loader.png",
-      alt: `${className} button icon`,
-      dataset: {
-        fileName,
-      },
-    },
-  };
-};
-
-const buttonMap = ({
-  className,
-  fileName,
-  imageClass = "",
-}: buttonMapProps) => {
+const buttonMap = ({ className, fileName, imageClass = "" }: buttonMapType) => {
   return {
     tag: "button",
     attrs: {
@@ -34,7 +14,7 @@ const buttonMap = ({
     },
     children: Array.isArray(fileName)
       ? fileName.map((fn, i) => buttonImageMap(fn, className[0], imageClass[i]))
-      : buttonImageMap(fileName, className[0], imageClass),
+      : buttonImageMap(fileName, className[0], imageClass as string),
   };
 };
 
