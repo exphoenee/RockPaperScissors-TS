@@ -1,4 +1,4 @@
-import loaderImageMap from "./components/loaderImageMap";
+import loaderImageMap from "./loaderImage/loaderImageMap";
 
 const loaderScreenMap = {
   tag: "div",
