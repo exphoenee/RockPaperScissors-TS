@@ -53,7 +53,7 @@ class Game {
     this.rules =
       games.find((game) => game.name === this.playing)?.rules || games[0].rules;
 
-    this.elem = { single: [{}], multi: [{}] }; //initilaized later
+    this.elem = {} as elemType; //initilaized later
     this.modalMap = []; //initilaized later
 
     this.appSettings = {
@@ -468,8 +468,8 @@ class Game {
       playerWins = false;
       this.resultText = this.getTranslation("resultOpponentWon");
     }
-    this.setScores();
     this.calculateStatistics(playerWins);
+    this.setScores();
   }
 
   private calculateStatistics(playerWins: boolean | null) {
@@ -613,8 +613,9 @@ class Game {
       this.opponentChoice.value + "T"
     )}</p>`;
     this.elem.single.resultModal.classList.add("show");
+
     for (let i = this.appSettings.popupTimeout; i >= 0; i--) {
-      setTimeout(() => {
+      let ti = setTimeout(() => {
         if (i === 0) {
           this.elem.single.resultCounter.innerHTML =
             this.getTranslation("popupClosing");
@@ -626,7 +627,8 @@ class Game {
             "popupTimeout"
           )}...`;
         }
-      }, (this.appSettings.popupTimeout - i) * 3000);
+        clearTimeout(ti);
+      }, (this.appSettings.popupTimeout - i) * this.appSettings.popupTimeout * 1000);
     }
   }
 
