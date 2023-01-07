@@ -2,8 +2,8 @@ import buttonImageMap from "./buttonImageMap";
 
 export type buttonMapType = {
   className: string[];
-  fileName: string | [];
-  imageClass?: string | [];
+  fileName: string | string[];
+  imageClass?: string | string[];
 };
 
 const buttonMap = ({ className, fileName, imageClass = "" }: buttonMapType) => {
