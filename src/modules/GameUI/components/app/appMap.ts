@@ -1,13 +1,20 @@
-import headerMap from "./components/headerMap";
-import gameAreaMap from "./components/gameAreaMap";
-import modalsMap from "./components/modalsMap";
+import headerMap from "./header/headerMap";
+import gameAreaMap from "./gameArea/gameAreaMap";
+import modalsMap from "./modals/modalsMap";
 
-const appMap = {
-  tag: "div",
-  attrs: {
-    id: "app",
-  },
-  children: [headerMap, gameAreaMap, ...modalsMap],
+export type appMapType = {
+  user: string;
+  opponent: string;
+};
+
+const appMap = ({ user, opponent }: appMapType) => {
+  return {
+    tag: "div",
+    attrs: {
+      id: "app",
+    },
+    children: [headerMap, gameAreaMap({ user, opponent }), ...modalsMap],
+  };
 };
 
 export default appMap;
