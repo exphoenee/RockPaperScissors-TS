@@ -1,29 +1,54 @@
 import imageMap from "../../../common/imageMap";
-import games from "../../../../constants/games";
-import { gameNames, gameType } from "../../../../../../types/game.type";
+import games from "../../../../../../constants/games";
+import {
+  gameNames,
+  gameType,
+  ruleType,
+} from "../../../../../../types/game.type";
+import getState from "../../../../../../utils/getState";
+import setState from "../../../../../../utils/setState";
+import appStates from "../../../../../../constants/appStates";
 
-const gameImages = [
-  {
-    fileName: games[gameNames.CLASSIC].rules[0].image,
-    alt: "rock",
-  },
-  {
-    fileName: "paper.png",
-    alt: "paper",
-  },
-  {
-    fileName: "scissors.png",
-    alt: "scissors",
-  },
-  {
-    fileName: "lizard.png",
-    alt: "lizard",
-  },
-  {
-    fileName: "spock.png",
-    alt: "spock",
-  },
-];
+const gameImages = () => {
+  const gameMode = getState(appStates.GAMEMODE);
+  const thisGame = games.find((game) => game.name === gameMode);
+
+  if (!thisGame) {
+    throw new Error("No game found");
+  } else {
+    const gameImages = thisGame?.rules?.map((game: ruleType) => {
+      return {
+        fileName: `${game.name}.png`,
+        alt: game.name,
+      };
+    });
+    console.log(gameImages);
+    return gameImages;
+  }
+
+  return [
+    {
+      fileName: "rock.png",
+      alt: "rock",
+    },
+    {
+      fileName: "paper.png",
+      alt: "paper",
+    },
+    {
+      fileName: "scissors.png",
+      alt: "scissors",
+    },
+    {
+      fileName: "lizard.png",
+      alt: "lizard",
+    },
+    {
+      fileName: "spock.png",
+      alt: "spock",
+    },
+  ];
+};
 
 const playerImageContainer = (user: string) => {
   return {
@@ -31,7 +56,7 @@ const playerImageContainer = (user: string) => {
     attrs: {
       class: `${user} image-container`,
     },
-    children: gameImages.map(({ alt, fileName }, i) => {
+    children: gameImages().map(({ alt, fileName }, i) => {
       return imageMap({
         className: i > 0 ? "hidden" : "",
         alt,
