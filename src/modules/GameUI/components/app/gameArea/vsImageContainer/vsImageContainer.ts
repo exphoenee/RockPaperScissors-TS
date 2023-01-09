@@ -5,7 +5,7 @@ const vsImageContainer = {
   attrs: {
     class: "vs-image-container",
   },
-  children: imageMap({ fileName: "./media/vs1.png", alt: "versus image" }),
+  children: imageMap({ fileName: "vs1.png", alt: "versus image" }),
 };
 
 export default vsImageContainer;
