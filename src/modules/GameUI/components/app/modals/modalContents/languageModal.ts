@@ -9,17 +9,11 @@ const languageModal = () => {
     attrs: {
       class: "languages-container",
     },
-    children: Object.keys(langImages).map((lang) => {
-      const [langName, fileName] = lang;
-      buttonMap({
+    children: Object.entries(langImages).map((lang) => {
+      const [, fileName] = lang;
+      return buttonMap({
         className: ["language-button"],
         fileName,
-        handleEvent: {
-          event: "click",
-          cb: () => {
-            console.log(langName);
-          },
-        },
       });
     }),
   };
