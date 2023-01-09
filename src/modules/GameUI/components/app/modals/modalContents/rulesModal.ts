@@ -1,11 +1,12 @@
 import imageMap from "../../../common/imageMap";
+import modalNames from "../../../../../../constants/modalNames";
 
 const rulesModal = [
   {
-    tag: "p",
+    tag: "h2",
     text: "Rules",
     attrs: {
-      id: "rules",
+      id: modalNames.RULES,
     },
   },
   imageMap({
