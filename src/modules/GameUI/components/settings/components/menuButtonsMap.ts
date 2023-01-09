@@ -3,24 +3,24 @@ import { buttonMapType } from "../../common/buttonMap";
 const menuButtonsMap: buttonMapType[] = [
   {
     className: ["rules"],
-    fileName: "media/rules.png",
+    fileName: "rules.png",
   },
   {
     className: ["statistics"],
-    fileName: "media/statistics.png",
+    fileName: "statistics.png",
   },
   {
     className: ["language"],
-    fileName: "media/language.png",
+    fileName: "lang.png",
   },
   {
     className: ["licensing"],
-    fileName: "media/language.png",
+    fileName: "licensing.png",
   },
   {
     className: ["thema"],
     imageClass: ["sun on", "moon off"],
-    fileName: ["media/sunny.png", "media/moon.png"],
+    fileName: ["sunny.png", "moon.png"],
   },
 ];
 
