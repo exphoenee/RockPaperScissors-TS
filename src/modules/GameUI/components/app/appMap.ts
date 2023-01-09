@@ -13,7 +13,11 @@ const appMap = ({ user, opponent }: appMapType) => {
     attrs: {
       id: "app",
     },
-    children: [headerMap, gameAreaMap({ user, opponent }), ...modalsMap],
+    children: [
+      headerMap,
+      gameAreaMap({ user, opponent }),
+      ...modalsMap.map((modal) => modal.element),
+    ],
   };
 };
 
