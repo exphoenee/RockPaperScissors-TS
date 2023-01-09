@@ -6,7 +6,7 @@ const buttonImageMap = (
   imageClass: string
 ) => {
   return imageMap({
-    fileName: fileName + " ez a tuti",
+    fileName: fileName,
     className: imageClass,
     alt: `${className} button icon`,
   });
