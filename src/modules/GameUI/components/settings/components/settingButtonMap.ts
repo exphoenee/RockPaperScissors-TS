@@ -1,6 +1,6 @@
 const settingButtonMap = {
   className: ["settings"],
-  fileName: "media/settings.png",
+  fileName: "settings.png",
 };
 
 export default settingButtonMap;
