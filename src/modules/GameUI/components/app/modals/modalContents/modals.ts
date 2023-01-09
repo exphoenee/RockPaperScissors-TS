@@ -1,13 +1,14 @@
 import rulesModal from "./rulesModal";
+import modalNames from "../../../../../../constants/modalNames";
 
 const modals = [
   {
-    name: "rules",
+    name: modalNames.rules,
     title: "Rules",
     content: rulesModal,
   },
   {
-    name: "result",
+    name: modalNames.result,
     title: "Results",
     content: {
       tag: "p",
@@ -15,7 +16,7 @@ const modals = [
     },
   },
   {
-    name: "language",
+    name: modalNames.language,
     title: "language",
     content: {
       tag: "p",
@@ -23,7 +24,7 @@ const modals = [
     },
   },
   {
-    name: "statistics",
+    name: modalNames.statistics,
     title: "statistics",
     content: {
       tag: "p",
@@ -31,7 +32,7 @@ const modals = [
     },
   },
   {
-    name: "licensing",
+    name: modalNames.licensing,
     title: "licensing",
     content: {
       tag: "p",
@@ -39,7 +40,7 @@ const modals = [
     },
   },
   {
-    name: "gamemode",
+    name: modalNames.gamemode,
     title: "gamemode",
     content: {
       tag: "p",
