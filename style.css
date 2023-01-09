@@ -147,30 +147,6 @@ body {
   box-shadow: 2px 5px 10px black !important;
 }
 
-.modal {
-  position: relative;
-}
-
-.modal .closeButton {
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
-  width: 32px;
-  height: 32px;
-  outline: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.modal .closeButton img {
-  -webkit-filter: grayscale(90%);
-  filter: grayscale(90%);
-  -webkit-filter: hue-rotate(150deg);
-  filter: hue-rotate(150deg);
-  width: 100%;
-}
-
 .modal.dark .closeButton img {
   -webkit-filter: grayscale(90%);
   filter: grayscale(90%);
@@ -339,21 +315,71 @@ img {
 
 .modal {
   position: fixed;
+  flex-direction: column;
+  display: flex;
+  top: 150%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.3) skew(30deg, 30deg) rotate(270deg);
   background-color: rgba(255, 255, 255, 0.8);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   box-shadow: 2px 5px 10px grey;
-  padding: 5%;
+  padding: 2rem;
+  max-width: 75%;
   border-radius: 2rem;
   z-index: 1;
   opacity: 0;
-  top: 100%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.3) skew(30deg, 30deg) rotate(270deg);
   transition: all 0.5s ease-in-out;
 }
 
-.modal.rules {
+.modal.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) skew(0deg, 0deg) rotate(0deg);
+  top: 50%;
+  left: 50%;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  width: 100%;
+  padding-bottom: 1rem;
+}
+
+.modal-header h2 {
+  margin: 0;
+}
+
+.modal .closeButton {
+  width: 32px;
+  height: 32px;
+  outline: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.modal .closeButton img {
+  -webkit-filter: grayscale(90%);
+  filter: grayscale(90%);
+  -webkit-filter: hue-rotate(150deg);
+  filter: hue-rotate(150deg);
+  width: 100%;
+}
+
+.modal-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+/* .modal.rules {
   display: flex;
   flex-direction: row;
   width: 45%;
@@ -370,23 +396,12 @@ img {
 .modal.rules .rules-image {
   width: 50%;
   max-width: 260px;
-}
-
-.modal.show {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1) skew(0deg, 0deg) rotate(0deg);
-  top: 50%;
-  left: 50%;
-}
-
-.modal.language {
-  display: flex;
-  flex-direction: row;
-}
+} */
 
 .modal.language .language-button {
   margin: 10px;
 }
+
 
 th,
 td {
