@@ -1,4 +1,9 @@
-export type ruleType = { value: string; beats: string[] };
+export type ruleType = {
+  value: string;
+  beats: string[];
+  image: string;
+  alt: string;
+};
 export type gameType = { name: string; rules: ruleType[] }[];
 
 export enum gameNames {
