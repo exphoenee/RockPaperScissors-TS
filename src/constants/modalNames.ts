@@ -1,10 +1,10 @@
 enum modalNames {
-  rules = "rules",
-  result = "result",
-  language = "language",
-  statistics = "statistics",
-  licensing = "licensing",
-  gamemode = "gamemode",
+  RULES = "rules",
+  RESULT = "result",
+  LANG = "language",
+  STAT = "statistics",
+  LICENC = "licensing",
+  GAMEMODE = "gamemode",
 }
 
 export default modalNames;
