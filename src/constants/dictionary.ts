@@ -4,6 +4,12 @@ export enum usedLangs {
   HUNGARIAN = "hu",
 }
 
+export const langImages = {
+  en: "en.png",
+  de: "de.png",
+  hu: "hu.png",
+};
+
 export type dictionaryType = {
   en: {
     [key: string]: string;
