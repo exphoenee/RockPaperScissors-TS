@@ -19,7 +19,7 @@ const modalHeaderMap = ({ name, title }: modalHeaderMapType) => {
           class: "modal-title",
         },
       },
-      buttonMap({ className: ["closeButton"], fileName: ["close.png"] }),
+      buttonMap({ className: ["closeButton"], fileName: "close.png" }),
     ],
   };
 };
