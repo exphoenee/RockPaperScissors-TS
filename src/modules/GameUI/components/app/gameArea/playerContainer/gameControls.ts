@@ -3,15 +3,15 @@ import buttonMap from "../../../common/buttonMap";
 const gameButtons = [
   {
     className: ["prev"],
-    fileName: "media/arrow.png",
+    fileName: "arrow.png",
   },
   {
     className: ["start"],
-    fileName: "media/check.png",
+    fileName: "check.png",
   },
   {
     className: ["next"],
-    fileName: "media/arrow.png",
+    fileName: "arrow.png",
   },
 ];
 
