@@ -4,7 +4,7 @@ export type buttonMapType = {
   className: string[];
   fileName: string | string[];
   imageClass?: string | string[];
-  handleEvent?: { event: ""; cb: () => void } | undefined;
+  handleEvent?: { event: string; cb: () => void } | undefined;
 };
 
 const buttonMap = ({
