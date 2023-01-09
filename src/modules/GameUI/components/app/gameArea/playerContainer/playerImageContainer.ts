@@ -1,12 +1,7 @@
 import imageMap from "../../../common/imageMap";
 import games from "../../../../../../constants/games";
-import {
-  gameNames,
-  gameType,
-  ruleType,
-} from "../../../../../../types/game.type";
+import { ruleType } from "../../../../../../types/game.type";
 import getState from "../../../../../../utils/getState";
-import setState from "../../../../../../utils/setState";
 import appStates from "../../../../../../constants/appStates";
 
 const gameImages = () => {
@@ -18,36 +13,12 @@ const gameImages = () => {
   } else {
     const gameImages = thisGame?.rules?.map((game: ruleType) => {
       return {
-        fileName: `${game.name}.png`,
-        alt: game.name,
+        fileName: game?.image,
+        alt: game?.alt,
       };
     });
-    console.log(gameImages);
     return gameImages;
   }
-
-  return [
-    {
-      fileName: "rock.png",
-      alt: "rock",
-    },
-    {
-      fileName: "paper.png",
-      alt: "paper",
-    },
-    {
-      fileName: "scissors.png",
-      alt: "scissors",
-    },
-    {
-      fileName: "lizard.png",
-      alt: "lizard",
-    },
-    {
-      fileName: "spock.png",
-      alt: "spock",
-    },
-  ];
 };
 
 const playerImageContainer = (user: string) => {
