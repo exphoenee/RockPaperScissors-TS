@@ -1,3 +1,5 @@
+import domelemjs from "domelemjs";
+
 export type imageMapType = {
   className?: string;
   alt: string;
@@ -6,7 +8,7 @@ export type imageMapType = {
 };
 
 const imageMap = ({ className, alt, id, fileName }: imageMapType) => {
-  return {
+  const img = domelemjs({
     tag: "img",
     attrs: {
       class: [className, `loader-image`].join(" "),
@@ -17,7 +19,21 @@ const imageMap = ({ className, alt, id, fileName }: imageMapType) => {
         filename: fileName,
       },
     },
-  };
+    handleEvent: () => imgLoader(),
+  });
+
+  const imgLoader = () =>
+    img.addEventListener("load", () => {
+      fetch(fileName).then((response) =>
+        response.blob().then((blob) => {
+          img.src = URL.createObjectURL(blob);
+          img.classList.remove("loader-image");
+          img.removeEventListener("load", imgLoader);
+        })
+      );
+    });
+
+  return img;
 };
 
 export default imageMap;
