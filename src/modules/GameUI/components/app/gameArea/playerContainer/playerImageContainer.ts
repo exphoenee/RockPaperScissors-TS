@@ -1,8 +1,10 @@
 import imageMap from "../../../common/imageMap";
+import games from "../../../../constants/games";
+import { gameNames, gameType } from "../../../../../../types/game.type";
 
 const gameImages = [
   {
-    fileName: "rock.png",
+    fileName: games[gameNames.CLASSIC].rules[0].image,
     alt: "rock",
   },
   {
