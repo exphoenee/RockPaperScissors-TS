@@ -1,4 +1,5 @@
 import domelemjs from "domelemjs";
+import mediaFolder from "../../../../constants/mediaFolder";
 
 export type imageMapType = {
   className?: string;
@@ -14,24 +15,20 @@ const imageMap = ({ className, alt, id, fileName }: imageMapType) => {
       class: [className, `loader-image`].join(" "),
       alt,
       id,
-      src: "./media/loader.png",
-      dataset: {
-        filename: fileName,
-      },
+      src: `${mediaFolder}/loader.png`,
     },
-    handleEvent: () => imgLoader(),
   });
 
   const imgLoader = () =>
-    img.addEventListener("load", () => {
-      fetch(fileName).then((response) =>
-        response.blob().then((blob) => {
-          img.src = URL.createObjectURL(blob);
-          img.classList.remove("loader-image");
-          img.removeEventListener("load", imgLoader);
-        })
-      );
-    });
+    fetch(`${mediaFolder}/${fileName}`).then((response) =>
+      response.blob().then((blob) => {
+        img.src = URL.createObjectURL(blob);
+        img.classList.remove("loader-image");
+        img.removeEventListener("load", imgLoader);
+      })
+    );
+
+  img.addEventListener("load", imgLoader);
 
   return img;
 };
