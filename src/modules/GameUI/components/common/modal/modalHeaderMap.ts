@@ -1,3 +1,5 @@
+import buttonMap from "../buttonMap";
+
 export type modalHeaderMapType = {
   name: string;
   title: string;
@@ -17,12 +19,7 @@ const modalHeaderMap = ({ name, title }: modalHeaderMapType) => {
           class: "modal-title",
         },
       },
-      {
-        tag: "button",
-        attrs: {
-          class: ["closeButton", name].join(" "),
-        },
-      },
+      buttonMap({ className: ["closeButton"], fileName: ["close.png"] }),
     ],
   };
 };
