@@ -13,9 +13,11 @@ const modalMap = ({ name, title, content, dictionary }: modalMapType) => {
     tag: "div",
     attrs: {
       class: ["modal", name].join(" "),
-      dataset: { dictionary },
     },
-    children: [modalHeaderMap({ title }), modalBodyMap({ content })],
+    children: [
+      modalHeaderMap({ title, dictionary }),
+      modalBodyMap({ content }),
+    ],
   };
 };
 
