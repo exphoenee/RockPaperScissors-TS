@@ -6,6 +6,7 @@ const rulesModal = [
     text: "...Loading...",
     attrs: {
       class: "rules-text",
+      dataset: { lang: "rulesDesc" },
     },
   },
   {
