@@ -13,7 +13,7 @@ const modalMap = ({ name, title, content }: modalMapType) => {
     attrs: {
       class: ["modal", name].join(" "),
     },
-    children: [modalHeaderMap({ title, name }), modalBodyMap({ content })],
+    children: [modalHeaderMap({ title }), modalBodyMap({ content })],
   };
 };
 
