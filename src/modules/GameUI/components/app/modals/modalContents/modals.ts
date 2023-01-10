@@ -7,35 +7,48 @@ import statisticsModal from "../statisticsModal/statisticsModal";
 
 import modalNames from "../../../../../../constants/modalNames";
 
-const modals = [
+export type modalType = {
+  name: string;
+  title: string;
+  dictionary: string;
+  content: any;
+};
+
+const modals: modalType[] = [
   {
     name: modalNames.RULES,
     title: "Rules",
+    dictionary: "rulesTitle",
     content: rulesModal,
   },
   {
     name: modalNames.RESULT,
     title: "Results",
+    dictionary: "resultTitle",
     content: resultModal,
   },
   {
     name: modalNames.LANG,
     title: "Language",
+    dictionary: "languageTitle",
     content: languageModal,
   },
   {
     name: modalNames.STAT,
     title: "Statistics",
+    dictionary: "statisticsTitle",
     content: statisticsModal,
   },
   {
     name: modalNames.LICENC,
     title: "licensing",
+    dictionary: "licensingTitle",
     content: licensingModal,
   },
   {
     name: modalNames.GAMEMODE,
     title: "Game mode",
+    dictionary: "gameModeTitle",
     content: gameModeModal,
   },
 ];
