@@ -31,8 +31,8 @@ export default class GameUI {
 
     this.creaeUI();
     this.getDomELements();
+    window.onload = () => this.elem.single.loaderScreen.remove();
     console.log(this.elem);
-    this.elem.single.loaderScreen.classList.add("hidden");
   }
 
   private creaeUI = () => {
@@ -48,19 +48,28 @@ export default class GameUI {
         if (elem) {
           acc.single = { ...acc.single, [el.name]: elem };
           acc.single[el.name as keyof appElementType] = elem;
-        } else throw new Error(`Element ${el.name} is missing!`);
+        } else {
+          console.log(el)
+          // throw new Error(`Element ${el.name} is missing!`)
+        };
       } else if (el.class) {
         const elem = document.querySelector(el.class);
         if (elem) {
           acc.single = { ...acc.single, [el.name]: elem };
           acc.single[el.name as keyof appElementType] = elem;
-        } else throw new Error(`Element ${el.name} is missing!`);
+        } else {
+          console.log(el);
+          // throw new Error(`Element ${el.name} is missing!`)
+        };
       } else if (el.classes) {
         const elems = Array.from(document.querySelectorAll(el.classes));
         if (elems) {
           acc.multi = { ...acc.multi, [el.name]: elems };
           acc.multi[el.name as keyof appElementType] = elems;
-        } else throw new Error(`Element ${el.name} is missing!`);
+        } else {
+          console.log(el);
+          // throw new Error(`Element ${el.name} is missing!`)
+        };
       } else {
         console.error(el.name, "is missing!");
       }
