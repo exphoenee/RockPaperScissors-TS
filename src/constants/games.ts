@@ -3,6 +3,7 @@ import { gameNames, gameType } from "../types/game.type";
 const games: gameType = [
   {
     name: gameNames.CLASSIC,
+    icon: "rock-paper-scissors.png",
     rules: [
       { value: "rock", beats: ["scissors"], image: "rock.png", alt: "rock" },
       { value: "paper", beats: ["rock"], image: "paper.png", alt: "paper" },
@@ -16,6 +17,7 @@ const games: gameType = [
   },
   {
     name: gameNames.BIG_BANG_THEORY,
+    icon: "complicated.png",
     rules: [
       {
         value: "rock",
