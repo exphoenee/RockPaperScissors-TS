@@ -24,6 +24,12 @@ export type dictionaryType = {
 
 const dictionary: dictionaryType = {
   en: {
+    mainTitle: "Rock, Paper, Scissors",
+    resultTitle: "Result",
+    languageTitle: "Language",
+    statisticsTitle: "Statistics",
+    licensingTitle: "Licensing",
+    gameModeTitle: "Game mode",
     rock: "rock",
     paper: "paper",
     scissors: "scissors",
@@ -55,6 +61,12 @@ const dictionary: dictionaryType = {
     error: "Error! You must select a valid option!",
   },
   de: {
+    mainTitle: "Stein, Papier, Schere",
+    resultTitle: "Ergebnis",
+    languageTitle: "Sprache",
+    statisticsTitle: "Statistik",
+    licensingTitle: "Lizenz",
+    gameModeTitle: "Spielmodus",
     rock: "Stein",
     paper: "Papier",
     scissors: "Schere",
@@ -86,6 +98,12 @@ const dictionary: dictionaryType = {
     error: "Fehler! Du musst eine gültige Option auswählen!",
   },
   hu: {
+    mainTitle: "Kő, Papír, Olló",
+    resultTitle: "Eredmény",
+    languageTitle: "Nyelv",
+    statisticsTitle: "Statisztika",
+    licensingTitle: "Licensz",
+    gameModeTitle: "Játékmód",
     rock: "kő",
     paper: "papír",
     scissors: "olló",
