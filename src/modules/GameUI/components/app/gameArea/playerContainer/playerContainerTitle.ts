@@ -3,7 +3,7 @@ const playerContainerTitle = (user: string) => {
     tag: "h2",
     text: user,
     attrs: {
-      class: `${user}-name`,
+      id: `${user}-name`,
     },
   };
 };
