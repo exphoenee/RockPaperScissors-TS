@@ -8,6 +8,7 @@ const headerMap = {
     content: "Rock, Paper, Scissors",
     attrs: {
       id: "main-title",
+      dataset: { dictionary: "mainTitle" },
     },
   },
 };
