@@ -29,7 +29,7 @@ const playerImageContainer = (user: string) => {
     },
     children: gameImages().map(({ alt, fileName }, i) => {
       return imageMap({
-        className: i > 0 ? "hidden" : "",
+        className: [i > 0 ? "hidden" : "", user, "image"].join(" "),
         alt,
         fileName,
         id: alt,
