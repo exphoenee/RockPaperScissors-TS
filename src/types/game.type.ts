@@ -4,7 +4,7 @@ export type ruleType = {
   image: string;
   alt: string;
 };
-export type gameType = { name: string; rules: ruleType[] }[];
+export type gameType = { name: string; rules: ruleType[]; icon: string }[];
 
 export enum gameNames {
   CLASSIC = "Classic",
