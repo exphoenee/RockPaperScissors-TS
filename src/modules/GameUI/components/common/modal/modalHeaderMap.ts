@@ -1,11 +1,10 @@
 import buttonMap from "../buttonMap";
 
 export type modalHeaderMapType = {
-  name: string;
   title: string;
 };
 
-const modalHeaderMap = ({ name, title }: modalHeaderMapType) => {
+const modalHeaderMap = ({ title }: modalHeaderMapType) => {
   return {
     tag: "div",
     attrs: {
