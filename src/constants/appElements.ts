@@ -5,13 +5,17 @@ export type appElementType = {
   classes?: string;
 };
 
-
 const appElements: appElementType[] = [
   { name: "app", id: "app" },
   { name: "menu", id: "menu" },
   { name: "settings", id: "settings" },
   { name: "loaderScreen", id: "loader-screen" },
   { name: "favicon", id: "favicon" },
+  { name: "statisticsInput", id: "statistics-input" },
+  { name: "userName", id: "user-name" },
+  { name: "opponentName", id: "opponent-name" },
+  { name: "opponentWins", class: ".opponent-wins" },
+  { name: "mainTitle", id: "main-title" },
   { name: "startButton", class: ".start.button" },
   { name: "nextButton", class: ".next.button" },
   { name: "prevButton", class: ".prev.button" },
@@ -27,26 +31,15 @@ const appElements: appElementType[] = [
   { name: "languageModal", class: ".language.modal" },
   { name: "statisticsModal", class: ".statistics.modal" },
   { name: "licensingModal", class: ".licensing.modal" },
-  { name: "statisticsClose", class: ".statistics.closeButton" },
-  { name: "rulesClose", class: ".rules.closeButton" },
-  { name: "languageClose", class: ".language.closeButton" },
-  { name: "resultClose", class: ".result.closeButton" },
-  { name: "licensingClose", class: ".licensing.closeButton" },
-  { name: "resultClose", class: ".result.closeButton" },
   { name: "statisticsTable", class: ".table-container" },
-  { name: "statisticsInput", id: "statistics-input" },
   { name: "resultContainer", class: ".result-container" },
-  { name: "resultCounter", class: ".counter" },
-  { name: "playerName", id: "player-name" },
-  { name: "opponentName", id: "computer-name" },
-  { name: "opponentWins", class: ".computer-wins" },
   { name: "userWins", class: ".user-wins" },
-  { name: "mainTitle", class: "#main-title" },
+  { name: "resultCounter", class: ".counter" },
   { name: "allModals", classes: ".modal" },
   { name: "langChange", classes: ".language-button" },
-  { name: "allCloseButtons", classes: ".closeButton" },
-  { name: "playerImages", classes: ".images.player" },
-  { name: "computerImages", classes: ".images.computer" },
+  { name: "allCloseButtons", classes: ".close-button" },
+  { name: "user", classes: ".images.user" },
+  { name: "opponentImages", classes: ".images.opponent" },
 ];
 
 export default appElements;
