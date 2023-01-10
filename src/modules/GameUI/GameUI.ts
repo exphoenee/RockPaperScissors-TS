@@ -42,6 +42,7 @@ export default class GameUI {
   public resultContainer: Element;
   public userImages: HTMLImageElement[];
   public opponentImages: HTMLImageElement[];
+  public dictionary: Element[];
 
   constructor(props?: GameUIType) {
     this.user = props?.user || "user";
@@ -67,6 +68,7 @@ export default class GameUI {
     this.resultContainer = {} as Element;
     this.userImages = [] as HTMLImageElement[];
     this.opponentImages = [] as HTMLImageElement[];
+    this.dictionary = [{} as Element];
 
     this.creaeUI();
     this.getDomELements();
@@ -108,7 +110,10 @@ export default class GameUI {
     this.opponentImages = Array.from(
       document.querySelectorAll(".image-container.opponent")
     ) as HTMLImageElement[];
+    this.dictionary = Array.from(
+      document.querySelectorAll("[data-dictionary]")
+    ) as Element[];
 
-    console.log(this.loaderScreen);
+    console.log("dict", this.dictionary);
   }
 }
