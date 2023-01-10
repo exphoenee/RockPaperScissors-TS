@@ -4,6 +4,7 @@ const playerContainerTitle = (user: string) => {
     text: user,
     attrs: {
       id: `${user}-name`,
+      dataset: { dictionary: `${user}Name` },
     },
   };
 };
