@@ -1,5 +1,9 @@
-import rulesModal from "./rulesModal";
-import languageModal from "./languageModal";
+import rulesModal from "../rulesModal/rulesModal";
+import languageModal from "../languageModal/languageModal";
+import gameModeModal from "../gameModeModal/gameModeModal";
+import licensingModal from "../licensingModal/licensingModal";
+import resultModal from "../resultModal/resultModal";
+import statisticsModal from "../statisticsModal/statisticsModal";
 
 import modalNames from "../../../../../../constants/modalNames";
 
@@ -12,39 +16,27 @@ const modals = [
   {
     name: modalNames.RESULT,
     title: "Results",
-    content: {
-      tag: "p",
-      text: "Results",
-    },
+    content: resultModal,
   },
   {
     name: modalNames.LANG,
     title: "Language",
-    content: languageModal(),
+    content: languageModal,
   },
   {
     name: modalNames.STAT,
-    title: "statistics",
-    content: {
-      tag: "p",
-      text: "statistics",
-    },
+    title: "Statistics",
+    content: statisticsModal,
   },
   {
     name: modalNames.LICENC,
     title: "licensing",
-    content: {
-      tag: "p",
-      text: "licensing",
-    },
+    content: licensingModal,
   },
   {
     name: modalNames.GAMEMODE,
-    title: "gamemode",
-    content: {
-      tag: "p",
-      text: "gamemode",
-    },
+    title: "Game mode",
+    content: gameModeModal,
   },
 ];
 
