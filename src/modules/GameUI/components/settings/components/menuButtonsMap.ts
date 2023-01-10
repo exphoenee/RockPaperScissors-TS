@@ -2,20 +2,24 @@ import { buttonMapType } from "../../common/buttonMap";
 
 const menuButtonsMap: buttonMapType[] = [
   {
-    className: ["rules"],
+    className: ["rules", "modal-button"],
     fileName: "rules.png",
+    target: "rules",
   },
   {
-    className: ["statistics"],
+    className: ["statistics", "modal-button"],
     fileName: "statistics.png",
+    target: "statistics",
   },
   {
-    className: ["language"],
+    className: ["language", "modal-button"],
     fileName: "lang.png",
+    target: "language",
   },
   {
-    className: ["licensing"],
+    className: ["licensing", "modal-button"],
     fileName: "licensing.png",
+    target: "licensing",
   },
   {
     className: ["thema"],
