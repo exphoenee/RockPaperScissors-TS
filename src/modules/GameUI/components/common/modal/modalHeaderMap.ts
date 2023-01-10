@@ -2,9 +2,10 @@ import buttonMap from "../buttonMap";
 
 export type modalHeaderMapType = {
   title: string;
+  dictionary?: string;
 };
 
-const modalHeaderMap = ({ title }: modalHeaderMapType) => {
+const modalHeaderMap = ({ title, dictionary }: modalHeaderMapType) => {
   return {
     tag: "div",
     attrs: {
@@ -16,6 +17,7 @@ const modalHeaderMap = ({ title }: modalHeaderMapType) => {
         text: title,
         attrs: {
           class: "modal-title",
+          dataset: { dictionary },
         },
       },
       buttonMap({ className: ["closeButton"], fileName: "close.png" }),
