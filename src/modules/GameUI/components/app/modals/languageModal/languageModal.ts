@@ -6,11 +6,14 @@ const languageModal = {
   attrs: {
     class: "languages-container",
   },
-  children: Object.entries(langImages).map((lang) => {
-    const [, fileName] = lang;
+  children: Object.entries(langImages).map((langData) => {
+    const [lang, fileName] = langData;
     return buttonMap({
       className: ["language-button"],
       fileName,
+      dataset: {
+        lang,
+      },
     });
   }),
 };
