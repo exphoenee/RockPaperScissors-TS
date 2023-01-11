@@ -6,6 +6,7 @@ export type buttonMapType = {
   imageClass?: string | string[];
   handleEvent?: { event: string; cb: () => void } | undefined;
   target?: string;
+  dataset?: { [key: string]: string };
 };
 
 const buttonMap = ({
@@ -14,12 +15,13 @@ const buttonMap = ({
   imageClass = "",
   handleEvent,
   target,
+  dataset,
 }: buttonMapType) => {
   return {
     tag: "button",
     attrs: {
       class: className && `button ${className.join(" ")}`,
-      dataset: target ? { target } : undefined,
+      dataset: target ? { target } : dataset,
     },
     handleEvent,
     children: Array.isArray(fileName)
