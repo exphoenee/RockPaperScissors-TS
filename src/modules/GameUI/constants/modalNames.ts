@@ -3,7 +3,7 @@ enum modalNames {
   RESULT = "result-modal",
   LANG = "language-modal",
   STAT = "statistics-modal",
-  LICENC = "licensing-modal",
+  LICENCE = "licensing-modal",
   GAMEMODE = "gamemode-modal",
 }
 
