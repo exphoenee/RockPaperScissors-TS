@@ -5,7 +5,7 @@ import licensingModal from "../licensingModal/licensingModal";
 import resultModal from "../resultModal/resultModal";
 import statisticsModal from "../statisticsModal/statisticsModal";
 
-import modalNames from "../../../../../../constants/modalNames";
+import modalNames from "../../../../constants/modalNames";
 
 export type modalType = {
   name: string;
@@ -40,7 +40,7 @@ const modals: modalType[] = [
     content: statisticsModal,
   },
   {
-    name: modalNames.LICENC,
+    name: modalNames.LICENCE,
     title: "licensing",
     dictionary: "licensingTitle",
     content: licensingModal,
