@@ -12,7 +12,8 @@ const modalMap = ({ name, title, content, dictionary }: modalMapType) => {
   return {
     tag: "div",
     attrs: {
-      class: ["modal", name].join(" "),
+      class: "modal",
+      id: name,
     },
     children: [
       modalHeaderMap({ title, dictionary }),
