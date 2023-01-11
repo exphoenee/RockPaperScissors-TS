@@ -14,6 +14,7 @@ import appStates from "../../constants/appStates";
 
 /* utils */
 import getState from "../../utils/getState";
+import setLang from "../../utils/setLang";
 
 export type GameUIType = {
   user?: string;
@@ -29,8 +30,10 @@ export default class GameUI {
   private modals: HTMLElement[];
   private loaderScreen: Element;
   private modalButtons: HTMLElement[];
+  private closeButtons: HTMLElement[];
   private settings: Element;
   private settingsButton: Element;
+  private languageButtons: Element[];
   private favicon: Element;
   private statisticsMode: Element;
   private gameMode: Element;
@@ -54,9 +57,12 @@ export default class GameUI {
     this.opponent = props?.opponent || "opponent";
     this.elem = {} as elemType;
     this.modals = [] as HTMLElement[];
-    this.loaderScreen = {} as Element;
     this.modalButtons = [] as HTMLElement[];
+    this.closeButtons = [] as HTMLElement[];
+    this.loaderScreen = {} as Element;
     this.settings = {} as Element;
+    this.settingsButton = {} as Element;
+    this.languageButtons = [] as Element[];
     this.favicon = {} as Element;
     this.statisticsMode = {} as Element;
     this.gameMode = {} as Element;
@@ -79,8 +85,6 @@ export default class GameUI {
     this.getDomELements();
     this.initialize();
     window.onload = () => this.loaderScreen.remove();
-
-    console.log(this.settings);
   }
 
   private creaeUI = () => {
@@ -92,9 +96,13 @@ export default class GameUI {
   private getDomELements() {
     this.modals = Array.from(document.querySelectorAll(".modal"));
     this.modalButtons = Array.from(document.querySelectorAll(".modal-button"));
+    this.closeButtons = Array.from(document.querySelectorAll(".close-button"));
     this.loaderScreen = document.querySelector("#loader-screen") as Element;
     this.settings = document.querySelector("#settings") as Element;
     this.settingsButton = document.querySelector(".settings.button") as Element;
+    this.languageButtons = Array.from(
+      document.querySelectorAll(".language-button")
+    );
     this.favicon = document.querySelector("#favicon") as Element;
     this.statisticsMode = document.querySelector("#statistics-mode") as Element;
     this.gameMode = document.querySelector("#game-mode") as Element;
@@ -125,42 +133,55 @@ export default class GameUI {
   }
 
   private initialize = () => {
-    console.log("Initialize");
     this.initSettings();
     this.initModals();
+    this.initLangButtons();
   };
 
-  toggleMenuOpen = () => {
-    console.log(this.settings);
+  private toggleMenuOpen = () => {
     this.settings.classList.toggle("closed");
   };
 
-  initSettings = () => {
+  private initSettings = () => {
     this.settingsButton.addEventListener("click", () => {
       this.toggleMenuOpen();
-      console.log("Menu clicked!");
     });
   };
 
-  initModals = () => {
-    this.modalButtons.forEach((elem) => {
-      console.log(elem);
-      elem.addEventListener("click", () => {
-        const modalName = elem.getAttribute("data-target") as string;
-        console.log(modalName);
+  private initModals = () => {
+    this.modalButtons.forEach((elem) =>
+      elem.addEventListener("click", () =>
         this.modals
-          .filter((modal) => modal.id === modalName)[0]
-          .classList.toggle("show");
-      });
-    });
+          .filter(
+            (modal) => modal.id === (elem.getAttribute("data-target") as string)
+          )[0]
+          .classList.toggle("show")
+      )
+    );
+    this.closeButtons.forEach((elem) =>
+      elem.addEventListener("click", () =>
+        this.modals.forEach((modal) => modal.classList.remove("show"))
+      )
+    );
   };
 
-  setLang = () => {
+  updateLang = () => {
     const lang = getState(appStates.LANG);
     this.dictionary.forEach((elem) => {
       const key = elem.getAttribute("data-dictionary") as string;
       elem.innerHTML = dictionary[lang][key];
-      clg(dictionary[lang][key]);
+      console.log(dictionary[lang][key]);
+    });
+  };
+
+  initLangButtons = () => {
+    this.languageButtons.forEach((elem) => {
+      elem.addEventListener("click", () => {
+        console.log(elem);
+        const lang = elem.getAttribute("data-lang") as string;
+        setLang(lang);
+        this.updateLang();
+      });
     });
   };
 }
