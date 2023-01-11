@@ -1,5 +1,3 @@
-import dictionary from "../../../../../../constants/dictionary";
-
 const playerResultDisplay = (user: string) => {
   return {
     tag: "p",
