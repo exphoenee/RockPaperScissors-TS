@@ -3,6 +3,6 @@ enum appStates {
   LANG = "language",
   STATMODE = "statisticMode",
   STATISTICS = "statistics",
-  DARKMODE = "darkmode",
+  THEMA = "thema",
 }
 export default appStates;
