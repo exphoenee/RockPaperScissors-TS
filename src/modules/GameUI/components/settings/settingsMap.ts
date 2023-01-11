@@ -16,7 +16,7 @@ const settingsMap = {
   tag: "div",
   attrs: {
     id: "settings",
-    class: "out",
+    class: "closed",
   },
   children: [buttonMap(settingButtonMap), settingMenuMap],
 };
