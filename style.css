@@ -147,7 +147,7 @@ body {
   box-shadow: 2px 5px 10px black !important;
 }
 
-.modal.dark .closeButton img {
+.modal.dark .close-button img {
   -webkit-filter: grayscale(90%);
   filter: grayscale(90%);
   -webkit-filter: hue-rotate(90deg);
@@ -352,7 +352,7 @@ img {
   margin: 0;
 }
 
-.modal .closeButton {
+.modal .close-button {
   width: 32px;
   height: 32px;
   outline: none;
@@ -361,7 +361,7 @@ img {
   cursor: pointer;
 }
 
-.modal .closeButton img {
+.modal .close-button img {
   -webkit-filter: grayscale(90%);
   filter: grayscale(90%);
   -webkit-filter: hue-rotate(150deg);
