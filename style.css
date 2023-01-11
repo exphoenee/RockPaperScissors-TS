@@ -50,25 +50,25 @@ table {
   }
 }
 
-#settings.out {
+#settings.closed {
   transform: translate(-95%, -50%);
   opacity: 0.2;
 }
 
-#settings.out .button.settings {
+#settings.closed .button.settings {
   opacity: 0.2;
 }
 
-#settings.out:hover {
+#settings.closed:hover {
   transform: translate(-80%, -50%);
   opacity: 0.6;
 }
 
-#settings.out:hover .button.settings {
+#settings.closed:hover .button.settings {
   opacity: 1;
 }
 
-#settings.out:hover .button.settings:hover {
+#settings.closed:hover .button.settings {
   -webkit-animation: spin 1s linear infinite;
   animation: spin 1s linear infinite;
 }
@@ -458,7 +458,7 @@ tr:nth-child(odd):hover {
   #settings:hover {
     opacity: 1 !important;
   }
-  #settings.out {
+  #settings.closed {
     transform: translate(-50%, -100%);
   }
 
