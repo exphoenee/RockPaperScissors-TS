@@ -26,7 +26,7 @@ export default class GameUI {
   private elem: elemType;
   private user?: string;
   private opponent?: string;
-  private modal: HTMLElement[];
+  private modals: HTMLElement[];
   private loaderScreen: Element;
   private modalButtons: HTMLElement[];
   private settings: Element;
@@ -53,7 +53,7 @@ export default class GameUI {
     this.user = props?.user || "user";
     this.opponent = props?.opponent || "opponent";
     this.elem = {} as elemType;
-    this.modal = [] as HTMLElement[];
+    this.modals = [] as HTMLElement[];
     this.loaderScreen = {} as Element;
     this.modalButtons = [] as HTMLElement[];
     this.settings = {} as Element;
@@ -90,7 +90,7 @@ export default class GameUI {
   };
 
   private getDomELements() {
-    this.modal = Array.from(document.querySelectorAll(".modal"));
+    this.modals = Array.from(document.querySelectorAll(".modal"));
     this.modalButtons = Array.from(document.querySelectorAll(".modal-button"));
     this.loaderScreen = document.querySelector("#loader-screen") as Element;
     this.settings = document.querySelector("#settings") as Element;
@@ -127,6 +127,7 @@ export default class GameUI {
   private initialize = () => {
     console.log("Initialize");
     this.initSettings();
+    this.initModals();
   };
 
   toggleMenuOpen = () => {
@@ -138,6 +139,19 @@ export default class GameUI {
     this.settingsButton.addEventListener("click", () => {
       this.toggleMenuOpen();
       console.log("Menu clicked!");
+    });
+  };
+
+  initModals = () => {
+    this.modalButtons.forEach((elem) => {
+      console.log(elem);
+      elem.addEventListener("click", () => {
+        const modalName = elem.getAttribute("data-target") as string;
+        console.log(modalName);
+        this.modals
+          .filter((modal) => modal.id === modalName)[0]
+          .classList.toggle("show");
+      });
     });
   };
 
