@@ -20,7 +20,7 @@ const modalHeaderMap = ({ title, dictionary }: modalHeaderMapType) => {
           dataset: { dictionary },
         },
       },
-      buttonMap({ className: ["closeButton"], fileName: "close.png" }),
+      buttonMap({ className: ["close-button"], fileName: "close.png" }),
     ],
   };
 };
