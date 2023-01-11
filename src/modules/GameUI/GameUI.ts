@@ -9,7 +9,11 @@ import appMap from "./components/app/appMap";
 import elemType from "../../types/elem.type";
 
 /* constants */
-import appElements, { appElementType } from "../../constants/appElements";
+import dictionary from "../../constants/dictionary";
+import appStates from "../../constants/appStates";
+
+/* utils */
+import getState from "../../utils/getState";
 
 export type GameUIType = {
   user?: string;
@@ -17,32 +21,33 @@ export type GameUIType = {
 };
 
 export default class GameUI {
-  // public settings: Element;
+  // private settings: Element;
 
-  public elem: elemType;
-  public user?: string;
-  public opponent?: string;
-  public modal: HTMLElement[];
-  public loaderScreen: Element;
-  public modalButtons: HTMLElement[];
-  public settings: Element;
-  public favicon: Element;
-  public statisticsMode: Element;
-  public gameMode: Element;
-  public userName: Element;
-  public opponentName: Element;
-  public opponentWins: Element;
-  public userWins: Element;
-  public mainTitle: Element;
-  public startButton: Element;
-  public nextButton: Element;
-  public prevButton: Element;
-  public themaButton: Element;
-  public statisticsTable: Element;
-  public resultContainer: Element;
-  public userImages: HTMLImageElement[];
-  public opponentImages: HTMLImageElement[];
-  public dictionary: Element[];
+  private elem: elemType;
+  private user?: string;
+  private opponent?: string;
+  private modal: HTMLElement[];
+  private loaderScreen: Element;
+  private modalButtons: HTMLElement[];
+  private settings: Element;
+  private settingsButton: Element;
+  private favicon: Element;
+  private statisticsMode: Element;
+  private gameMode: Element;
+  private userName: Element;
+  private opponentName: Element;
+  private opponentWins: Element;
+  private userWins: Element;
+  private mainTitle: Element;
+  private startButton: Element;
+  private nextButton: Element;
+  private prevButton: Element;
+  private themaButton: Element;
+  private statisticsTable: Element;
+  private resultContainer: Element;
+  private userImages: HTMLImageElement[];
+  private opponentImages: HTMLImageElement[];
+  private dictionary: Element[];
 
   constructor(props?: GameUIType) {
     this.user = props?.user || "user";
@@ -72,7 +77,10 @@ export default class GameUI {
 
     this.creaeUI();
     this.getDomELements();
+    this.initialize();
     window.onload = () => this.loaderScreen.remove();
+
+    console.log(this.settings);
   }
 
   private creaeUI = () => {
@@ -86,6 +94,7 @@ export default class GameUI {
     this.modalButtons = Array.from(document.querySelectorAll(".modal-button"));
     this.loaderScreen = document.querySelector("#loader-screen") as Element;
     this.settings = document.querySelector("#settings") as Element;
+    this.settingsButton = document.querySelector(".settings.button") as Element;
     this.favicon = document.querySelector("#favicon") as Element;
     this.statisticsMode = document.querySelector("#statistics-mode") as Element;
     this.gameMode = document.querySelector("#game-mode") as Element;
@@ -113,7 +122,31 @@ export default class GameUI {
     this.dictionary = Array.from(
       document.querySelectorAll("[data-dictionary]")
     ) as Element[];
-
-    console.log("dict", this.dictionary);
   }
+
+  private initialize = () => {
+    console.log("Initialize");
+    this.initSettings();
+  };
+
+  toggleMenuOpen = () => {
+    console.log(this.settings);
+    this.settings.classList.toggle("closed");
+  };
+
+  initSettings = () => {
+    this.settingsButton.addEventListener("click", () => {
+      this.toggleMenuOpen();
+      console.log("Menu clicked!");
+    });
+  };
+
+  setLang = () => {
+    const lang = getState(appStates.LANG);
+    this.dictionary.forEach((elem) => {
+      const key = elem.getAttribute("data-dictionary") as string;
+      elem.innerHTML = dictionary[lang][key];
+      clg(dictionary[lang][key]);
+    });
+  };
 }
