@@ -1,25 +1,26 @@
 import { buttonMapType } from "../../common/buttonMap";
+import modalNames from "../../../constants/modalNames";
 
 const menuButtonsMap: buttonMapType[] = [
   {
     className: ["rules", "modal-button"],
     fileName: "rules.png",
-    target: "rules",
+    target: modalNames.RULES,
   },
   {
     className: ["statistics", "modal-button"],
     fileName: "statistics.png",
-    target: "statistics",
+    target: modalNames.STAT,
   },
   {
     className: ["language", "modal-button"],
     fileName: "lang.png",
-    target: "language",
+    target: modalNames.LANG,
   },
   {
     className: ["licensing", "modal-button"],
     fileName: "licensing.png",
-    target: "licensing",
+    target: modalNames.LICENCE,
   },
   {
     className: ["thema"],
