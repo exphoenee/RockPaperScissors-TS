@@ -5,8 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rock, paper, scissors, lizard, Spock</title>
-    <link rel="stylesheet" href="reset.css" />
-    <link rel="stylesheet" href="style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -72,169 +70,12 @@
     <meta name="robots" content="index,follow" />
     <meta name="googlebot" content="index,follow" />
     <meta name="revisit-after" content="180 days" />
+
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="style.css" />
+
+    <script type="module" src="/src/main.ts"></script>
   </head>
   <body>
-
-    <div id="app" class="">
-      <div class="modal rules">
-        <button class="rules closeButton">
-          <img
-            src="./media/loader.png"
-            class="loader-image"
-            data-filename="media/close.png"
-            alt="close"
-            srcset=""
-          />
-        </button>
-        <div class="rules-text"></div>
-        <div class="rules-image">
-          <img
-            src=""
-            class="loader-image"
-            data-filename="media/rulesdesc.png"
-            alt="rules"
-          />
-        </div>
-      </div>
-      <div class="modal result">
-        <button class="result closeButton">
-          <img
-            src="./media/loader.png"
-            class="loader-image"
-            data-filename="media/close.png"
-            alt="close"
-            srcset=""
-          />
-        </button>
-        <div class="result-container"></div>
-        <p class="counter"></p>
-      </div>
-      <div class="modal language">
-        <button class="language closeButton">
-          <img
-            src="./media/loader.png"
-            class="loader-image"
-            data-filename="media/close.png"
-            alt="close"
-            srcset=""
-          />
-        </button>
-        <button class="button language-button en" data-lang="en">
-          <img
-            src="./media/loader.png"
-            class="loader-image"
-            data-filename="media/en.png"
-            alt="german"
-          />
-        </button>
-        <button class="button language-button de" data-lang="de">
-          <img
-            src="./media/loader.png"
-            class="loader-image"
-            data-filename="media/de.png"
-            alt="german"
-          />
-        </button>
-        <button class="button language-button hu" data-lang="hu">
-          <img
-            src="./media/loader.png"
-            class="loader-image"
-            data-filename="media/hu.png"
-            alt="german"
-          />
-        </button>
-      </div>
-      <div class="modal statistics">
-        <button class="statistics closeButton">
-          <img
-            src="./media/loader.png"
-            class="loader-image"
-            data-filename="media/close.png"
-            alt="close"
-            srcset=""
-          />
-        </button>
-        <div class="table-container"></div>
-        <label for="statistics-input">Statisztika számítása:</label>
-        <select id="statistics-input">
-          <option value="value">Érték</option>
-          <option value="percent">Százalék</option>
-        </select>
-      </div>
-      <div class="modal licensing">
-        <button class="licensing closeButton">
-          <img
-            src="./media/loader.png"
-            class="loader-image"
-            data-filename="media/close.png"
-            alt="close"
-            srcset=""
-          />
-        </button>
-        <div>
-          <h2>Licensing</h2>
-          <div>
-            <h3>
-              Made by Viktor Bozzay
-              <span>©2022</span>
-            </h3>
-            <a href="https://www.webforsol.hu" class="w4s" target="_blank"
-              ><img
-                src=""
-                class="minilogo loader-image"
-                data-filename="media/webforsol.svg"
-                alt=""
-            /></a>
-          </div>
-        </div>
-        <div>
-          <h2>Other licenses</h2>
-          <div>
-            Icons made by
-            <a
-              href="https://www.flaticon.com/authors/roundicons"
-              title="Roundicons"
-              >Roundicons</a
-            >
-            from
-            <a href="https://www.flaticon.com/" title="Flaticon"
-              >www.flaticon.com</a
-            >
-          </div>
-          <div>
-            Icons made by
-            <a
-              href="https://www.flaticon.com/authors/smashicons"
-              title="Smashicons"
-              >Smashicons</a
-            >
-            from
-            <a href="https://www.flaticon.com/" title="Flaticon"
-              >www.flaticon.com</a
-            >
-          </div>
-          <div>
-            Icons made by
-            <a href="https://www.freepik.com" title="Freepik">Freepik</a> from
-            <a href="https://www.flaticon.com/" title="Flaticon"
-              >www.flaticon.com</a
-            >
-          </div>
-          <div>
-            Icons made by
-            <a
-              href="https://www.flaticon.com/authors/geekclick"
-              title="GeekClick"
-              >GeekClick</a
-            >
-            from
-            <a href="https://www.flaticon.com/" title="Flaticon"
-              >www.flaticon.com</a
-            >
-          </div>
-        </div>
-      </div>
-    </div>
-    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
