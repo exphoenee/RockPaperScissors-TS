@@ -166,6 +166,7 @@ export default class GameUI {
     this.initLangButtons();
     this.initTheming();
     this.initStatistics();
+    this.initGameButtons();
   };
 
   private toggleMenuOpen = () => {
@@ -262,15 +263,11 @@ export default class GameUI {
   };
 
   private startGame = () => {
-    this.modals.forEach((modal) => modal.classList.remove("show"));
-    this.app.classList.add("game");
-    this.initGameButtons();
-    this.initGame();
+    console.log("gameStarted");
   };
 
   private stepImage = (direction: "next" | "prev") => {
-    const userImage = this.userImages[this.userImageIndex];
-    const opponentImage = this.opponentImages[this.opponentImageIndex];
+    console.log(direction);
   };
 
   private initGameButtons = () => {
