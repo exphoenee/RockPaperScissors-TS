@@ -17,6 +17,8 @@ import getState from "../../utils/getState";
 import getThema from "../../utils/getThema";
 import setThema from "../../utils/setThema";
 import setLang from "../../utils/setLang";
+import setStatMode from "../../utils/setStatMode";
+import setGameMode from "../../utils/setGameMode";
 import getLang from "../../utils/getLang";
 
 /* enums */
@@ -41,8 +43,8 @@ export default class GameUI {
   private settingsButton: Element;
   private languageButtons: Element[];
   private favicon: Element;
-  private statisticsMode: Element;
-  private gameMode: Element;
+  private statisticsMode: HTMLSelectElement;
+  private gameMode: HTMLSelectElement;
   private userName: Element;
   private opponentName: Element;
   private opponentWins: Element;
@@ -57,7 +59,7 @@ export default class GameUI {
   private userImages: HTMLImageElement[];
   private opponentImages: HTMLImageElement[];
   private dictionary: Element[];
-  private themable: HTMLElement[];
+  private themable: Element[];
   private selects: HTMLSelectElement[];
 
   constructor(props?: GameUIType) {
@@ -72,8 +74,8 @@ export default class GameUI {
     this.settingsButton = {} as Element;
     this.languageButtons = [] as Element[];
     this.favicon = {} as Element;
-    this.statisticsMode = {} as Element;
-    this.gameMode = {} as Element;
+    this.statisticsMode = {} as HTMLSelectElement;
+    this.gameMode = {} as HTMLSelectElement;
     this.userName = {} as Element;
     this.opponentName = {} as Element;
     this.opponentWins = {} as Element;
@@ -83,7 +85,7 @@ export default class GameUI {
     this.nextButton = {} as Element;
     this.prevButton = {} as Element;
     this.themaButton = {} as Element;
-    this.themable = [] as HTMLElement[];
+    this.themable = [] as Element[];
     this.statisticsTable = {} as Element;
     this.resultContainer = {} as Element;
     this.userImages = [] as HTMLImageElement[];
@@ -115,8 +117,10 @@ export default class GameUI {
       document.querySelectorAll(".language-button")
     );
     this.favicon = document.querySelector("#favicon") as Element;
-    this.statisticsMode = document.querySelector("#statistics-mode") as Element;
-    this.gameMode = document.querySelector("#game-mode") as Element;
+    this.statisticsMode = document.querySelector(
+      "#statistics-mode"
+    ) as HTMLSelectElement;
+    this.gameMode = document.querySelector("#game-mode") as HTMLSelectElement;
     this.userName = document.querySelector("#user-name") as Element;
     this.opponentName = document.querySelector("#opponent-name") as Element;
     this.userWins = document.querySelector("#user-wins") as Element;
@@ -161,6 +165,7 @@ export default class GameUI {
     this.initModals();
     this.initLangButtons();
     this.initTheming();
+    this.initStatistics();
   };
 
   private toggleMenuOpen = () => {
@@ -192,7 +197,7 @@ export default class GameUI {
     );
   };
 
-  updateLang = () => {
+  private updateLang = () => {
     const lang = getState(appStates.LANG);
     this.dictionary.forEach((elem) => {
       const key = elem.getAttribute("data-dictionary") as string;
@@ -201,7 +206,7 @@ export default class GameUI {
     });
   };
 
-  initLangButtons = () => {
+  private initLangButtons = () => {
     this.languageButtons.forEach((elem) => {
       elem.addEventListener("click", () => {
         console.log(elem);
@@ -212,7 +217,7 @@ export default class GameUI {
     });
   };
 
-  setUIThema(newThema: string) {
+  private setUIThema(newThema: string) {
     setThema(newThema);
 
     Array.from(this.themaButton.children).forEach((elem) => {
@@ -230,7 +235,7 @@ export default class GameUI {
     });
   }
 
-  initTheming = () => {
+  private initTheming = () => {
     this.setUIThema(getThema());
 
     this.themaButton.addEventListener("click", () => {
@@ -243,6 +248,16 @@ export default class GameUI {
       const newThema = themas[newThemaId[0]] as string;
 
       this.setUIThema(newThema);
+    });
+  };
+
+  private initStatistics = () => {
+    this.statisticsMode.addEventListener("change", () => {
+      setStatMode(this.statisticsMode.value);
+    });
+
+    this.gameMode.addEventListener("change", () => {
+      setGameMode(this.gameMode.value);
     });
   };
 }
