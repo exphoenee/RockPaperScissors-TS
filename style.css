@@ -1,3 +1,10 @@
+* {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
 table {
   border-collapse: collapse;
   box-shadow: 2px 5px 10px #eee;
