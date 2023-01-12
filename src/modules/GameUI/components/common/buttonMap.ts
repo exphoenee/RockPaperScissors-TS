@@ -7,6 +7,7 @@ export type buttonMapType = {
   handleEvent?: { event: string; cb: () => void } | undefined;
   target?: string;
   dataset?: { [key: string]: string };
+  id?: string;
 };
 
 const buttonMap = ({
@@ -16,10 +17,12 @@ const buttonMap = ({
   handleEvent,
   target,
   dataset,
+  id,
 }: buttonMapType) => {
   return {
     tag: "button",
     attrs: {
+      id,
       class: className && `button ${className.join(" ")}`,
       dataset: target ? { target } : dataset,
     },
