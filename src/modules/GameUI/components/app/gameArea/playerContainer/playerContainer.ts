@@ -11,7 +11,7 @@ const playerContainer = ({ user }: playerContainerType) => {
   return {
     tag: "div",
     attrs: {
-      class: `images ${user}`,
+      class: `${user} container`,
     },
     children: [
       playerContainerTitle(user),
