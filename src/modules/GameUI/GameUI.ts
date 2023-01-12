@@ -14,7 +14,13 @@ import appStates from "../../constants/appStates";
 
 /* utils */
 import getState from "../../utils/getState";
+import getThema from "../../utils/getThema";
+import setThema from "../../utils/setThema";
 import setLang from "../../utils/setLang";
+import getLang from "../../utils/getLang";
+
+/* enums */
+import themas from "./constants/themas";
 
 export type GameUIType = {
   user?: string;
@@ -24,7 +30,7 @@ export type GameUIType = {
 export default class GameUI {
   // private settings: Element;
 
-  private elem: elemType;
+  private app: Element;
   private user?: string;
   private opponent?: string;
   private modals: HTMLElement[];
@@ -51,11 +57,13 @@ export default class GameUI {
   private userImages: HTMLImageElement[];
   private opponentImages: HTMLImageElement[];
   private dictionary: Element[];
+  private themable: HTMLElement[];
+  private selects: HTMLSelectElement[];
 
   constructor(props?: GameUIType) {
+    this.app = {} as Element;
     this.user = props?.user || "user";
     this.opponent = props?.opponent || "opponent";
-    this.elem = {} as elemType;
     this.modals = [] as HTMLElement[];
     this.modalButtons = [] as HTMLElement[];
     this.closeButtons = [] as HTMLElement[];
@@ -75,11 +83,13 @@ export default class GameUI {
     this.nextButton = {} as Element;
     this.prevButton = {} as Element;
     this.themaButton = {} as Element;
+    this.themable = [] as HTMLElement[];
     this.statisticsTable = {} as Element;
     this.resultContainer = {} as Element;
     this.userImages = [] as HTMLImageElement[];
     this.opponentImages = [] as HTMLImageElement[];
     this.dictionary = [{} as Element];
+    this.selects = [] as HTMLSelectElement[];
 
     this.creaeUI();
     this.getDomELements();
@@ -94,6 +104,7 @@ export default class GameUI {
   };
 
   private getDomELements() {
+    this.app = document.querySelector("#app") as Element;
     this.modals = Array.from(document.querySelectorAll(".modal"));
     this.modalButtons = Array.from(document.querySelectorAll(".modal-button"));
     this.closeButtons = Array.from(document.querySelectorAll(".close-button"));
@@ -130,12 +141,26 @@ export default class GameUI {
     this.dictionary = Array.from(
       document.querySelectorAll("[data-dictionary]")
     ) as Element[];
+    this.themable = Array.from(
+      document.querySelectorAll("[data-themable]")
+    ) as Element[];
+    this.selects = Array.from(
+      document.querySelectorAll("select")
+    ) as HTMLSelectElement[];
+    this.themable.push(
+      document.body,
+      this.app,
+      ...this.modals,
+      ...this.selects,
+      this.settings as HTMLElement
+    );
   }
 
   private initialize = () => {
     this.initSettings();
     this.initModals();
     this.initLangButtons();
+    this.initTheming();
   };
 
   private toggleMenuOpen = () => {
@@ -150,14 +175,16 @@ export default class GameUI {
 
   private initModals = () => {
     this.modalButtons.forEach((elem) =>
-      elem.addEventListener("click", () =>
+      elem.addEventListener("click", () => {
+        this.modals.forEach((modal) => modal.classList.remove("show"));
         this.modals
           .filter(
             (modal) => modal.id === (elem.getAttribute("data-target") as string)
           )[0]
-          .classList.toggle("show")
-      )
+          .classList.toggle("show");
+      })
     );
+
     this.closeButtons.forEach((elem) =>
       elem.addEventListener("click", () =>
         this.modals.forEach((modal) => modal.classList.remove("show"))
@@ -182,6 +209,40 @@ export default class GameUI {
         setLang(lang);
         this.updateLang();
       });
+    });
+  };
+
+  setUIThema(newThema: string) {
+    setThema(newThema);
+
+    Array.from(this.themaButton.children).forEach((elem) => {
+      elem.classList.toggle("on");
+      elem.classList.toggle("off");
+    });
+
+    const themaNames = Object.values(themas).filter(
+      (name) => name !== newThema
+    );
+
+    this.themable.forEach((elem) => {
+      themaNames.forEach((name) => elem.classList.remove(name));
+      elem.classList.add(newThema);
+    });
+  }
+
+  initTheming = () => {
+    this.setUIThema(getThema());
+
+    this.themaButton.addEventListener("click", () => {
+      const thema = getThema();
+      const themaDate = Object.entries(themas);
+      const nrOfTemas = themaDate.length;
+
+      const themaIndex = themaDate.findIndex(([_, value]) => value === thema);
+      const newThemaId = themaDate[(themaIndex + 1) % nrOfTemas];
+      const newThema = themas[newThemaId[0]] as string;
+
+      this.setUIThema(newThema);
     });
   };
 }
