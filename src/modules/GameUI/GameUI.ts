@@ -43,7 +43,7 @@ export default class GameUI {
   private settings: Element;
   private settingsButton: Element;
   private languageButtons: Element[];
-  private favicon: Element;
+  private favicon: HTMLLinkElement;
   private statisticsMode: HTMLSelectElement;
   private gameMode: HTMLSelectElement;
   private userName: Element;
@@ -77,7 +77,7 @@ export default class GameUI {
     this.settings = {} as Element;
     this.settingsButton = {} as Element;
     this.languageButtons = [] as Element[];
-    this.favicon = {} as Element;
+    this.favicon = {} as HTMLLinkElement;
     this.statisticsMode = {} as HTMLSelectElement;
     this.gameMode = {} as HTMLSelectElement;
     this.userName = {} as Element;
@@ -125,7 +125,7 @@ export default class GameUI {
     this.languageButtons = Array.from(
       document.querySelectorAll(".language-button")
     );
-    this.favicon = document.querySelector("#favicon") as Element;
+    this.favicon = document.querySelector("#favicon") as HTMLLinkElement;
     this.statisticsMode = document.querySelector(
       "#statistics-mode"
     ) as HTMLSelectElement;
