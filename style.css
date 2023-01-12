@@ -128,7 +128,7 @@ body {
 }
 
 
-#statistics-input {
+select {
   font-family: "Rammetto One", cursive;
   transition: 0.3s all ease-in-out;
   padding: 0.3rem;
@@ -242,11 +242,11 @@ img {
   user-drag: none;
 }
 
-.vs {
+.vs-image-container {
   margin: 0 30px;
 }
 
-.vs img {
+.vs-image-container img {
   margin-top: 8rem;
 }
 
