@@ -169,6 +169,7 @@ export default class GameUI {
     this.initGameButtons();
   };
 
+  /* Settings menu */
   private toggleMenuOpen = () => {
     this.settings.classList.toggle("closed");
   };
@@ -179,6 +180,7 @@ export default class GameUI {
     });
   };
 
+  /* Modals */
   private initModals = () => {
     this.modalButtons.forEach((elem) =>
       elem.addEventListener("click", () => {
@@ -197,6 +199,13 @@ export default class GameUI {
       )
     );
   };
+
+  /* Language */
+  private generateTitle() {
+    return this.rules
+      .map((threw: ruleType) => this.getTranslation(threw.value))
+      .join(", ");
+  }
 
   private updateLang = () => {
     const lang = getState(appStates.LANG);
@@ -218,6 +227,7 @@ export default class GameUI {
     });
   };
 
+  /* Theming */
   private setUIThema(newThema: string) {
     setThema(newThema);
 
@@ -252,6 +262,7 @@ export default class GameUI {
     });
   };
 
+  /* Statistics */
   private initStatistics = () => {
     this.statisticsMode.addEventListener("change", () => {
       setStatMode(this.statisticsMode.value);
@@ -262,6 +273,7 @@ export default class GameUI {
     });
   };
 
+  /* Game */
   private startGame = () => {
     console.log("gameStarted");
   };
