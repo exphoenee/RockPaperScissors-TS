@@ -155,7 +155,7 @@ select {
   width: 100%;
 }
 
-.modal.rules.dark .rules-image img {
+#rules-modal.dark .rules-image img {
   -webkit-filter: invert(1);
   filter: invert(1);
 }
@@ -251,7 +251,7 @@ img {
 }
 
 .user-wins,
-.computer-wins {
+.opponent-wins {
   margin-bottom: 2rem;
 }
 .controls {
