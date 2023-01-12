@@ -9,8 +9,9 @@ import appMap from "./components/app/appMap";
 import elemType from "../../types/elem.type";
 
 /* constants */
-import dictionary from "../../constants/dictionary";
+import dictionary, { dictionaryType } from "../../constants/dictionary";
 import appStates from "../../constants/appStates";
+import games from "../../constants/games";
 
 /* utils */
 import getState from "../../utils/getState";
@@ -62,6 +63,9 @@ export default class GameUI {
   private themable: Element[];
   private selects: HTMLSelectElement[];
 
+  private rules: any; // TODO add type here
+  private lang: string;
+
   constructor(props?: GameUIType) {
     this.app = {} as Element;
     this.user = props?.user || "user";
@@ -92,6 +96,11 @@ export default class GameUI {
     this.opponentImages = [] as HTMLImageElement[];
     this.dictionary = [{} as Element];
     this.selects = [] as HTMLSelectElement[];
+
+    this.rules =
+      games.find((game) => game.name === this.playing)?.rules || games[0].rules;
+
+    this.lang = getLang();
 
     this.creaeUI();
     this.getDomELements();
@@ -167,7 +176,27 @@ export default class GameUI {
     this.initTheming();
     this.initStatistics();
     this.initGameButtons();
+    this.initTitleChange();
   };
+
+  /* Fancy title and favicon change */
+  private initTitleChange() {
+    setInterval(() => {
+      const choice = this.rules[Math.floor(Math.random() * this.rules.length)];
+
+      const choiceName =
+        dictionary[this.lang as keyof dictionaryType][choice.value];
+
+      document.title =
+        choiceName[0].toUpperCase() + choiceName.substring(1) + "!";
+
+      fetch(window.location.href + "/media/" + choice.image)
+        .then((res) => res.blob())
+        .then((blob) => {
+          this.favicon.href = URL.createObjectURL(blob);
+        });
+    }, 1000);
+  }
 
   /* Settings menu */
   private toggleMenuOpen = () => {
