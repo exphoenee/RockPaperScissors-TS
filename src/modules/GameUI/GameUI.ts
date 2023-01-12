@@ -260,4 +260,30 @@ export default class GameUI {
       setGameMode(this.gameMode.value);
     });
   };
+
+  private startGame = () => {
+    this.modals.forEach((modal) => modal.classList.remove("show"));
+    this.app.classList.add("game");
+    this.initGameButtons();
+    this.initGame();
+  };
+
+  private stepImage = (direction: "next" | "prev") => {
+    const userImage = this.userImages[this.userImageIndex];
+    const opponentImage = this.opponentImages[this.opponentImageIndex];
+  };
+
+  private initGameButtons = () => {
+    this.startButton.addEventListener("click", () => {
+      this.startGame();
+    });
+
+    this.nextButton.addEventListener("click", () => {
+      this.stepImage("next");
+    });
+
+    this.prevButton.addEventListener("click", () => {
+      this.stepImage("prev");
+    });
+  };
 }
