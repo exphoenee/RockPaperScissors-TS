@@ -24,6 +24,7 @@ const menuButtonsMap: buttonMapType[] = [
   },
   {
     className: ["thema"],
+    id: "thema-button",
     imageClass: ["sun on", "moon off"],
     fileName: ["sunny.png", "moon.png"],
   },
