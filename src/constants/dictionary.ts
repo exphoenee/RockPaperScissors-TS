@@ -39,7 +39,7 @@ const dictionary: dictionaryType = {
     scissorsT: "scissors",
     lizardT: "lizard",
     spockT: "Spock",
-    gameRules: "Game rules",
+    rulesTitle: "Game rules",
     rulesDesc:
       'Use the arrows to set your threw,<br />then click to "check" to start the game!',
     beats: "beats",
@@ -72,7 +72,7 @@ const dictionary: dictionaryType = {
     scissors: "Schere",
     lizard: "Echse",
     spock: "Spock",
-    gameRules: "Spielregeln",
+    rulesTitle: "Spielregeln",
     paperT: "Papier",
     scissorsT: "Schere",
     lizardT: "Echse",
@@ -114,7 +114,7 @@ const dictionary: dictionaryType = {
     scissorsT: "ollót",
     lizardT: "gyíkot",
     spockT: "Spockot",
-    gameRules: "Játékszabályok",
+    rulesTitle: "Játékszabályok",
     rulesDesc:
       'A nyilakkal a válaszd ki amit mutatni akarsz,<br />majd kattintson a "pipa" gombra a játék indításához!',
     beats: "üti",
