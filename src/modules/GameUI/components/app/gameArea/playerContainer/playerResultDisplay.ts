@@ -4,7 +4,6 @@ const playerResultDisplay = (user: string) => {
     text: "0",
     attrs: {
       class: `${user}-wins`,
-      dataset: { dictionary: `${user}Wins` },
     },
   };
 };
