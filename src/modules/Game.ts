@@ -97,83 +97,6 @@ class Game {
     this.appSettings.developerMode = !!hostedLocally;
   }
 
-  private getDomELements() {
-    this.elem = appElements.reduce((acc: elemType, el: appElementType) => {
-      if (el.id) {
-        const elem = document.getElementById(el.id);
-        if (elem) {
-          acc.single = { ...acc.single, [el.name]: elem };
-          acc.single[el.name as keyof appElementType] = elem;
-        } else throw new Error(`Element ${el.name} is missing!`);
-      } else if (el.class) {
-        const elem = document.querySelector(el.class);
-        if (elem) {
-          acc.single = { ...acc.single, [el.name]: elem };
-          acc.single[el.name as keyof appElementType] = elem;
-        } else throw new Error(`Element ${el.name} is missing!`);
-      } else if (el.classes) {
-        const elems = Array.from(document.querySelectorAll(el.classes));
-        if (elems) {
-          acc.multi = { ...acc.multi, [el.name]: elems };
-          acc.multi[el.name as keyof appElementType] = elems;
-        } else throw new Error(`Element ${el.name} is missing!`);
-      } else {
-        console.error(el.name, "is missing!");
-      }
-      return acc;
-    }, {} as elemType);
-  }
-
-  private initializeImages() {
-    const images: HTMLImageElement[] = Array.from(
-      document.querySelectorAll(".loader-image") as NodeListOf<HTMLImageElement>
-    );
-    const loaderImage = document.getElementById(
-      "#loader-image"
-    ) as HTMLImageElement;
-    this.appSettings.imageCount = images.length;
-    images.forEach((image: HTMLImageElement) => {
-      image.src = loaderImage?.src || "";
-      this.asynImageLoader(image);
-    });
-  }
-
-  private asynImageLoader(img: HTMLImageElement) {
-    const fileName = img.dataset.filename;
-
-    const url = `${this.appSettings.baseURL}/${
-      this.appSettings.developerMode ? "" : "RockPaperScissors/"
-    }${fileName}`;
-
-    fileName &&
-      fetch(url).then((response) =>
-        response.blob().then((blob) => {
-          img.src = URL.createObjectURL(blob);
-          img.alt = `image: ${fileName.split(".")[0]}`;
-          img.classList.remove("loader-image");
-          img.addEventListener(
-            "load",
-            () => {
-              this.appSettings.imageLoaded++;
-              if (
-                this.appSettings.imageLoaded === this.appSettings.imageCount
-              ) {
-                this.elem.single.app.classList.remove("off");
-                this.elem.single.loaderScreen.classList.add("off");
-                this.elem.single.loaderScreen.addEventListener(
-                  "transitionend",
-                  () =>
-                    this.elem.single.loaderScreen instanceof Element &&
-                    this.elem.single.loaderScreen.remove()
-                );
-              }
-            },
-            { once: true }
-          );
-        })
-      );
-  }
-
   private initTitleChange() {
     setInterval(() => {
       const choice = this.rules[Math.floor(Math.random() * this.rules.length)];
@@ -291,149 +214,6 @@ class Game {
           }
         }, 10 * (this.computerRollLength + 1 - i) * (this.computerRollLength + 1 - i));
       }
-    }
-  }
-
-  private changeThema() {
-    const changeDark = [
-      this.elem.single.app.parentElement,
-      this.elem.single.app,
-      this.elem.single.rulesModal,
-      this.elem.single.resultModal,
-      this.elem.single.languageModal,
-      this.elem.single.licensingModal,
-      this.elem.single.statisticsModal,
-      this.elem.single.settings,
-      this.elem.single.statisticsInput,
-    ];
-
-    changeDark.forEach((elem) => elem && elem.classList.toggle("dark"));
-    if (this.elem.single.app) {
-      localStorage.setItem("darkmode", this.appSettings.thema);
-    }
-
-    Array.from(this.elem.single.themaButton.children).forEach(
-      (icon: Element) => {
-        icon?.classList?.toggle("on");
-        icon?.classList?.toggle("off");
-      }
-    );
-  }
-
-  private showMenu() {
-    this.elem.single.settings.classList.toggle("out");
-  }
-
-  private initButton(button: HTMLButtonElement, cb: () => void) {
-    button.addEventListener("click", (e) => {
-      e.preventDefault();
-      cb();
-    });
-  }
-
-  private initializeButtons() {
-    const buttonActions = [
-      {
-        button: this.elem.single.nextButton,
-        action: this.nextThrew.bind(this),
-      },
-      {
-        button: this.elem.single.prevButton,
-        action: this.prevThrew.bind(this),
-      },
-      {
-        button: this.elem.single.startButton,
-        action: this.startGame.bind(this),
-      },
-      {
-        button: this.elem.single.settingsButton,
-        action: this.showMenu.bind(this),
-      },
-      {
-        button: this.elem.single.themaButton,
-        action: this.changeThema.bind(this),
-      },
-    ];
-
-    buttonActions.forEach(({ button, action }) =>
-      this.initButton(button as HTMLButtonElement, action)
-    );
-  }
-
-  private initModal(activator: HTMLButtonElement[], modal: Element) {
-    this.makeArray(activator).forEach((elem) => {
-      elem.addEventListener("click", () => {
-        const modalShowed = modal.classList.contains("show");
-        this.closeAllModals();
-        modalShowed
-          ? modal.classList.remove("show")
-          : modal.classList.add("show");
-      });
-    });
-  }
-
-  private closeAllModals() {
-    this.elem.multi.allModals.forEach((modal: Element) =>
-      modal.classList.remove("show")
-    );
-  }
-
-  private initCloseButtons() {
-    this.elem.multi.allCloseButtons.forEach((button) =>
-      button.addEventListener("click", () => this.closeAllModals())
-    );
-  }
-
-  private initializeModals() {
-    /* Modal initialization */
-    this.modalMap = [
-      {
-        activator: [this.elem.single.rulesButton as HTMLButtonElement],
-        modal: this.elem.single.rulesModal,
-      },
-      {
-        activator: [this.elem.single.langButton as HTMLButtonElement],
-        modal: this.elem.single.languageModal,
-      },
-      {
-        activator: [this.elem.single.licensingButton as HTMLButtonElement],
-        modal: this.elem.single.licensingModal,
-      },
-      {
-        activator: [this.elem.single.statisticsButton as HTMLButtonElement],
-        modal: this.elem.single.statisticsModal,
-      },
-    ];
-
-    this.initCloseButtons();
-
-    this.modalMap.forEach(({ activator, modal }) => {
-      this.initModal(activator, modal);
-    });
-
-    this.elem.multi.langChange.forEach((lc) => {
-      lc.addEventListener("click", (e) => {
-        e.preventDefault();
-
-        interface MyElement extends HTMLElement {
-          dataset: {
-            [key: string]: string;
-          };
-        }
-
-        const modlc = lc as MyElement;
-
-        this.appSettings.language = modlc.dataset?.lang || "hu";
-        this.updateLang();
-      });
-    });
-  }
-
-  private makeArray<T>(arr: T | T[]): T[] {
-    if (Array.isArray(arr)) {
-      return arr;
-    } else {
-      return [arr];
     }
   }
 
@@ -634,12 +414,6 @@ class Game {
     }
   }
 
-  private getTitle() {
-    return this.rules
-      .map((threw: ruleType) => this.getTranslation(threw.value))
-      .join(", ");
-  }
-
   private updateLang() {
     this.generateRules();
     this.createStatistics();
@@ -655,22 +429,11 @@ class Game {
     localStorage.setItem("statistics", JSON.stringify(this.statistics));
   }
 
-  private initilizeThema() {
-    if (this.appSettings.thema === "true") {
-      this.changeThema();
-    }
-  }
-
   private initialize() {
     window.onload = () => {
-      this.initializeImages();
       /* DOM elements */
-      this.getDomELements();
 
       this.checkRunsLocal();
-      this.initilizeThema();
-      this.initializeButtons();
-      this.initializeModals();
       this.initStatMode();
 
       this.updateLang();
