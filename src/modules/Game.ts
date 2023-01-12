@@ -97,19 +97,6 @@ class Game {
     this.appSettings.developerMode = !!hostedLocally;
   }
 
-  private initTitleChange() {
-    setInterval(() => {
-      const choice = this.rules[Math.floor(Math.random() * this.rules.length)];
-
-      const choiceName = this.getTranslation(choice.value);
-      document.title =
-        choiceName[0].toUpperCase() + choiceName.substring(1) + "!";
-
-      const favicon = this.elem.single.favicon as HTMLImageElement;
-      favicon.src = `./media/${choice.value}.png`;
-    }, 1000);
-  }
-
   private initStatMode() {
     const statMode = localStorage.getItem("statisticMode");
     if (statMode) {
