@@ -276,8 +276,7 @@ export default class GameUI {
     setThema(newThema);
 
     Array.from(this.themaButton.children).forEach((elem) => {
-      elem.classList.toggle("on");
-      elem.classList.toggle("off");
+      ["on", "off"].forEach((className) => elem.classList.toggle(className));
     });
 
     const themaNames = Object.values(themas).filter(
