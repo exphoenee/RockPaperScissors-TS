@@ -20,6 +20,7 @@ import setThema from "../../utils/setThema";
 import setLang from "../../utils/setLang";
 import setStatMode from "../../utils/setStatMode";
 import setGameMode from "../../utils/setGameMode";
+import getGameMode from "../../utils/getGameMode";
 import getLang from "../../utils/getLang";
 
 /* enums */
@@ -65,6 +66,7 @@ export default class GameUI {
 
   private rules: any; // TODO add type here
   private lang: string;
+  private playing: string;
 
   constructor(props?: GameUIType) {
     this.app = {} as Element;
@@ -96,6 +98,8 @@ export default class GameUI {
     this.opponentImages = [] as HTMLImageElement[];
     this.dictionary = [{} as Element];
     this.selects = [] as HTMLSelectElement[];
+
+    this.playing = getGameMode();
 
     this.rules =
       games.find((game) => game.name === this.playing)?.rules || games[0].rules;
@@ -213,12 +217,11 @@ export default class GameUI {
   private initModals = () => {
     this.modalButtons.forEach((elem) =>
       elem.addEventListener("click", () => {
-        this.modals.forEach((modal) => modal.classList.remove("show"));
-        this.modals
-          .filter(
-            (modal) => modal.id === (elem.getAttribute("data-target") as string)
-          )[0]
-          .classList.toggle("show");
+        this.modals.forEach((modal) => {
+          modal.id === (elem.getAttribute("data-target") as string)
+            ? modal.classList.toggle("show")
+            : modal.classList.remove("show");
+        });
       })
     );
 
@@ -232,16 +235,28 @@ export default class GameUI {
   /* Language */
   private generateTitle() {
     return this.rules
-      .map((threw: ruleType) => this.getTranslation(threw.value))
+      .map(
+        (threw: ruleType) =>
+          dictionary[this.lang as keyof typeof dictionary][threw.value]
+      )
       .join(", ");
   }
 
+  private updateTitle = () => {
+    this.mainTitle.innerHTML = this.generateTitle();
+  };
+
   private updateLang = () => {
-    const lang = getState(appStates.LANG);
-    this.dictionary.forEach((elem) => {
+    const otherElse = (elem: HTMLElement) => {
       const key = elem.getAttribute("data-dictionary") as string;
-      elem.innerHTML = dictionary[lang][key];
-      console.log(dictionary[lang][key]);
+      elem.innerHTML = dictionary[this.lang as keyof typeof dictionary][key];
+      console.log(dictionary[this.lang as keyof typeof dictionary][key]);
+    };
+
+    this.dictionary.forEach((elem) => {
+      elem.id === "main-title"
+        ? this.updateTitle()
+        : otherElse(elem as HTMLElement);
     });
   };
 
