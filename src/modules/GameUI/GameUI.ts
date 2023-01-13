@@ -67,6 +67,7 @@ export default class GameUI {
   private rules: any; // TODO add type here
   private lang: string;
   private playing: string;
+  private current: number;
 
   constructor(props?: GameUIType) {
     this.app = {} as Element;
@@ -105,6 +106,8 @@ export default class GameUI {
       games.find((game) => game.name === this.playing)?.rules || games[0].rules;
 
     this.lang = getLang();
+
+    this.current = 0;
 
     this.creaeUI();
     this.getDomELements();
@@ -150,10 +153,10 @@ export default class GameUI {
       "#result-container"
     ) as Element;
     this.userImages = Array.from(
-      document.querySelectorAll(".image-container.user")
+      document.querySelectorAll(".image.user")
     ) as HTMLImageElement[];
     this.opponentImages = Array.from(
-      document.querySelectorAll(".image-container.opponent")
+      document.querySelectorAll(".image.opponent")
     ) as HTMLImageElement[];
     this.dictionary = Array.from(
       document.querySelectorAll("[data-dictionary]")
@@ -318,24 +321,59 @@ export default class GameUI {
 
   /* Game */
   private startGame = () => {
-    console.log("gameStarted");
+    const possibilties = this.rules.length;
+    const choose = Math.floor(Math.random() * possibilties);
+    const animSteps = Math.floor(Math.random() * 7) + 8;
+
+    let anim = new Array(animSteps).fill(0);
+    let prevNumber = -1;
+    for (let i = 0; i < animSteps; i++) {
+      let nextNumber = Math.floor(Math.random() * possibilties);
+      while (nextNumber === prevNumber) {
+        nextNumber = Math.floor(Math.random() * possibilties);
+      }
+      prevNumber = nextNumber;
+      anim[i] = nextNumber;
+    }
+    anim.push(choose);
+
+    let delay = 200;
+    for (let i = 0; i < anim.length; i++) {
+      console.log(delay);
+      setTimeout(() => this.stepImage("opponent", anim[i]), delay);
+      delay *= 1.3;
+    }
   };
 
-  private stepImage = (direction: "next" | "prev") => {
-    console.log(direction);
+  private stepImage = (user: "user" | "opponent", next: number) => {
+    const images = user === "user" ? this.userImages : this.opponentImages;
+    const current = this.current;
+
+    images[current].classList.add("hidden");
+    images[current].classList.remove("showen");
+    images[next].classList.add("showen");
+    images[next].classList.remove("hidden");
+
+    this.current = next;
+  };
+
+  private calculateIndex = (index: number, direction: "next" | "prev") => {
+    const allImages = this.rules.length;
+
+    return direction === "next"
+      ? (index + 1) % allImages
+      : (index - 1 + allImages) % allImages;
   };
 
   private initGameButtons = () => {
-    this.startButton.addEventListener("click", () => {
-      this.startGame();
-    });
+    this.startButton.addEventListener("click", () => this.startGame());
 
-    this.nextButton.addEventListener("click", () => {
-      this.stepImage("next");
-    });
+    this.nextButton.addEventListener("click", () =>
+      this.stepImage("user", this.calculateIndex(this.current, "next"))
+    );
 
-    this.prevButton.addEventListener("click", () => {
-      this.stepImage("prev");
-    });
+    this.prevButton.addEventListener("click", () =>
+      this.stepImage("user", this.calculateIndex(this.current, "prev"))
+    );
   };
 }
