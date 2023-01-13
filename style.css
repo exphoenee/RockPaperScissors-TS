@@ -231,12 +231,16 @@ p {
 }
 
 .image-container {
-  height: 100%;
-  overflow: hidden;
+  width: 240px;
+  height: 240px;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
 .image-container img {
+  position: absolute;
   width: 240px;
 }
 
@@ -249,11 +253,30 @@ img {
   user-drag: none;
 }
 
+.hidden {
+  transform: scale(0.2)  translateY(10%) rotate(360deg);
+  -webkit-filter: blur(25px);
+          filter: blur(25px);
+  opacity: 0;
+  transition: all 0.15s ease-in-out;
+}
+
+.showen {
+  transform: scale(1) translateY(0px) rotate(0deg);
+  -webkit-filter: blur(0px);
+          filter: blur(0px);
+  opacity: 1;
+  transition: all 0.3s ease-in-out;
+}
+
 .vs-image-container {
-  margin: 0 30px;
+  width: 240px;
+  height: 240px;
+  margin: 0 30px
 }
 
 .vs-image-container img {
+  width: 100%;
   margin-top: 8rem;
 }
 
@@ -314,10 +337,6 @@ img {
 .prev img {
   transform: rotate(180deg);
   transform-origin: center;
-}
-
-.hidden {
-  display: none !important;
 }
 
 .modal {
