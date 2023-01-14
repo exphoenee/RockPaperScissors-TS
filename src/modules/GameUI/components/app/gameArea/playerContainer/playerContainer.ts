@@ -3,11 +3,7 @@ import playerResultDisplay from "./playerResultDisplay";
 import playerImageContainer from "./playerImageContainer";
 import gameControls from "./gameControls";
 
-type playerContainerType = {
-  user: string;
-};
-
-const playerContainer = ({ user }: playerContainerType) => {
+const playerContainer = (user: string) => {
   return {
     tag: "div",
     attrs: {
