@@ -7,7 +7,7 @@ import appMap from "./components/app/appMap";
 
 /* types */
 import elemType from "../../types/elem.type";
-import { ruleType } from "../../types/game.type";
+import gameType, { ruleType } from "../../types/game.type";
 
 /* constants */
 import dictionary, { dictionaryType } from "../../constants/dictionary";
@@ -65,16 +65,13 @@ export default class GameUI {
   private themable: Element[];
   private selects: HTMLSelectElement[];
 
-  private rules: any; // TODO add type here
+  private rules: gameType;
   private lang: string;
   private playing: string;
   private userChoice: number;
   private opponentChoice: number;
 
-  constructor(props?: GameUIType) {
-    this.user = props?.user || "user";
-    this.opponent = props?.opponent || "opponent";
-
+  constructor() {
     this.app = {} as Element;
     this.favicon = {} as HTMLLinkElement;
 
