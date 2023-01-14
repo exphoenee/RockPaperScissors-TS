@@ -186,6 +186,22 @@ export default class GameUI {
     );
   }
 
+  public setUserWins(value: number) {
+    this.userWins.textContent = String(value);
+  }
+
+  public setOpponentWins(value: number) {
+    this.opponentWins.textContent = String(value);
+  }
+
+  public setUserName(name: string) {
+    this.userNameElem.textContent = name;
+  }
+
+  public setOpponentName(name: string) {
+    this.opponentNameElem.textContent = name;
+  }
+
   private initialize = () => {
     this.initSettings();
     this.initModals();
@@ -196,24 +212,22 @@ export default class GameUI {
     this.initTitleChange();
     this.initPlayersChoices();
     this.initPlayersName();
+    this.initScores();
   };
 
-  initPlayersChoices() {
+  private initPlayersChoices() {
     this.stepImage("user", this.userChoice);
     this.stepImage("opponent", this.opponentChoice);
+  }
+
+  private initScores() {
+    this.setUserWins(0);
+    this.setOpponentWins(0);
   }
 
   private initPlayersName() {
     this.setUserName("You");
     this.setOpponentName("Computer");
-  }
-
-  public setUserName(name: string) {
-    this.userNameElem.textContent = name;
-  }
-
-  public setOpponentName(name: string) {
-    this.opponentNameElem.textContent = name;
   }
 
   /* Fancy title and favicon change */
