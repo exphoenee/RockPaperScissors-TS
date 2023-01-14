@@ -67,7 +67,8 @@ export default class GameUI {
   private rules: any; // TODO add type here
   private lang: string;
   private playing: string;
-  private current: number;
+  private userChoice: number;
+  private opponentChoice: number;
 
   constructor(props?: GameUIType) {
     this.app = {} as Element;
@@ -107,7 +108,7 @@ export default class GameUI {
 
     this.lang = getLang();
 
-    this.current = 0;
+    this.userChoice = 0;
 
     this.creaeUI();
     this.getDomELements();
@@ -347,14 +348,14 @@ export default class GameUI {
 
   private stepImage = (user: "user" | "opponent", next: number) => {
     const images = user === "user" ? this.userImages : this.opponentImages;
-    const current = this.current;
+    const current = this.userChoice;
 
     images[current].classList.add("hidden");
     images[current].classList.remove("showen");
     images[next].classList.add("showen");
     images[next].classList.remove("hidden");
 
-    this.current = next;
+    this.userChoice = next;
   };
 
   private calculateIndex = (index: number, direction: "next" | "prev") => {
@@ -369,11 +370,11 @@ export default class GameUI {
     this.startButton.addEventListener("click", () => this.startGame());
 
     this.nextButton.addEventListener("click", () =>
-      this.stepImage("user", this.calculateIndex(this.current, "next"))
+      this.stepImage("user", this.calculateIndex(this.userChoice, "next"))
     );
 
     this.prevButton.addEventListener("click", () =>
-      this.stepImage("user", this.calculateIndex(this.current, "prev"))
+      this.stepImage("user", this.calculateIndex(this.userChoice, "prev"))
     );
   };
 }
