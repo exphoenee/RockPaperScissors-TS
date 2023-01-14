@@ -3,7 +3,7 @@ const playerResultDisplay = (user: string) => {
     tag: "p",
     text: "0",
     attrs: {
-      class: `${user}-wins`,
+      id: `${user}-wins`,
     },
   };
 };
