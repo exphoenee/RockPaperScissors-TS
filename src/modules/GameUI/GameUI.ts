@@ -131,7 +131,7 @@ export default class GameUI {
   private creaeUI = () => {
     domelemjs(loaderScreenMap);
     domelemjs(settingsMap);
-    domelemjs(appMap({ user: this.user, opponent: this.opponent }));
+    domelemjs(appMap());
   };
 
   private getDomELements() {
@@ -198,11 +198,25 @@ export default class GameUI {
     this.initGameButtons();
     this.initTitleChange();
     this.initPlayersChoices();
+    this.initPlayersName();
   };
 
   initPlayersChoices() {
     this.stepImage("user", this.userChoice);
     this.stepImage("opponent", this.opponentChoice);
+  }
+
+  initPlayersName() {
+    this.setPlayerName("user", "You");
+    this.setPlayerName("opponent", "Computer");
+  }
+
+  setPlayerName(player: "user" | "opponent", name: string) {
+    if (player === "user") {
+      this.userName.textContent = name;
+    } else {
+      this.opponentName.textContent = name;
+    }
   }
 
   /* Fancy title and favicon change */
@@ -321,7 +335,9 @@ export default class GameUI {
 
       const themaIndex = themaDate.findIndex(([_, value]) => value === thema);
       const newThemaId = themaDate[(themaIndex + 1) % nrOfTemas];
-      const newThema: string = themas[newThemaId[0]] as string;
+      const newThema: string = themas[
+        newThemaId[0] as keyof typeof themas
+      ] as string;
 
       this.setUIThema(newThema);
     });
