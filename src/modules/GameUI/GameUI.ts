@@ -48,8 +48,8 @@ export default class GameUI {
   private favicon: HTMLLinkElement;
   private statisticsMode: HTMLSelectElement;
   private gameMode: HTMLSelectElement;
-  private userName: Element;
-  private opponentName: Element;
+  private userNameElem: Element;
+  private opponentNameElem: Element;
   private opponentWins: Element;
   private userWins: Element;
   private mainTitle: Element;
@@ -90,8 +90,8 @@ export default class GameUI {
     this.statisticsMode = {} as HTMLSelectElement;
     this.gameMode = {} as HTMLSelectElement;
 
-    this.userName = {} as Element;
-    this.opponentName = {} as Element;
+    this.userNameElem = {} as Element;
+    this.opponentNameElem = {} as Element;
     this.opponentWins = {} as Element;
     this.userWins = {} as Element;
 
@@ -150,8 +150,8 @@ export default class GameUI {
       "#statistics-mode"
     ) as HTMLSelectElement;
     this.gameMode = document.querySelector("#game-mode") as HTMLSelectElement;
-    this.userName = document.querySelector("#user-name") as Element;
-    this.opponentName = document.querySelector("#opponent-name") as Element;
+    this.userNameElem = document.querySelector("#user-name") as Element;
+    this.opponentNameElem = document.querySelector("#opponent-name") as Element;
     this.userWins = document.querySelector("#user-wins") as Element;
     this.opponentWins = document.querySelector("#opponent-wins") as Element;
     this.mainTitle = document.querySelector("#main-title") as Element;
@@ -206,17 +206,17 @@ export default class GameUI {
     this.stepImage("opponent", this.opponentChoice);
   }
 
-  initPlayersName() {
-    this.setPlayerName("user", "You");
-    this.setPlayerName("opponent", "Computer");
+  private initPlayersName() {
+    this.setUserName("You");
+    this.setOpponentName("Computer");
   }
 
-  setPlayerName(player: "user" | "opponent", name: string) {
-    if (player === "user") {
-      this.userName.textContent = name;
-    } else {
-      this.opponentName.textContent = name;
-    }
+  public setUserName(name: string) {
+    this.userNameElem.textContent = name;
+  }
+
+  public setOpponentName(name: string) {
+    this.opponentNameElem.textContent = name;
   }
 
   /* Fancy title and favicon change */
@@ -268,7 +268,7 @@ export default class GameUI {
     );
   };
 
-  /* Language */
+  /* Language update */
   private generateTitle() {
     return this.rules
       .map(
@@ -296,6 +296,7 @@ export default class GameUI {
     });
   };
 
+  /* Language settings */
   private initLangButtons = () => {
     this.languageButtons.forEach((elem) => {
       elem.addEventListener("click", () => {
