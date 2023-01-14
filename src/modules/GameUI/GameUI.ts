@@ -7,6 +7,7 @@ import appMap from "./components/app/appMap";
 
 /* types */
 import elemType from "../../types/elem.type";
+import { ruleType } from "../../types/game.type";
 
 /* constants */
 import dictionary, { dictionaryType } from "../../constants/dictionary";
@@ -71,30 +72,40 @@ export default class GameUI {
   private opponentChoice: number;
 
   constructor(props?: GameUIType) {
-    this.app = {} as Element;
     this.user = props?.user || "user";
     this.opponent = props?.opponent || "opponent";
+
+    this.app = {} as Element;
+    this.favicon = {} as HTMLLinkElement;
+
     this.modals = [] as HTMLElement[];
     this.modalButtons = [] as HTMLElement[];
     this.closeButtons = [] as HTMLElement[];
+
     this.loaderScreen = {} as Element;
+
     this.settings = {} as Element;
     this.settingsButton = {} as Element;
     this.languageButtons = [] as Element[];
-    this.favicon = {} as HTMLLinkElement;
     this.statisticsMode = {} as HTMLSelectElement;
     this.gameMode = {} as HTMLSelectElement;
+
     this.userName = {} as Element;
     this.opponentName = {} as Element;
     this.opponentWins = {} as Element;
     this.userWins = {} as Element;
+
     this.mainTitle = {} as Element;
+
     this.startButton = {} as Element;
     this.nextButton = {} as Element;
     this.prevButton = {} as Element;
+
     this.themaButton = {} as Element;
     this.themable = [] as Element[];
+
     this.statisticsTable = {} as Element;
+
     this.resultContainer = {} as Element;
     this.userImages = [] as HTMLImageElement[];
     this.opponentImages = [] as HTMLImageElement[];
@@ -109,6 +120,7 @@ export default class GameUI {
     this.lang = getLang();
 
     this.userChoice = 0;
+    this.opponentChoice = 0;
 
     this.creaeUI();
     this.getDomELements();
@@ -185,7 +197,13 @@ export default class GameUI {
     this.initStatistics();
     this.initGameButtons();
     this.initTitleChange();
+    this.initPlayersChoices();
   };
+
+  initPlayersChoices() {
+    this.stepImage("user", this.userChoice);
+    this.stepImage("opponent", this.opponentChoice);
+  }
 
   /* Fancy title and favicon change */
   private initTitleChange() {
@@ -303,7 +321,7 @@ export default class GameUI {
 
       const themaIndex = themaDate.findIndex(([_, value]) => value === thema);
       const newThemaId = themaDate[(themaIndex + 1) % nrOfTemas];
-      const newThema = themas[newThemaId[0]] as string;
+      const newThema: string = themas[newThemaId[0]] as string;
 
       this.setUIThema(newThema);
     });
