@@ -2,12 +2,9 @@ import imageMap from "../../../common/imageMap";
 import games from "../../../../../../constants/games";
 import ruleType from "../../../../../../types/ruleType";
 import getGameMode from "../../../../../../utils/getGameMode";
-import { gameNames } from "../../../../../../types/gameType";
 
-const gameImages = () => {
+export const gameImages = () => {
   const gameMode = getGameMode();
-
-  console.log(gameMode);
 
   const thisGame = games.find((game) => game.name === gameMode);
 
@@ -29,6 +26,7 @@ const playerImageContainer = (user: string) => {
     tag: "div",
     attrs: {
       class: `${user} image-container`,
+      dataset: { user: user },
     },
     children: gameImages().map(({ alt, fileName }, i) => {
       return imageMap({
