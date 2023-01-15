@@ -23,6 +23,7 @@ import getLang from "../../utils/getLang";
 
 /* enums */
 import themas from "./constants/themas";
+import { gameNames } from "../../types/gameType";
 
 export type GameUIType = {
   user?: string;
@@ -54,6 +55,7 @@ export default class GameUI {
   private nextButton: HTMLButtonElement;
   private prevButton: HTMLButtonElement;
   private themaButton: HTMLButtonElement;
+  private gameModeButton: HTMLButtonElement;
   private statisticsTable: Element;
   private resultContainer: Element;
   private userImages: HTMLImageElement[];
@@ -115,6 +117,9 @@ export default class GameUI {
     ) as HTMLButtonElement;
     this.themaButton = document.querySelector(
       "#thema-button"
+    ) as HTMLButtonElement;
+    this.gameModeButton = document.querySelector(
+      "#gamemode-button"
     ) as HTMLButtonElement;
     this.statisticsTable = document.querySelector(
       "#statistics-table"
@@ -178,6 +183,7 @@ export default class GameUI {
     this.initModals();
     this.initLangButtons();
     this.initTheming();
+    this.initGameMode();
     this.initStatistics();
     this.initGameButtons();
     this.initTitleChange();
@@ -327,6 +333,27 @@ export default class GameUI {
       ] as string;
 
       this.setUIThema(newThema);
+    });
+  };
+
+  /* gameMode */
+  private initGameMode = () => {
+    this.gameModeButton.addEventListener("click", () => {
+      const gamemode = getGameMode();
+
+      const gameDate = Object.entries(gameNames);
+      const nrOfgameModes = gameDate.length;
+
+      const gameModeIndex = gameDate.findIndex(
+        ([_, value]) => value === gamemode
+      );
+
+      const newGameModeId = gameDate[(gameModeIndex + 1) % nrOfgameModes];
+      const newGameMode: string = gameNames[
+        newGameModeId[0] as keyof typeof gameNames
+      ] as string;
+
+      setGameMode(newGameMode);
     });
   };
 
