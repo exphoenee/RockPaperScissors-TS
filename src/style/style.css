@@ -64,7 +64,7 @@ table {
 }
 
 #settings.closed {
-  transform: translate(-95%, -50%);
+  transform: translate(-90%, -50%);
   opacity: 0.2;
 }
 
@@ -73,7 +73,7 @@ table {
 }
 
 #settings.closed:hover {
-  transform: translate(-80%, -50%);
+  transform: translate(-83%, -50%);
   opacity: 0.6;
 }
 
