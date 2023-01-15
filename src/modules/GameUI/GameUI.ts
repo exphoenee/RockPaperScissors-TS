@@ -356,8 +356,6 @@ export default class GameUI {
       ["on", "off"].forEach((className) => elem.classList.toggle(className));
     });
 
-    console.log(this.imageContainer);
-
     this.imageContainer.forEach((userContainer) => {
       const user = userContainer.getAttribute("data-user") as string;
 
@@ -372,7 +370,16 @@ export default class GameUI {
           parent: userContainer,
         });
       });
+      user === "user" &&
+        ((this.userImages = Array.from(
+          userContainer.children as HTMLCollectionOf<HTMLImageElement>
+        )) as HTMLImageElement[]);
+      user === "opponent" &&
+        ((this.opponentImages = Array.from(
+          userContainer.children as HTMLCollectionOf<HTMLImageElement>
+        )) as HTMLImageElement[]);
 
+      console.log(this.userImages);
     });
 
     this.updateTitle();
