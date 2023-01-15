@@ -6,8 +6,7 @@ import settingsMap from "./components/settings/settingsMap";
 import appMap from "./components/app/appMap";
 
 /* types */
-import gameType from "../../types/game.type";
-import ruleType from "../../types/rule.type";
+import ruleType from "../../types/ruleType";
 
 /* constants */
 import dictionary, { dictionaryType } from "../../constants/dictionary";
@@ -63,7 +62,7 @@ export default class GameUI {
   private themable: Element[];
   private selects: HTMLSelectElement[];
 
-  private rules: gameType;
+  private rules: ruleType[];
   private lang: string;
   private playing: string;
   private userChoice: number;
@@ -75,8 +74,6 @@ export default class GameUI {
 
     this.rules =
       games.find((game) => game.name === this.playing)?.rules || games[0].rules;
-
-    console.log(this.rules);
 
     this.lang = getLang();
 
@@ -195,10 +192,6 @@ export default class GameUI {
     setInterval(() => {
       const choice: ruleType =
         this.rules[Math.floor(Math.random() * this.rules.length)];
-
-      console.log(choice instanceof ruleType);
-
-      console.log(choice);
 
       if (choice?.value) {
         const choiceName =
@@ -335,6 +328,8 @@ export default class GameUI {
 
   /* Game */
   private startGame = () => {
+    this.freezeUI = true;
+
     const possibilties = this.rules.length;
     const choose = Math.floor(Math.random() * possibilties);
     const animSteps = Math.floor(Math.random() * 7) + 8;
@@ -372,7 +367,7 @@ export default class GameUI {
   };
 
   private calculateIndex = (index: number, direction: "next" | "prev") => {
-    const allImages = this.rules.length;
+    const allImages = games.length;
 
     return direction === "next"
       ? (index + 1) % allImages
