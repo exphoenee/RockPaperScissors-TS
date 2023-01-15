@@ -1,6 +1,7 @@
-import { gameNames, gameType } from "../types/game.type";
+import { gameNames } from "../types/game.type";
+import gameType from "../types/game.type";
 
-const games: gameType = [
+const games: gameType[] = [
   {
     name: gameNames.CLASSIC,
     icon: "rock-paper-scissors.png",
