@@ -355,10 +355,18 @@ export default class GameUI {
       ["on", "off"].forEach((className) => elem.classList.toggle(className));
     });
 
-    this.imageContainer.forEach((userContainer) => {
+
+    this.imageContainer.forEach((userContainer: HTMLElement) => {
+      userContainer.classList.add("disabled");
+      userContainer.addEventListener("transitionend", () =>
+        userContainer.classList.remove("disabled")
+      );
+
       const user = userContainer.getAttribute("data-user") as string;
 
-      userContainer.innerHTML = "";
+      Array.from(userContainer.children).forEach((elem) => {
+        elem.remove();
+      });
 
       gameImages(user, userContainer);
 
