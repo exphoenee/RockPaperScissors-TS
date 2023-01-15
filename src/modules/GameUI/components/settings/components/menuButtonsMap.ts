@@ -28,6 +28,12 @@ const menuButtonsMap: buttonMapType[] = [
     imageClass: ["sun on", "moon off"],
     fileName: ["sunny.png", "moon.png"],
   },
+  {
+    className: ["gamemode"],
+    id: "gamemode-button",
+    imageClass: ["classic on", "bbt off"],
+    fileName: ["classic.png", "bbt.png"],
+  },
 ];
 
 export default menuButtonsMap;
