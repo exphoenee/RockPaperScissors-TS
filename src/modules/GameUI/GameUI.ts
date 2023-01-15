@@ -6,16 +6,13 @@ import settingsMap from "./components/settings/settingsMap";
 import appMap from "./components/app/appMap";
 
 /* types */
-import elemType from "../../types/elem.type";
 import gameType, { ruleType } from "../../types/game.type";
 
 /* constants */
 import dictionary, { dictionaryType } from "../../constants/dictionary";
-import appStates from "../../constants/appStates";
 import games from "../../constants/games";
 
 /* utils */
-import getState from "../../utils/getState";
 import getThema from "../../utils/getThema";
 import setThema from "../../utils/setThema";
 import setLang from "../../utils/setLang";
@@ -72,43 +69,6 @@ export default class GameUI {
   private opponentChoice: number;
 
   constructor() {
-    this.app = {} as Element;
-    this.favicon = {} as HTMLLinkElement;
-
-    this.modals = [] as HTMLElement[];
-    this.modalButtons = [] as HTMLElement[];
-    this.closeButtons = [] as HTMLElement[];
-
-    this.loaderScreen = {} as Element;
-
-    this.settings = {} as Element;
-    this.settingsButton = {} as Element;
-    this.languageButtons = [] as Element[];
-    this.statisticsMode = {} as HTMLSelectElement;
-    this.gameMode = {} as HTMLSelectElement;
-
-    this.userNameElem = {} as Element;
-    this.opponentNameElem = {} as Element;
-    this.opponentWins = {} as Element;
-    this.userWins = {} as Element;
-
-    this.mainTitle = {} as Element;
-
-    this.startButton = {} as Element;
-    this.nextButton = {} as Element;
-    this.prevButton = {} as Element;
-
-    this.themaButton = {} as Element;
-    this.themable = [] as Element[];
-
-    this.statisticsTable = {} as Element;
-
-    this.resultContainer = {} as Element;
-    this.userImages = [] as HTMLImageElement[];
-    this.opponentImages = [] as HTMLImageElement[];
-    this.dictionary = [{} as Element];
-    this.selects = [] as HTMLSelectElement[];
-
     this.playing = getGameMode();
 
     this.rules =
@@ -120,18 +80,7 @@ export default class GameUI {
     this.opponentChoice = 0;
 
     this.creaeUI();
-    this.getDomELements();
-    this.initialize();
-    window.onload = () => this.loaderScreen.remove();
-  }
 
-  private creaeUI = () => {
-    domelemjs(loaderScreenMap);
-    domelemjs(settingsMap);
-    domelemjs(appMap());
-  };
-
-  private getDomELements() {
     this.app = document.querySelector("#app") as Element;
     this.modals = Array.from(document.querySelectorAll(".modal"));
     this.modalButtons = Array.from(document.querySelectorAll(".modal-button"));
@@ -184,7 +133,15 @@ export default class GameUI {
       ...this.selects,
       this.settings as HTMLElement
     );
+
+    this.initialize();
   }
+
+  private creaeUI = () => {
+    domelemjs(loaderScreenMap);
+    domelemjs(settingsMap);
+    domelemjs(appMap());
+  };
 
   public setUserWins(value: number) {
     this.userWins.textContent = String(value);
@@ -213,6 +170,7 @@ export default class GameUI {
     this.initPlayersChoices();
     this.initPlayersName();
     this.initScores();
+    window.onload = () => this.loaderScreen.remove();
   };
 
   private initPlayersChoices() {
