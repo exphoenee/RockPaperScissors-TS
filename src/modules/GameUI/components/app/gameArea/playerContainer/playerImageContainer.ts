@@ -3,7 +3,7 @@ import games from "../../../../../../constants/games";
 import ruleType from "../../../../../../types/ruleType";
 import getGameMode from "../../../../../../utils/getGameMode";
 
-export const gameImages = () => {
+export const gameImages = (user: string, parent: HTMLElement) => {
   const gameMode = getGameMode();
 
   const thisGame = games.find((game) => game.name === gameMode);
@@ -17,7 +17,15 @@ export const gameImages = () => {
         alt: game?.alt,
       };
     });
-    return gameImages;
+    return gameImages.map(({ alt, fileName }, i) => {
+      return imageMap({
+        className: [i > 0 ? "hidden" : "showen", user, "image"].join(" "),
+        alt,
+        fileName,
+        id: alt,
+        parent,
+      });
+    });
   }
 };
 
@@ -28,14 +36,7 @@ const playerImageContainer = (user: string) => {
       class: `${user} image-container`,
       dataset: { user: user },
     },
-    children: gameImages().map(({ alt, fileName }, i) => {
-      return imageMap({
-        className: [i > 0 ? "hidden" : "showen", user, "image"].join(" "),
-        alt,
-        fileName,
-        id: alt,
-      });
-    }),
+    children: gameImages(user),
   };
 };
 
