@@ -1,6 +1,6 @@
 import imageMap from "../../../common/imageMap";
 import games from "../../../../../../constants/games";
-import { ruleType } from "../../../../../../types/game.type";
+import { ruleType } from "../../../../../../types/gameType";
 import getState from "../../../../../../utils/getState";
 import appStates from "../../../../../../constants/appStates";
 
