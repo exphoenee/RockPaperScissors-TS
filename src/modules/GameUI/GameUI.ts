@@ -50,10 +50,10 @@ export default class GameUI {
   private opponentWins: Element;
   private userWins: Element;
   private mainTitle: Element;
-  private startButton: Element;
-  private nextButton: Element;
-  private prevButton: Element;
-  private themaButton: Element;
+  private startButton: HTMLButtonElement;
+  private nextButton: HTMLButtonElement;
+  private prevButton: HTMLButtonElement;
+  private themaButton: HTMLButtonElement;
   private statisticsTable: Element;
   private resultContainer: Element;
   private userImages: HTMLImageElement[];
@@ -67,7 +67,9 @@ export default class GameUI {
   private playing: string;
   private userChoice: number;
   private opponentChoice: number;
-  private freezeUI: boolean = false;
+  private gameButtons: HTMLButtonElement[];
+
+  private isUIFreezed: boolean = false;
 
   constructor() {
     this.playing = getGameMode();
@@ -102,10 +104,18 @@ export default class GameUI {
     this.userWins = document.querySelector("#user-wins") as Element;
     this.opponentWins = document.querySelector("#opponent-wins") as Element;
     this.mainTitle = document.querySelector("#main-title") as Element;
-    this.startButton = document.querySelector("#start-button") as Element;
-    this.nextButton = document.querySelector("#next-button") as Element;
-    this.prevButton = document.querySelector("#prev-button") as Element;
-    this.themaButton = document.querySelector("#thema-button") as Element;
+    this.startButton = document.querySelector(
+      "#start-button"
+    ) as HTMLButtonElement;
+    this.nextButton = document.querySelector(
+      "#next-button"
+    ) as HTMLButtonElement;
+    this.prevButton = document.querySelector(
+      "#prev-button"
+    ) as HTMLButtonElement;
+    this.themaButton = document.querySelector(
+      "#thema-button"
+    ) as HTMLButtonElement;
     this.statisticsTable = document.querySelector(
       "#statistics-table"
     ) as Element;
@@ -132,6 +142,11 @@ export default class GameUI {
       ...this.selects,
       this.settings as HTMLElement,
     ] as Element[];
+    this.gameButtons = [
+      this.nextButton,
+      this.prevButton,
+      this.startButton,
+    ] as HTMLButtonElement[];
 
     this.initialize();
   }
@@ -327,12 +342,31 @@ export default class GameUI {
   };
 
   /* Game */
+  private freezeUI = () => {
+    this.isUIFreezed = true;
+    this.gameButtons.forEach((elem) => {
+      elem.classList.add("disabled");
+      elem.disabled = true;
+    });
+  };
+
+  private unfreezeUI = () => {
+    this.isUIFreezed = false;
+    this.gameButtons.forEach((elem) => {
+      elem.classList.remove("disabled");
+      elem.disabled = false;
+    });
+    console.log("unfreesed");
+  };
+
   private startGame = () => {
-    this.freezeUI = true;
+    this.freezeUI();
 
     const possibilties = this.rules.length;
-    const choose = Math.floor(Math.random() * possibilties);
+    const choosen = Math.floor(Math.random() * possibilties);
     const animSteps = Math.floor(Math.random() * 7) + 8;
+
+    console.log(choosen);
 
     let anim = new Array(animSteps).fill(0);
     let prevNumber = -1;
@@ -344,13 +378,17 @@ export default class GameUI {
       prevNumber = nextNumber;
       anim[i] = nextNumber;
     }
-    anim.push(choose);
+    anim.push(choosen);
+
+    console.log(anim);
 
     let delay = 200;
     for (let i = 0; i < anim.length; i++) {
-      console.log(delay);
-      setTimeout(() => this.stepImage("opponent", anim[i]), delay);
-      delay *= 1.3;
+      setTimeout(() => {
+        this.stepImage("opponent", anim[i]);
+        i === anim.length - 1 && this.unfreezeUI();
+      }, delay);
+      delay *= 1.15;
     }
   };
 
@@ -377,20 +415,20 @@ export default class GameUI {
   private initGameButtons = () => {
     this.startButton.addEventListener(
       "click",
-      () => !this.freezeUI && this.startGame()
+      () => !this.isUIFreezed && this.startGame()
     );
 
     this.nextButton.addEventListener(
       "click",
       () =>
-        !this.freezeUI &&
+        !this.isUIFreezed &&
         this.stepImage("user", this.calculateIndex(this.userChoice, "next"))
     );
 
     this.prevButton.addEventListener(
       "click",
       () =>
-        !this.freezeUI &&
+        !this.isUIFreezed &&
         this.stepImage("user", this.calculateIndex(this.userChoice, "prev"))
     );
   };
