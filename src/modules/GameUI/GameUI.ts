@@ -362,9 +362,8 @@ export default class GameUI {
       const user = userContainer.getAttribute("data-user") as string;
 
       userContainer.innerHTML = "";
-      console.log(userContainer);
 
-      const elements = gameImages().map(({ alt, fileName }, i) => {
+      gameImages().map(({ alt, fileName }, i) => {
         return imageMap({
           className: [i > 0 ? "hidden" : "showen", user, "image"].join(" "),
           alt,
@@ -374,7 +373,6 @@ export default class GameUI {
         });
       });
 
-      console.log(elements);
     });
 
     this.updateTitle();
