@@ -424,7 +424,6 @@ export default class GameUI {
       elem.classList.remove("disabled");
       elem.disabled = false;
     });
-    console.log("unfreesed");
   };
 
   private unfreezeUI = () => {
