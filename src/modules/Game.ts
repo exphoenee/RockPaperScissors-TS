@@ -6,12 +6,12 @@ import dictionaty, { dictionaryType } from "../constants/dictionary";
 import appElements, { appElementType } from "../constants/appElements";
 
 /* tpyes */
-import { ruleType } from "../types/game.type";
+import { ruleType } from "../types/gameType";
 import statisticsType, { gameStatisticsType } from "../types/statistics.type";
 import elemType from "../types/elem.type";
 
 /* enums */
-import { gameNames } from "../types/game.type";
+import { gameNames } from "../types/gameType";
 import { statModes } from "../types/statistics.type";
 import { usedLangs } from "../constants/dictionary";
 
