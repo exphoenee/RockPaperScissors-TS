@@ -366,8 +366,6 @@ export default class GameUI {
     const choosen = Math.floor(Math.random() * possibilties);
     const animSteps = Math.floor(Math.random() * 7) + 8;
 
-    console.log(choosen);
-
     let anim = new Array(animSteps).fill(0);
     let prevNumber = -1;
     for (let i = 0; i < animSteps; i++) {
@@ -379,8 +377,6 @@ export default class GameUI {
       anim[i] = nextNumber;
     }
     anim.push(choosen);
-
-    console.log(anim);
 
     let delay = 200;
     for (let i = 0; i < anim.length; i++) {
