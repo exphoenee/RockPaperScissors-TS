@@ -3,7 +3,9 @@ const getState = (state: string): any => {
   if (value) {
     return value; //JSON.stringify(value);
   } else {
-    throw new Error("No state found");
+    console.error(`No state: ${state} found!`);
+    // throw new Error("No state found");
+    return false;
   }
 };
 export default getState;
