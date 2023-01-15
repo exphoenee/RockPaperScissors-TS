@@ -1,11 +1,14 @@
 import imageMap from "../../../common/imageMap";
 import games from "../../../../../../constants/games";
-import { ruleType } from "../../../../../../types/gameType";
-import getState from "../../../../../../utils/getState";
-import appStates from "../../../../../../constants/appStates";
+import ruleType from "../../../../../../types/ruleType";
+import getGameMode from "../../../../../../utils/getGameMode";
+import { gameNames } from "../../../../../../types/gameType";
 
 const gameImages = () => {
-  const gameMode = getState(appStates.GAMEMODE);
+  const gameMode = getGameMode();
+
+  console.log(gameMode);
+
   const thisGame = games.find((game) => game.name === gameMode);
 
   if (!thisGame) {
