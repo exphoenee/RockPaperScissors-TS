@@ -6,7 +6,7 @@ import dictionaty, { dictionaryType } from "../constants/dictionary";
 import appElements, { appElementType } from "../constants/appElements";
 
 /* tpyes */
-import { ruleType } from "../types/gameType";
+import ruleType from "../types/ruleType";
 import statisticsType, { gameStatisticsType } from "../types/statistics.type";
 import elemType from "../types/elem.type";
 
