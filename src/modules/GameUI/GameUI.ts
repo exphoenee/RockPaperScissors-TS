@@ -6,7 +6,8 @@ import settingsMap from "./components/settings/settingsMap";
 import appMap from "./components/app/appMap";
 
 /* types */
-import gameType, { ruleType } from "../../types/game.type";
+import gameType from "../../types/game.type";
+import ruleType from "../../types/rule.type";
 
 /* constants */
 import dictionary, { dictionaryType } from "../../constants/dictionary";
@@ -67,12 +68,15 @@ export default class GameUI {
   private playing: string;
   private userChoice: number;
   private opponentChoice: number;
+  private freezeUI: boolean = false;
 
   constructor() {
     this.playing = getGameMode();
 
     this.rules =
       games.find((game) => game.name === this.playing)?.rules || games[0].rules;
+
+    console.log(this.rules);
 
     this.lang = getLang();
 
@@ -120,19 +124,17 @@ export default class GameUI {
     this.dictionary = Array.from(
       document.querySelectorAll("[data-dictionary]")
     ) as Element[];
-    this.themable = Array.from(
-      document.querySelectorAll("[data-themable]")
-    ) as Element[];
     this.selects = Array.from(
       document.querySelectorAll("select")
     ) as HTMLSelectElement[];
-    this.themable.push(
+    this.themable = [
+      ...Array.from(document.querySelectorAll("[data-themable]")),
       document.body,
       this.app,
       ...this.modals,
       ...this.selects,
-      this.settings as HTMLElement
-    );
+      this.settings as HTMLElement,
+    ] as Element[];
 
     this.initialize();
   }
@@ -191,19 +193,26 @@ export default class GameUI {
   /* Fancy title and favicon change */
   private initTitleChange() {
     setInterval(() => {
-      const choice = this.rules[Math.floor(Math.random() * this.rules.length)];
+      const choice: ruleType =
+        this.rules[Math.floor(Math.random() * this.rules.length)];
 
-      const choiceName =
-        dictionary[this.lang as keyof dictionaryType][choice.value];
+      console.log(choice instanceof ruleType);
 
-      document.title =
-        choiceName[0].toUpperCase() + choiceName.substring(1) + "!";
+      console.log(choice);
 
-      fetch(window.location.href + "/media/" + choice.image)
-        .then((res) => res.blob())
-        .then((blob) => {
-          this.favicon.href = URL.createObjectURL(blob);
-        });
+      if (choice?.value) {
+        const choiceName =
+          dictionary[this.lang as keyof dictionaryType][choice.value as string];
+
+        document.title =
+          choiceName[0].toUpperCase() + choiceName.substring(1) + "!";
+
+        fetch(window.location.href + "/media/" + choice.image)
+          .then((res) => res.blob())
+          .then((blob) => {
+            this.favicon.href = URL.createObjectURL(blob);
+          });
+      }
     }, 1000);
   }
 
@@ -371,14 +380,23 @@ export default class GameUI {
   };
 
   private initGameButtons = () => {
-    this.startButton.addEventListener("click", () => this.startGame());
-
-    this.nextButton.addEventListener("click", () =>
-      this.stepImage("user", this.calculateIndex(this.userChoice, "next"))
+    this.startButton.addEventListener(
+      "click",
+      () => !this.freezeUI && this.startGame()
     );
 
-    this.prevButton.addEventListener("click", () =>
-      this.stepImage("user", this.calculateIndex(this.userChoice, "prev"))
+    this.nextButton.addEventListener(
+      "click",
+      () =>
+        !this.freezeUI &&
+        this.stepImage("user", this.calculateIndex(this.userChoice, "next"))
+    );
+
+    this.prevButton.addEventListener(
+      "click",
+      () =>
+        !this.freezeUI &&
+        this.stepImage("user", this.calculateIndex(this.userChoice, "prev"))
     );
   };
 }
