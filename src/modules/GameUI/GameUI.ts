@@ -350,13 +350,20 @@ export default class GameUI {
     });
   };
 
-  private unfreezeUI = () => {
+  private unfreezeUICore = () => {
     this.isUIFreezed = false;
     this.gameButtons.forEach((elem) => {
       elem.classList.remove("disabled");
       elem.disabled = false;
     });
     console.log("unfreesed");
+  };
+
+  private unfreezeUI = () => {
+    const to = setTimeout(() => {
+      this.unfreezeUICore();
+      clearTimeout(to);
+    }, 500);
   };
 
   private startGame = () => {
@@ -380,9 +387,10 @@ export default class GameUI {
 
     let delay = 200;
     for (let i = 0; i < anim.length; i++) {
-      setTimeout(() => {
+      const to = setTimeout(() => {
         this.stepImage("opponent", anim[i]);
         i === anim.length - 1 && this.unfreezeUI();
+        clearTimeout(to);
       }, delay);
       delay *= 1.15;
     }
