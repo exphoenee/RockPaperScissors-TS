@@ -24,7 +24,6 @@ import getLang from "../../utils/getLang";
 /* enums */
 import options from "./constants/themas";
 import { gameNames } from "../../types/gameType";
-import imageMap from "./components/common/imageMap";
 import { gameImages } from "./components/app/gameArea/playerContainer/playerImageContainer";
 
 export type GameUIType = {
@@ -361,15 +360,8 @@ export default class GameUI {
 
       userContainer.innerHTML = "";
 
-      gameImages().map(({ alt, fileName }, i) => {
-        return imageMap({
-          className: [i > 0 ? "hidden" : "showen", user, "image"].join(" "),
-          alt,
-          fileName,
-          id: alt,
-          parent: userContainer,
-        });
-      });
+      gameImages(user, userContainer);
+
       user === "user" &&
         ((this.userImages = Array.from(
           userContainer.children as HTMLCollectionOf<HTMLImageElement>
@@ -378,8 +370,6 @@ export default class GameUI {
         ((this.opponentImages = Array.from(
           userContainer.children as HTMLCollectionOf<HTMLImageElement>
         )) as HTMLImageElement[]);
-
-      console.log(this.userImages);
     });
 
     this.updateTitle();
