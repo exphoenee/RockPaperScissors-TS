@@ -22,8 +22,10 @@ import getGameMode from "../../utils/getGameMode";
 import getLang from "../../utils/getLang";
 
 /* enums */
-import themas from "./constants/themas";
+import options from "./constants/themas";
 import { gameNames } from "../../types/gameType";
+import imageMap from "./components/common/imageMap";
+import { gameImages } from "./components/app/gameArea/playerContainer/playerImageContainer";
 
 export type GameUIType = {
   user?: string;
@@ -60,13 +62,12 @@ export default class GameUI {
   private resultContainer: Element;
   private userImages: HTMLImageElement[];
   private opponentImages: HTMLImageElement[];
+  private imageContainer: HTMLElement[];
   private dictionary: Element[];
   private themable: Element[];
   private selects: HTMLSelectElement[];
 
   private rules: ruleType[];
-  private lang: string;
-  private playing: string;
   private userChoice: number;
   private opponentChoice: number;
   private gameButtons: HTMLButtonElement[];
@@ -74,12 +75,7 @@ export default class GameUI {
   private isUIFreezed: boolean = false;
 
   constructor() {
-    this.playing = getGameMode();
-
-    this.rules =
-      games.find((game) => game.name === this.playing)?.rules || games[0].rules;
-
-    this.lang = getLang();
+    this.rules = this.getRules();
 
     this.userChoice = 0;
     this.opponentChoice = 0;
@@ -133,6 +129,9 @@ export default class GameUI {
     this.opponentImages = Array.from(
       document.querySelectorAll(".image.opponent")
     ) as HTMLImageElement[];
+    this.imageContainer = Array.from(
+      document.querySelectorAll(".image-container")
+    ) as HTMLElement[];
     this.dictionary = Array.from(
       document.querySelectorAll("[data-dictionary]")
     ) as Element[];
@@ -193,6 +192,12 @@ export default class GameUI {
     window.onload = () => this.loaderScreen.remove();
   };
 
+  private getRules() {
+    return (
+      games.find((game) => game.name === getGameMode())?.rules || games[0].rules
+    );
+  }
+
   private initPlayersChoices() {
     this.stepImage("user", this.userChoice);
     this.stepImage("opponent", this.opponentChoice);
@@ -216,7 +221,7 @@ export default class GameUI {
 
       if (choice?.value) {
         const choiceName =
-          dictionary[this.lang as keyof dictionaryType][choice.value as string];
+          dictionary[getLang() as keyof dictionaryType][choice.value as string];
 
         document.title =
           choiceName[0].toUpperCase() + choiceName.substring(1) + "!";
@@ -262,10 +267,13 @@ export default class GameUI {
 
   /* Language update */
   private generateTitle() {
-    return this.rules
+    const lang = getLang();
+    const rules = this.getRules();
+
+    return rules
       .map(
         (threw: ruleType) =>
-          dictionary[this.lang as keyof typeof dictionary][threw.value]
+          dictionary[lang as keyof typeof dictionary][threw.value]
       )
       .join(", ");
   }
@@ -277,8 +285,8 @@ export default class GameUI {
   private updateLang = () => {
     const otherElse = (elem: HTMLElement) => {
       const key = elem.getAttribute("data-dictionary") as string;
-      elem.innerHTML = dictionary[this.lang as keyof typeof dictionary][key];
-      console.log(dictionary[this.lang as keyof typeof dictionary][key]);
+      elem.innerHTML = dictionary[getLang() as keyof typeof dictionary][key];
+      console.log(dictionary[getLang() as keyof typeof dictionary][key]);
     };
 
     this.dictionary.forEach((elem) => {
@@ -308,7 +316,7 @@ export default class GameUI {
       ["on", "off"].forEach((className) => elem.classList.toggle(className));
     });
 
-    const themaNames = Object.values(themas).filter(
+    const themaNames = Object.values(options).filter(
       (name) => name !== newThema
     );
 
@@ -318,42 +326,75 @@ export default class GameUI {
     });
   }
 
+  // TODO: Refactor this
   private initTheming = () => {
     this.setUIThema(getThema());
 
     this.themaButton.addEventListener("click", () => {
       const thema = getThema();
-      const themaDate = Object.entries(themas);
+      const themaDate = Object.entries(options);
       const nrOfTemas = themaDate.length;
 
       const themaIndex = themaDate.findIndex(([_, value]) => value === thema);
       const newThemaId = themaDate[(themaIndex + 1) % nrOfTemas];
-      const newThema: string = themas[
-        newThemaId[0] as keyof typeof themas
+      const newThema: string = options[
+        newThemaId[0] as keyof typeof options
       ] as string;
+
+      console.log(newThema);
 
       this.setUIThema(newThema);
     });
   };
 
   /* gameMode */
+
+  changeGameMode(newGameMode: string) {
+    setGameMode(newGameMode);
+
+    Array.from(this.gameModeButton.children).forEach((elem) => {
+      ["on", "off"].forEach((className) => elem.classList.toggle(className));
+    });
+
+    console.log(this.imageContainer);
+
+    this.imageContainer.forEach((userContainer) => {
+      const user = userContainer.getAttribute("data-user") as string;
+
+      userContainer.innerHTML = "";
+      console.log(userContainer);
+
+      const elements = gameImages().map(({ alt, fileName }, i) => {
+        return imageMap({
+          className: [i > 0 ? "hidden" : "showen", user, "image"].join(" "),
+          alt,
+          fileName,
+          id: alt,
+          parent: userContainer,
+        });
+      });
+
+      console.log(elements);
+    });
+
+    this.updateTitle();
+  }
+
   private initGameMode = () => {
     this.gameModeButton.addEventListener("click", () => {
       const gamemode = getGameMode();
-
       const gameDate = Object.entries(gameNames);
       const nrOfgameModes = gameDate.length;
 
       const gameModeIndex = gameDate.findIndex(
         ([_, value]) => value === gamemode
       );
-
       const newGameModeId = gameDate[(gameModeIndex + 1) % nrOfgameModes];
       const newGameMode: string = gameNames[
         newGameModeId[0] as keyof typeof gameNames
       ] as string;
 
-      setGameMode(newGameMode);
+      this.changeGameMode(newGameMode);
     });
   };
 
