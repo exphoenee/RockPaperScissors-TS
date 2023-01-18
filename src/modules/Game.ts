@@ -1,24 +1,18 @@
 /* modules */
 import GameUI from "./GameUI/GameUI";
 
-/* constants */
-import games from "../constants/games";
-
-/* tpyes */
-import statisticsType, { gameStatisticsType } from "../types/statistics.type";
-
 /* enums */
-import { gameNames } from "../types/gameType";
+import gameType, { gameNames } from "../types/gameType";
 
 /* utils */
-import isType from "../utils/isType";
 import getGameMode from "../utils/getGameMode";
 import getThema from "../utils/getThema";
 import getLang from "../utils/getLang";
+import getStatMode from "../utils/getStatMode";
+import ruleType from "../types/ruleType";
 
 class Game {
   private appSettings: {
-    baseURL: string;
     developerMode: boolean;
     gameMode: gameNames;
     thema: string;
@@ -30,21 +24,19 @@ class Game {
     statisticMode: string;
     computerRollLength: number;
   };
-  private localhosts: string[];
-  private userChoice: gameType;
-  private opponentChoice: gameType;
+  private localhosts: string[] = ["localhost", "127.0.0.1"];
+  private userChoice: ruleType;
+  private opponentChoice: ruleType;
   private gameUI = new GameUI();
 
   constructor() {
-    this.localhosts = ["localhost", "127.0.0.1"];
-
+    console.log(window.location.origin);
     this.appSettings = {
-      baseURL: window.location.origin,
-      developerMode: true,
+      developerMode: this.checkRunsLocal(),
       thema: getThema(),
       gameMode: getGameMode(),
       language: getLang(),
-      statisticMode: getStatsMode(),
+      statisticMode: getStatMode(),
       playerNames: ["player", "opponent"],
       imageLoaded: 0,
       imageCount: 0,
@@ -53,61 +45,14 @@ class Game {
     };
 
     this.opponentChoice = this.userChoice = this.gameUI.getRules()[0];
-
-    this.initialize();
+    console.log(this.opponentChoice);
+    console.log(this.userChoice);
   }
 
-  private checkRunsLocal() {
-    const hostedLocally = this.localhosts.find(
-      (host) => this.appSettings.baseURL.indexOf(host) > -1
+  private checkRunsLocal(): boolean {
+    return !!this.localhosts.find(
+      (host) => window.location.origin.indexOf(host) > -1
     );
-    this.appSettings.developerMode = !!hostedLocally;
-  }
-
-  private initStatMode() {
-    const statMode = localStorage.getItem("statisticMode");
-    if (statMode) {
-      this.appSettings.statisticMode = statMode;
-      const statSelector = this.elem.single.statisticsInput as HTMLInputElement;
-
-      statSelector.value = statMode;
-    }
-  }
-
-  private initStatistics(): statisticsType {
-    let statistics: statisticsType;
-
-    statistics = games.map((game) => {
-      return {
-        name: game.name,
-        values: {
-          opponent: game.rules.reduce(
-            (acc: { [key: string]: number }, rule) => {
-              acc[rule.value] = 0;
-              return acc;
-            },
-            {}
-          ),
-          player: game.rules.reduce((acc: { [key: string]: number }, rule) => {
-            acc[rule.value] = 0;
-            return acc;
-          }, {}),
-        },
-      };
-    });
-
-    const oldStatStr = localStorage.getItem("statistics");
-    const oldStat = oldStatStr ? JSON.parse(oldStatStr) : {};
-
-    if (isType(oldStat, statistics)) statistics = oldStat;
-
-    return statistics;
-  }
-
-  private initialize() {
-    window.onload = () => {
-      /* DOM elements */
-    };
   }
 }
 
