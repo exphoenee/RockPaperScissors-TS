@@ -70,7 +70,7 @@ export default class GameUI {
   private gameButtons: HTMLButtonElement[];
 
   private isUIFreezed: boolean = false;
-  public action: (user: ruleType) => void = () => {
+  public action: (userChoice: ruleType) => void = () => {
     throw new Error("Action is not defined");
   };
 
@@ -458,10 +458,10 @@ export default class GameUI {
     for (let i = 0; i < anim.length; i++) {
       const to = setTimeout(() => {
         this.stepImage("opponent", anim[i]);
+        clearTimeout(to);
         if (i === anim.length - 1) {
           this.unfreezeUI();
         }
-        clearTimeout(to);
       }, delay);
       delay *= 1.15;
     }
