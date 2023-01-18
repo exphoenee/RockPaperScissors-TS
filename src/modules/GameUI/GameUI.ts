@@ -70,13 +70,7 @@ export default class GameUI {
   private gameButtons: HTMLButtonElement[];
 
   private isUIFreezed: boolean = false;
-  public action: ({
-    user,
-    opponent,
-  }: {
-    user: ruleType;
-    opponent: ruleType;
-  }) => void = () => {
+  public action: (user: ruleType) => void = () => {
     throw new Error("Action is not defined");
   };
 
@@ -442,11 +436,10 @@ export default class GameUI {
     }, 500);
   };
 
-  private startComputer = () => {
+  public startComputer = (choosen: number) => {
     this.freezeUI();
 
     const possibilties = this.rules.length;
-    const choosen = Math.floor(Math.random() * possibilties);
     const animSteps = Math.floor(Math.random() * 7) + 8;
 
     let anim = new Array(animSteps).fill(0);
@@ -467,10 +460,6 @@ export default class GameUI {
         this.stepImage("opponent", anim[i]);
         if (i === anim.length - 1) {
           this.unfreezeUI();
-          this.action({
-            user: this.rules[this.userChoice],
-            opponent: this.rules[choosen],
-          });
         }
         clearTimeout(to);
       }, delay);
@@ -504,7 +493,7 @@ export default class GameUI {
   private initGameButtons = () => {
     this.startButton.addEventListener(
       "click",
-      () => !this.isUIFreezed && this.startComputer()
+      () => !this.isUIFreezed && this.action(this.rules[this.userChoice])
     );
 
     this.nextButton.addEventListener(
