@@ -468,12 +468,15 @@ export default class GameUI {
 
   private stepImage = (user: "user" | "opponent", next: number) => {
     const images = user === "user" ? this.userImages : this.opponentImages;
-    const current = this.userChoice;
 
-    images[current].classList.add("hidden");
-    images[current].classList.remove("showen");
-    images[next].classList.add("showen");
-    images[next].classList.remove("hidden");
+    const changeClass = (elem: HTMLElement, action: "set" | "unset") => {
+      elem.classList.add(action === "set" ? "showen" : "hidden");
+      elem.classList.remove(action === "set" ? "hidden" : "showen");
+    };
+
+    images.forEach((elem, i) =>
+      i === next ? changeClass(elem, "set") : changeClass(elem, "unset")
+    );
 
     this.userChoice = next;
   };
