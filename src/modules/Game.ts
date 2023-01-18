@@ -3,24 +3,18 @@ import GameUI from "./GameUI/GameUI";
 
 /* constants */
 import games from "../constants/games";
-import dictionaty, { dictionaryType } from "../constants/dictionary";
 
 /* tpyes */
-import ruleType from "../types/ruleType";
 import statisticsType, { gameStatisticsType } from "../types/statistics.type";
-import elemType from "../types/elem.type";
 
 /* enums */
 import { gameNames } from "../types/gameType";
-import { statModes } from "../types/statistics.type";
-import { usedLangs } from "../constants/dictionary";
 
 /* utils */
 import isType from "../utils/isType";
 import getGameMode from "../utils/getGameMode";
 import getThema from "../utils/getThema";
 import getLang from "../utils/getLang";
-import getStatsMode from "../utils/getStatsMode";
 
 class Game {
   private appSettings: {
@@ -37,9 +31,9 @@ class Game {
     computerRollLength: number;
   };
   private localhosts: string[];
-  private statistics: statisticsType;
-  private userChoice: ruleType;
-  private opponentChoice: ruleType;
+  private userChoice: gameType;
+  private opponentChoice: gameType;
+  private gameUI = new GameUI();
 
   constructor() {
     this.localhosts = ["localhost", "127.0.0.1"];
@@ -58,11 +52,7 @@ class Game {
       computerRollLength: 15,
     };
 
-    /* Game state */
-    this.statistics = [...this.initStatistics()];
-
-    this.userChoice = this.rules[0];
-    this.opponentChoice = this.rules[0];
+    this.opponentChoice = this.userChoice = this.gameUI.getRules()[0];
 
     this.initialize();
   }
@@ -112,23 +102,6 @@ class Game {
     if (isType(oldStat, statistics)) statistics = oldStat;
 
     return statistics;
-  }
-
-  private calculateScore() {
-    const playerStat = this.statistics.find(
-      (game) => game.name === this.playing
-    ).values;
-
-    const playerScore = Object.values(playerStat.player).reduce(
-      (acc, val) => acc + val,
-      0
-    );
-
-    const opponentScore = Object.values(playerStat.opponent).reduce(
-      (acc, val) => acc + val,
-      0
-    );
-    return { opponentScore, playerScore };
   }
 
   private initialize() {
