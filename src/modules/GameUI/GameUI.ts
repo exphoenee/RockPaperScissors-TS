@@ -465,16 +465,17 @@ export default class GameUI {
     for (let i = 0; i < anim.length; i++) {
       const to = setTimeout(() => {
         this.stepImage("opponent", anim[i]);
-        i === anim.length - 1 && this.unfreezeUI();
+        if (i === anim.length - 1) {
+          this.unfreezeUI();
+          this.action({
+            user: this.rules[this.userChoice],
+            opponent: this.rules[choosen],
+          });
+        }
         clearTimeout(to);
       }, delay);
       delay *= 1.15;
     }
-
-    this.action({
-      user: this.rules[this.userChoice],
-      opponent: this.rules[choosen],
-    });
   };
 
   private stepImage = (user: "user" | "opponent", next: number) => {
