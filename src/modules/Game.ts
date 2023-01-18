@@ -17,7 +17,8 @@ class Game {
     gameMode: gameNames;
     thema: string;
     language: string;
-    playerNames: string[];
+    userName: string;
+    opponentName: string;
     imageLoaded: number;
     imageCount: number;
     popupTimeout: number;
@@ -27,32 +28,47 @@ class Game {
   private localhosts: string[] = ["localhost", "127.0.0.1"];
   private userChoice: ruleType;
   private opponentChoice: ruleType;
-  private gameUI = new GameUI();
+  private gameUI: GameUI = new GameUI();
 
   constructor() {
-    console.log(window.location.origin);
     this.appSettings = {
       developerMode: this.checkRunsLocal(),
       thema: getThema(),
       gameMode: getGameMode(),
       language: getLang(),
       statisticMode: getStatMode(),
-      playerNames: ["player", "opponent"],
+      userName: "You",
+      opponentName: "Opponent",
       imageLoaded: 0,
       imageCount: 0,
       popupTimeout: 3,
       computerRollLength: 15,
     };
 
+    this.gameUI.setUserName(this.appSettings.userName);
+    this.gameUI.setOpponentName(this.appSettings.opponentName);
     this.opponentChoice = this.userChoice = this.gameUI.getRules()[0];
-    console.log(this.opponentChoice);
-    console.log(this.userChoice);
+
+    this.gameUI.action = this.setAction.bind(this);
   }
 
   private checkRunsLocal(): boolean {
     return !!this.localhosts.find(
       (host) => window.location.origin.indexOf(host) > -1
     );
+  }
+
+  private setAction({
+    user,
+    opponent,
+  }: {
+    user: ruleType;
+    opponent: ruleType;
+  }): void {
+    this.userChoice = user;
+    this.opponentChoice = opponent;
+
+    console.log(user, opponent);
   }
 }
 
