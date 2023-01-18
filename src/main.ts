@@ -1,9 +1,9 @@
-import Game from "./modules/Game";
+import GameContorller from "./modules/GameContorller";
 // import GameUI from "./modules/GameUI/GameUI";
 
 /* style */
 import "./style/reset.css";
 import "./style/style.css";
 
-new Game();
+new GameContorller();
 // new GameUI();
