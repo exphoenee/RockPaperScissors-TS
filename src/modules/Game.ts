@@ -67,14 +67,14 @@ class Game {
     this.gameUI.startComputer(random);
   }
 
-  private setAction(user: ruleType): void {
-    this.userChoice = user;
+  private setAction(userChoice: ruleType): void {
+    this.userChoice = userChoice;
 
     if (this.appSettings.gameType === "singleplayer") {
       this.computerPlay();
     }
 
-    console.log(user);
+    console.log(userChoice);
   }
 }
 
