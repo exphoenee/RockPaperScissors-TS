@@ -35,9 +35,7 @@ export default class GameUI {
   // private settings: Element;
 
   private app: Element;
-  private user?: string;
-  private opponent?: string;
-  private modals: HTMLElement[];
+  private modals: Element[];
   private loaderScreen: Element;
   private modalButtons: HTMLElement[];
   private closeButtons: HTMLElement[];
@@ -72,6 +70,15 @@ export default class GameUI {
   private gameButtons: HTMLButtonElement[];
 
   private isUIFreezed: boolean = false;
+  public action: ({
+    user,
+    opponent,
+  }: {
+    user: ruleType;
+    opponent: ruleType;
+  }) => void = () => {
+    throw new Error("Action is not defined");
+  };
 
   constructor() {
     this.rules = this.getRules();
@@ -208,8 +215,8 @@ export default class GameUI {
   }
 
   private initPlayersName() {
-    this.setUserName("You");
-    this.setOpponentName("Computer");
+    this.setUserName("?");
+    this.setOpponentName("?");
   }
 
   /* Fancy title and favicon change */
@@ -435,7 +442,7 @@ export default class GameUI {
     }, 500);
   };
 
-  private startGame = () => {
+  private startComputer = () => {
     this.freezeUI();
 
     const possibilties = this.rules.length;
@@ -463,6 +470,11 @@ export default class GameUI {
       }, delay);
       delay *= 1.15;
     }
+
+    this.action({
+      user: this.rules[this.userChoice],
+      opponent: this.rules[choosen],
+    });
   };
 
   private stepImage = (user: "user" | "opponent", next: number) => {
@@ -491,7 +503,7 @@ export default class GameUI {
   private initGameButtons = () => {
     this.startButton.addEventListener(
       "click",
-      () => !this.isUIFreezed && this.startGame()
+      () => !this.isUIFreezed && this.startComputer()
     );
 
     this.nextButton.addEventListener(
