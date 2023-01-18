@@ -191,7 +191,7 @@ export default class GameUI {
     window.onload = () => this.loaderScreen.remove();
   };
 
-  private getRules() {
+  public getRules() {
     return (
       games.find((game) => game.name === getGameMode())?.rules || games[0].rules
     );
@@ -354,7 +354,6 @@ export default class GameUI {
     Array.from(this.gameModeButton.children).forEach((elem) => {
       ["on", "off"].forEach((className) => elem.classList.toggle(className));
     });
-
 
     this.imageContainer.forEach((userContainer: HTMLElement) => {
       userContainer.classList.add("disabled");
