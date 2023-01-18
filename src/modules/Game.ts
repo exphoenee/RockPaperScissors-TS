@@ -15,6 +15,7 @@ class Game {
   private appSettings: {
     developerMode: boolean;
     gameMode: gameNames;
+    gameType: "singleplayer" | "multiplayer";
     thema: string;
     language: string;
     userName: string;
@@ -33,6 +34,7 @@ class Game {
   constructor() {
     this.appSettings = {
       developerMode: this.checkRunsLocal(),
+      gameType: "singleplayer",
       thema: getThema(),
       gameMode: getGameMode(),
       language: getLang(),
@@ -58,17 +60,21 @@ class Game {
     );
   }
 
-  private setAction({
-    user,
-    opponent,
-  }: {
-    user: ruleType;
-    opponent: ruleType;
-  }): void {
-    this.userChoice = user;
-    this.opponentChoice = opponent;
+  private computerPlay(): void {
+    const rules = this.gameUI.getRules();
+    const random = Math.floor(Math.random() * rules.length);
+    this.opponentChoice = rules[random];
+    this.gameUI.startComputer(random);
+  }
 
-    console.log(user, opponent);
+  private setAction(user: ruleType): void {
+    this.userChoice = user;
+
+    if (this.appSettings.gameType === "singleplayer") {
+      this.computerPlay();
+    }
+
+    console.log(user);
   }
 }
 
