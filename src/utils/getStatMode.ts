@@ -1,6 +1,6 @@
 import appStates from "../constants/appStates";
 import getState from "./getState";
 
-const getStateMode = () => getState(appStates.STATMODE);
+const getStatMode = () => getState(appStates.STATMODE);
 
-export default getStateMode;
+export default getStatMode;
