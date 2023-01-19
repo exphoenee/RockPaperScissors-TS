@@ -22,6 +22,7 @@ import { gameImages } from "./components/app/gameArea/playerContainer/playerImag
 import { statCalcModes } from "../../types/statistics.type";
 import { playerNames } from "../../types/playerName";
 import { directions } from "../../constants/directions";
+import themas from "./constants/themas";
 
 export type GameUIType = {
   user?: string;
@@ -60,6 +61,7 @@ export default class GameUI {
   private dictionary: Element[];
   private themable: Element[];
   private selects: HTMLSelectElement[];
+  private flashlight: Element;
 
   private userChoice: number;
   private opponentChoice: number;
@@ -179,6 +181,7 @@ export default class GameUI {
       this.prevButton,
       this.startButton,
     ] as HTMLButtonElement[];
+    this.flashlight = document.querySelector("#flash") as Element;
 
     this.initialize({ rules, lang });
   }
@@ -223,8 +226,15 @@ export default class GameUI {
     this.initPlayersChoices();
     this.initPlayersName();
     this.initScores();
+    this.initFlaslight();
     window.onload = () => this.loaderScreen.remove();
   };
+
+  private initFlaslight() {
+    const thema = getThema();
+    if (thema === themas.DARK) {
+    }
+  }
 
   private initPlayersChoices() {
     // this.stepImage(playerNames.USER this.userChoice);
