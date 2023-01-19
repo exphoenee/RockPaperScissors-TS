@@ -19,7 +19,7 @@ import getLang from "../../utils/getLang";
 
 /* enums */
 import options from "./constants/themas";
-import { gameNames } from "../../types/gameType";
+import gameType, { gameNames } from "../../types/gameType";
 import { gameImages } from "./components/app/gameArea/playerContainer/playerImageContainer";
 import { statCalcModes } from "../../types/statistics.type";
 
@@ -401,7 +401,7 @@ export default class GameUI {
     });
 
     this.gameMode.addEventListener("change", () => {
-      this.setStatGameMode(this.gameMode.value);
+      this.setStatGameMode(this.gameMode.value as gameNames);
     });
   };
 
