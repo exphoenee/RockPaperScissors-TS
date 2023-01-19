@@ -19,6 +19,7 @@ import setStateCalcMode from "../utils/setStatCalcMode";
 import getStatGameMode from "../utils/getStatGameMode";
 import setStateGameMode from "../utils/setStatGameMode";
 import ruleType from "../types/ruleType";
+import { directions } from "../constants/directions";
 
 class GameContorller {
   private appSettings: {
@@ -68,7 +69,7 @@ class GameContorller {
     this.opponentChoiceIndex = this.userChoiceIndex = 0;
 
     /* Setting up gameUi */
-    this.gameUI = new GameUI({
+    this.gameUI = GameUI.getInstance({
       rules: this.rules,
       lang: this.appSettings.language,
     });
@@ -97,7 +98,6 @@ class GameContorller {
 
   private setLanguage(lang: string): void {
     this.appSettings.language = lang;
-    console.log(lang);
     this.gameUI.updateLang({ rules: this.rules, lang });
     setLang(lang);
   }
@@ -134,11 +134,11 @@ class GameContorller {
     setStateGameMode(mode);
   }
 
-  private setUserChoice(direction: "next" | "prev"): number {
+  private setUserChoice(direction: directions): number {
     const possibleChoices = this.rules.length;
 
     this.userChoiceIndex =
-      direction === "next"
+      direction === directions.NEXT
         ? (this.userChoiceIndex + 1) % possibleChoices
         : (this.userChoiceIndex + possibleChoices - 1) % possibleChoices;
 
@@ -147,7 +147,10 @@ class GameContorller {
 
   private computerPlay(): void {
     this.opponentChoiceIndex = Math.floor(Math.random() * this.rules.length);
-    this.gameUI.startComputerAnimation(this.opponentChoiceIndex);
+    this.gameUI.startComputerAnimation({
+      choosen: this.opponentChoiceIndex,
+      rules: this.rules,
+    });
   }
 
   getChoice(index: number): ruleType {
