@@ -530,3 +530,31 @@ tr:nth-child(odd):hover {
     font-size: 1rem;
   }
 }
+#flashlight {
+  --Xpos: 50vw;
+  --Ypos: 50vh;
+  z-index: 100;
+}
+
+#flashlight:before {
+  content: "";
+  position: absolute;
+  top:0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle 12rem at var(--Xpos) var(--Ypos),
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.1) 30%,
+    rgba(0, 0, 0, 0) 50%,
+    rgba(0, 0, 0, 0.2) 70%,
+    rgba(0, 0, 0, 1) 100%
+  );
+}
+
+#flashlight.light {
+  display: none;
+}
