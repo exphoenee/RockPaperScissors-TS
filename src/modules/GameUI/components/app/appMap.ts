@@ -7,7 +7,7 @@ const appMap = ({ rules }: { rules: ruleType[] }) => {
   return {
     tag: "div",
     attrs: {
-      id: "app",
+      id: "rps-ui",
     },
     children: [headerMap, gameAreaMap({ rules }), ...modalsMap],
   };
