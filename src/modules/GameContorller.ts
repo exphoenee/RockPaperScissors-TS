@@ -30,14 +30,13 @@ class GameContorller {
     computerRollLength: number;
   };
   private localhosts: string[] = ["localhost", "127.0.0.1"];
-  private userChoice: ruleType;
-  private userChoiceIndex: number;
-  private opponentChoice: ruleType;
-  private opponentChoiceIndex: number;
-  private gameUI: GameUI = new GameUI();
+  private userChoiceIndex: number = 0;
+  private opponentChoiceIndex: number = 0;
+  private gameUI: GameUI;
   private rules: ruleType[];
 
   constructor() {
+    /* Setting up appSettings */
     this.appSettings = {
       developerMode: this.checkRunsLocal(),
       gameType: "singleplayer",
@@ -53,14 +52,19 @@ class GameContorller {
       computerRollLength: 15,
     };
 
+    /* Setting up games */
+    this.rules =
+      games.find((game) => game.name === this.appSettings.gameMode)?.rules ||
+      games[0]?.rules;
+    this.opponentChoiceIndex = this.userChoiceIndex = 0;
+
+    /* Setting up gameUi */
+    this.gameUI = new GameUI({ rules: this.rules });
+
     this.gameUI.setUserName(this.appSettings.userName);
     this.gameUI.setOpponentName(this.appSettings.opponentName);
 
-    this.rules = games.find((game) => game.name === this.appSettings.gameMode)?.rules  || games[0]?.rules;
-
-    this.opponentChoice = this.userChoice = this.rules[0];
-
-    this.gameUI.action = this.setChoice.bind(this);
+    this.gameUI.setChoice = this.setChoice.bind(this);
     this.gameUI.changeChoice = this.setUserChoice.bind(this);
   }
 
@@ -75,18 +79,21 @@ class GameContorller {
 
     const possibleChoices = this.rules.length;
 
-    direction === "next"
-      ? this.userChoiceIndex++ % possibleChoices
-      : this.userChoiceIndex-- % possibleChoices;
+    this.userChoiceIndex =
+      direction === "next"
+        ? (this.userChoiceIndex + 1) % possibleChoices
+        : (this.userChoiceIndex + possibleChoices - 1) % possibleChoices;
 
     return this.userChoiceIndex;
   }
 
   private computerPlay(): void {
-    const rules = this.gameUI.getRules();
-    const random = Math.floor(Math.random() * rules.length);
-    this.opponentChoice = rules[random];
+    const random = Math.floor(Math.random() * this.rules.length);
     this.gameUI.startComputer(random);
+  }
+
+  getChoice(index: number): ruleType {
+    return this.rules[index];
   }
 
   private setChoice(userChoice: ruleType): void {
