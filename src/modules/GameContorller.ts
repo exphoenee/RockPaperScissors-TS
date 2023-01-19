@@ -87,8 +87,8 @@ class GameContorller {
   }
 
   private computerPlay(): void {
-    const random = Math.floor(Math.random() * this.rules.length);
-    this.gameUI.startComputer(random);
+    this.opponentChoiceIndex = Math.floor(Math.random() * this.rules.length);
+    this.gameUI.startComputerAnimation(this.opponentChoiceIndex);
   }
 
   getChoice(index: number): ruleType {
