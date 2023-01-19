@@ -12,6 +12,7 @@ import games from "../constants/games";
 import getGameMode from "../utils/getGameMode";
 import setGameMode from "../utils/setGameMode";
 import getThema from "../utils/getThema";
+import setLang from "../utils/setLang";
 import getLang from "../utils/getLang";
 import getStatCalcMode from "../utils/getStatCalcMode";
 import setStateCalcMode from "../utils/setStatCalcMode";
@@ -67,7 +68,10 @@ class GameContorller {
     this.opponentChoiceIndex = this.userChoiceIndex = 0;
 
     /* Setting up gameUi */
-    this.gameUI = new GameUI({ rules: this.rules });
+    this.gameUI = new GameUI({
+      rules: this.rules,
+      lang: this.appSettings.language,
+    });
 
     this.gameUI.setUserName(this.appSettings.userName);
     this.gameUI.setOpponentName(this.appSettings.opponentName);
@@ -78,6 +82,7 @@ class GameContorller {
     this.gameUI.setStatCalcMode = this.setStatCalcMode.bind(this);
     this.gameUI.setStatGameMode = this.setStatGameMode.bind(this);
     this.gameUI.setGameMode = this.setGameMode.bind(this);
+    this.gameUI.setLanguage = this.setLanguage.bind(this);
   }
 
   private checkRunsLocal(): boolean {
@@ -88,6 +93,13 @@ class GameContorller {
 
   setGameType(type: "singleplayer" | "multiplayer"): void {
     this.appSettings.gameType = type;
+  }
+
+  private setLanguage(lang: string): void {
+    this.appSettings.language = lang;
+    console.log(lang);
+    this.gameUI.updateLang({ rules: this.rules, lang });
+    setLang(lang);
   }
 
   setGameMode(): void {
@@ -103,7 +115,10 @@ class GameContorller {
     this.rules = games.find((game) => game.name === newGame)?.rules || [];
 
     this.appSettings.gameMode = newGame;
-    this.gameUI.changeGameMode(this.rules);
+    this.gameUI.changeGameMode({
+      rules: this.rules,
+      lang: this.appSettings.language,
+    });
     setGameMode(newGame);
   }
 
