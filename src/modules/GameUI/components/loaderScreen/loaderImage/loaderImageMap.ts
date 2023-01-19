@@ -4,9 +4,9 @@ const loaderImageMap = [
     attrs: {
       id: "loader-image",
       // class: "loader-image",
-      src: "./media/loader.png",
+      src: "./media/loader.svg",
       dataset: {
-        filename: "media/loader.png",
+        filename: "media/loader.svg",
       },
       alt: "loader",
     },
