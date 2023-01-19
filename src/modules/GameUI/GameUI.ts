@@ -84,6 +84,10 @@ export default class GameUI {
     throw new Error("The choiceChange is not defined");
   };
 
+  public setGameMode: () => void = () => {
+    throw new Error("The setGameMode is not defined");
+  };
+
   private rules: ruleType[];
 
   constructor({ rules }: { rules: ruleType[] }) {
@@ -358,10 +362,7 @@ export default class GameUI {
   };
 
   /* gameMode */
-
   changeGameMode(newGameMode: string) {
-    setGameMode(newGameMode);
-
     Array.from(this.gameModeButton.children).forEach((elem) => {
       ["on", "off"].forEach((className) => elem.classList.toggle(className));
     });
@@ -394,21 +395,7 @@ export default class GameUI {
   }
 
   private initGameMode = () => {
-    this.gameModeButton.addEventListener("click", () => {
-      const gamemode = getGameMode();
-      const gameDate = Object.entries(gameNames);
-      const nrOfgameModes = gameDate.length;
-
-      const gameModeIndex = gameDate.findIndex(
-        ([_, value]) => value === gamemode
-      );
-      const newGameModeId = gameDate[(gameModeIndex + 1) % nrOfgameModes];
-      const newGameMode: string = gameNames[
-        newGameModeId[0] as keyof typeof gameNames
-      ] as string;
-
-      this.changeGameMode(newGameMode);
-    });
+    this.gameModeButton.addEventListener("click", () => this.setGameMode());
   };
 
   /* Statistics */
