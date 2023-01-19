@@ -10,6 +10,7 @@ import games from "../constants/games";
 
 /* utils */
 import getGameMode from "../utils/getGameMode";
+import setGameMode from "../utils/setGameMode";
 import getThema from "../utils/getThema";
 import getLang from "../utils/getLang";
 import getStatCalcMode from "../utils/getStatCalcMode";
@@ -17,6 +18,7 @@ import setStateCalcMode from "../utils/setStatCalcMode";
 import getStatGameMode from "../utils/getStatGameMode";
 import setStateGameMode from "../utils/setStatGameMode";
 import ruleType from "../types/ruleType";
+import nextEnum from "../utils/nextEnum";
 
 class GameContorller {
   private appSettings: {
@@ -76,14 +78,37 @@ class GameContorller {
 
     this.gameUI.setStatCalcMode = this.setStatCalcMode.bind(this);
     this.gameUI.setStatGameMode = this.setStatGameMode.bind(this);
-    // this.gameUI.setThema = this.setThema.bind(this);
-    // this.gameUI.setGameMode = this.setGameMode.bind(this);
+    this.gameUI.setGameMode = this.setGameMode.bind(this);
   }
 
   private checkRunsLocal(): boolean {
     return !!this.localhosts.find(
       (host) => window.location.origin.indexOf(host) > -1
     );
+  }
+
+  setGameType(type: "singleplayer" | "multiplayer"): void {
+    this.appSettings.gameType = type;
+  }
+
+  setGameMode(): void {
+    // const gamemode = getGameMode();
+    // const gameDate = Object.entries(gameNames);
+    // const nrOfgameModes = gameDate.length;
+
+    // const gameModeIndex = gameDate.findIndex(
+    //   ([_, value]) => value === gamemode
+    // );
+    // const newGameModeId = gameDate[(gameModeIndex + 1) % nrOfgameModes];
+    // const newGameMode: string = gameNames[
+    //   newGameModeId[0] as keyof typeof gameNames
+    // ] as string;
+
+    const mode = nextEnum(this.appSettings.gameMode, gameNames);
+
+    this.appSettings.gameMode = mode;
+    this.gameUI.changeGameMode(mode);
+    setGameMode(mode);
   }
 
   setStatCalcMode(mode: statCalcModes): void {
