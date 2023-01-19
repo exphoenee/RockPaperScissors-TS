@@ -18,7 +18,6 @@ import setStateCalcMode from "../utils/setStatCalcMode";
 import getStatGameMode from "../utils/getStatGameMode";
 import setStateGameMode from "../utils/setStatGameMode";
 import ruleType from "../types/ruleType";
-import nextEnum from "../utils/nextEnum";
 
 class GameContorller {
   private appSettings: {
@@ -92,20 +91,6 @@ class GameContorller {
   }
 
   setGameMode(): void {
-    // const gamemode = getGameMode();
-    // const gameDate = Object.entries(gameNames);
-    // const nrOfgameModes = gameDate.length;
-
-    // const gameModeIndex = gameDate.findIndex(
-    //   ([_, value]) => value === gamemode
-    // );
-    // const newGameModeId = gameDate[(gameModeIndex + 1) % nrOfgameModes];
-    // const newGameMode: string = gameNames[
-    //   newGameModeId[0] as keyof typeof gameNames
-    // ] as string;
-
-    // this.appSettings.gameMode = newGameMode;
-
     const gameIdx = games.findIndex(
       (game) => game.name === this.appSettings.gameMode
     );
@@ -115,8 +100,10 @@ class GameContorller {
         ? (games[(gameIdx + 1) % games.length].name as gameNames)
         : (games[0].name as gameNames);
 
+    this.rules = games.find((game) => game.name === newGame)?.rules || [];
+
     this.appSettings.gameMode = newGame;
-    this.gameUI.changeGameMode(newGame);
+    this.gameUI.changeGameMode(this.rules);
     setGameMode(newGame);
   }
 
