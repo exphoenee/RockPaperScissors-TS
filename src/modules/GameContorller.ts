@@ -3,6 +3,7 @@ import GameUI from "./GameUI/GameUI";
 
 /* enums */
 import gameType, { gameNames } from "../types/gameType";
+import { statCalcModes } from "../types/statistics.type";
 
 /* constants */
 import games from "../constants/games";
@@ -11,7 +12,10 @@ import games from "../constants/games";
 import getGameMode from "../utils/getGameMode";
 import getThema from "../utils/getThema";
 import getLang from "../utils/getLang";
-import getStatMode from "../utils/getStatMode";
+import getStatCalcMode from "../utils/getStatCalcMode";
+import setStateCalcMode from "../utils/setStatCalcMode";
+import getStatGameMode from "../utils/getStatGameMode";
+import setStateGameMode from "../utils/setStatGameMode";
 import ruleType from "../types/ruleType";
 
 class GameContorller {
@@ -26,7 +30,8 @@ class GameContorller {
     imageLoaded: number;
     imageCount: number;
     popupTimeout: number;
-    statisticMode: string;
+    statCalcMode: statCalcModes;
+    statGameMode: gameNames;
     computerRollLength: number;
   };
   private localhosts: string[] = ["localhost", "127.0.0.1"];
@@ -44,7 +49,8 @@ class GameContorller {
       thema: getThema(),
       gameMode: getGameMode(),
       language: getLang(),
-      statisticMode: getStatMode(),
+      statCalcMode: getStatCalcMode(),
+      statGameMode: getStatGameMode(),
       userName: "You",
       opponentName: "Opponent",
       imageLoaded: 0,
@@ -67,12 +73,29 @@ class GameContorller {
 
     this.gameUI.setChoice = this.setChoice.bind(this);
     this.gameUI.changeChoice = this.setUserChoice.bind(this);
+
+    this.gameUI.setStatCalcMode = this.setStatCalcMode.bind(this);
+    this.gameUI.setStatGameMode = this.setStatGameMode.bind(this);
+    // this.gameUI.setThema = this.setThema.bind(this);
+    // this.gameUI.setGameMode = this.setGameMode.bind(this);
   }
 
   private checkRunsLocal(): boolean {
     return !!this.localhosts.find(
       (host) => window.location.origin.indexOf(host) > -1
     );
+  }
+
+  setStatCalcMode(mode: statCalcModes): void {
+    this.appSettings.statCalcMode = mode;
+    console.log(mode);
+    setStateCalcMode(mode);
+  }
+
+  setStatGameMode(mode: gameNames): void {
+    this.appSettings.statGameMode = mode;
+    console.log(mode);
+    setStateGameMode(mode);
   }
 
   private setUserChoice(direction: "next" | "prev"): number {
