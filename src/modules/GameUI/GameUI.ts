@@ -15,7 +15,6 @@ import dictionary, { dictionaryType } from "../../constants/dictionary";
 import getThema from "../../utils/getThema";
 import setThema from "../../utils/setThema";
 import setLang from "../../utils/setLang";
-import setStatMode from "../../utils/setStatMode";
 import setGameMode from "../../utils/setGameMode";
 import getGameMode from "../../utils/getGameMode";
 import getLang from "../../utils/getLang";
@@ -24,6 +23,7 @@ import getLang from "../../utils/getLang";
 import options from "./constants/themas";
 import { gameNames } from "../../types/gameType";
 import { gameImages } from "./components/app/gameArea/playerContainer/playerImageContainer";
+import { statCalcModes } from "../../types/statistics.type";
 
 export type GameUIType = {
   user?: string;
@@ -68,8 +68,17 @@ export default class GameUI {
   private gameButtons: HTMLButtonElement[];
 
   private isUIFreezed: boolean = false;
+
+  public setStatCalcMode: (mode: statCalcModes) => void = () => {
+    throw new Error("The setStatCalcMode is not defined");
+  };
+
+  public setStatGameMode: (mode: gameNames) => void = () => {
+    throw new Error("The setStatGameMode is not defined");
+  };
+
   public setChoice: (isUserCoiceSet: boolean) => void = () => {
-    throw new Error("The action is not defined");
+    throw new Error("The setChoice is not defined");
   };
   public changeChoice: (direction: "next" | "prev") => number = () => {
     throw new Error("The choiceChange is not defined");
@@ -405,11 +414,11 @@ export default class GameUI {
   /* Statistics */
   private initStatistics = () => {
     this.statisticsMode.addEventListener("change", () => {
-      setStatMode(this.statisticsMode.value);
+      this.setStatCalcMode(this.statisticsMode.value as statCalcModes);
     });
 
     this.gameMode.addEventListener("change", () => {
-      setGameMode(this.gameMode.value);
+      this.setStatGameMode(this.gameMode.value);
     });
   };
 
