@@ -228,7 +228,7 @@ export default class GameUI {
 
   private initPlayersChoices() {
     // this.stepImage(playerNames.USER this.userChoice);
-    // this.stepImage(plyerNames.OPPONENT, this.opponentChoice);
+    // this.stepImage(playerNames.OPPONENT, this.opponentChoice);
   }
 
   private initScores() {
@@ -478,6 +478,8 @@ export default class GameUI {
     }
     anim.push(choosen);
 
+    console.log(anim);
+
     let delay = 200;
     for (let i = 0; i < anim.length; i++) {
       const to = setTimeout(() => {
@@ -494,12 +496,12 @@ export default class GameUI {
   private stepImage = (user: playerNames, direction: directions) => {
     const images = user === "user" ? this.userImages : this.opponentImages;
 
+    const newChoice = this.changeChoice(direction);
+
     const changeClass = (elem: HTMLElement, action: "set" | "unset") => {
       elem.classList.add(action === "set" ? "showen" : "hidden");
       elem.classList.remove(action === "set" ? "hidden" : "showen");
     };
-
-    const newChoice = this.changeChoice(direction);
 
     images.forEach((elem, i) =>
       i === newChoice ? changeClass(elem, "set") : changeClass(elem, "unset")
