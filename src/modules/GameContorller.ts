@@ -104,11 +104,20 @@ class GameContorller {
     //   newGameModeId[0] as keyof typeof gameNames
     // ] as string;
 
-    const mode = nextEnum(this.appSettings.gameMode, gameNames);
+    // this.appSettings.gameMode = newGameMode;
 
-    this.appSettings.gameMode = mode;
-    this.gameUI.changeGameMode(mode);
-    setGameMode(mode);
+    const gameIdx = games.findIndex(
+      (game) => game.name === this.appSettings.gameMode
+    );
+
+    const newGame: gameNames =
+      gameIdx !== -1
+        ? (games[(gameIdx + 1) % games.length].name as gameNames)
+        : (games[0].name as gameNames);
+
+    this.appSettings.gameMode = newGame;
+    this.gameUI.changeGameMode(newGame);
+    setGameMode(newGame);
   }
 
   setStatCalcMode(mode: statCalcModes): void {
