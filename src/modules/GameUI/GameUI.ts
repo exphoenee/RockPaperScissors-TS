@@ -64,19 +64,19 @@ export default class GameUI {
   private themable: Element[];
   private selects: HTMLSelectElement[];
 
-  private rules: ruleType[];
   private userChoice: number;
   private opponentChoice: number;
   private gameButtons: HTMLButtonElement[];
 
   private isUIFreezed: boolean = false;
   public action: (userChoice: ruleType) => void = () => {
-    throw new Error("Action is not defined");
+    throw new Error("The action is not defined");
+  };
+  public changeChoice: (direction: "next" | "prev") => number = () => {
+    throw new Error("The choiceChange is not defined");
   };
 
   constructor() {
-    this.rules = this.getRules();
-
     this.userChoice = 0;
     this.opponentChoice = 0;
 
@@ -199,8 +199,8 @@ export default class GameUI {
   }
 
   private initPlayersChoices() {
-    this.stepImage("user", this.userChoice);
-    this.stepImage("opponent", this.opponentChoice);
+    // this.stepImage("user", this.userChoice);
+    // this.stepImage("opponent", this.opponentChoice);
   }
 
   private initScores() {
@@ -467,7 +467,10 @@ export default class GameUI {
     }
   };
 
-  private stepImage = (user: "user" | "opponent", next: number) => {
+  private stepImage = (
+    user: "user" | "opponent",
+    direction: "next" | "prev"
+  ) => {
     const images = user === "user" ? this.userImages : this.opponentImages;
 
     const changeClass = (elem: HTMLElement, action: "set" | "unset") => {
@@ -475,19 +478,11 @@ export default class GameUI {
       elem.classList.remove(action === "set" ? "hidden" : "showen");
     };
 
+    const newChoice = this.changeChoice(direction);
+
     images.forEach((elem, i) =>
-      i === next ? changeClass(elem, "set") : changeClass(elem, "unset")
+      i === newChoice ? changeClass(elem, "set") : changeClass(elem, "unset")
     );
-
-    this.userChoice = next;
-  };
-
-  private calculateIndex = (index: number, direction: "next" | "prev") => {
-    const allImages = games.length;
-
-    return direction === "next"
-      ? (index + 1) % allImages
-      : (index - 1 + allImages) % allImages;
   };
 
   private initGameButtons = () => {
@@ -498,16 +493,12 @@ export default class GameUI {
 
     this.nextButton.addEventListener(
       "click",
-      () =>
-        !this.isUIFreezed &&
-        this.stepImage("user", this.calculateIndex(this.userChoice, "next"))
+      () => !this.isUIFreezed && this.stepImage("user", "next")
     );
 
     this.prevButton.addEventListener(
       "click",
-      () =>
-        !this.isUIFreezed &&
-        this.stepImage("user", this.calculateIndex(this.userChoice, "prev"))
+      () => !this.isUIFreezed && this.stepImage("user", "prev")
     );
   };
 }
