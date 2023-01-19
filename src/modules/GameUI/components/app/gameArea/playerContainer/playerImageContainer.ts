@@ -3,7 +3,7 @@ import games from "../../../../../../constants/games";
 import ruleType from "../../../../../../types/ruleType";
 import getGameMode from "../../../../../../utils/getGameMode";
 
-export const gameImages = (user: string, parent: HTMLElement) => {
+export const gameImages = (user: string, parent?: HTMLElement) => {
   const gameMode = getGameMode();
 
   const thisGame = games.find((game) => game.name === gameMode);
@@ -22,7 +22,7 @@ export const gameImages = (user: string, parent: HTMLElement) => {
         className: [i > 0 ? "hidden" : "showen", user, "image"].join(" "),
         alt,
         fileName,
-        id: alt,
+        dataset: { choice: alt },
         parent,
       });
     });
