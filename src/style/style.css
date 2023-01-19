@@ -35,7 +35,7 @@ table {
 }
 
 #loader-screen.off,
-#app.off {
+#rps-ui.off {
   opacity: 0;
 }
 
@@ -129,7 +129,7 @@ body {
   height: 100vh;
 }
 
-#app {
+#rps-ui {
   width: 50%;
   padding: 5%;
   box-shadow: 2px 5px 10px grey;
@@ -454,7 +454,7 @@ tr:nth-child(odd):hover {
 }
 
 @media screen and (max-width: 1350px) {
-  #app {
+  #rps-ui {
     width: 66%;
   }
   .image-container img {
@@ -463,7 +463,7 @@ tr:nth-child(odd):hover {
 }
 
 @media screen and (max-width: 950px) {
-  #app {
+  #rps-ui {
     width: 85%;
   }
 
