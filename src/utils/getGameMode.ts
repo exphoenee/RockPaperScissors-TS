@@ -4,10 +4,13 @@ import { gameNames } from "../types/gameType";
 import setState from "./setState";
 
 const getGameMode = () => {
-  const defaultMode = Object.values(gameNames)[0];
+  const defaultMode: gameNames =
+    gameNames[Object.keys(gameNames)[0] as keyof typeof gameNames];
+  console.log(defaultMode);
   const gameMode = getState(appStates.GAMEMODE);
+
   if (gameMode) {
-    return getState(appStates.GAMEMODE);
+    return gameMode;
   } else {
     setState(appStates.GAMEMODE, defaultMode);
     return defaultMode;
