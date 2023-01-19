@@ -4,6 +4,9 @@ import GameUI from "./GameUI/GameUI";
 /* enums */
 import gameType, { gameNames } from "../types/gameType";
 
+/* constants */
+import games from "../constants/games";
+
 /* utils */
 import getGameMode from "../utils/getGameMode";
 import getThema from "../utils/getThema";
@@ -28,8 +31,11 @@ class GameContorller {
   };
   private localhosts: string[] = ["localhost", "127.0.0.1"];
   private userChoice: ruleType;
+  private userChoiceIndex: number;
   private opponentChoice: ruleType;
+  private opponentChoiceIndex: number;
   private gameUI: GameUI = new GameUI();
+  private rules: ruleType[];
 
   constructor() {
     this.appSettings = {
@@ -49,15 +55,31 @@ class GameContorller {
 
     this.gameUI.setUserName(this.appSettings.userName);
     this.gameUI.setOpponentName(this.appSettings.opponentName);
-    this.opponentChoice = this.userChoice = this.gameUI.getRules()[0];
 
-    this.gameUI.action = this.setAction.bind(this);
+    this.rules = games.find((game) => game.name === this.appSettings.gameMode)?.rules  || games[0]?.rules;
+
+    this.opponentChoice = this.userChoice = this.rules[0];
+
+    this.gameUI.action = this.setChoice.bind(this);
+    this.gameUI.changeChoice = this.setUserChoice.bind(this);
   }
 
   private checkRunsLocal(): boolean {
     return !!this.localhosts.find(
       (host) => window.location.origin.indexOf(host) > -1
     );
+  }
+
+  private setUserChoice(direction: "next" | "prev"): number {
+    console.log(direction);
+
+    const possibleChoices = this.rules.length;
+
+    direction === "next"
+      ? this.userChoiceIndex++ % possibleChoices
+      : this.userChoiceIndex-- % possibleChoices;
+
+    return this.userChoiceIndex;
   }
 
   private computerPlay(): void {
@@ -67,14 +89,12 @@ class GameContorller {
     this.gameUI.startComputer(random);
   }
 
-  private setAction(userChoice: ruleType): void {
+  private setChoice(userChoice: ruleType): void {
     this.userChoice = userChoice;
 
     if (this.appSettings.gameType === "singleplayer") {
       this.computerPlay();
     }
-
-    console.log(userChoice);
   }
 }
 
