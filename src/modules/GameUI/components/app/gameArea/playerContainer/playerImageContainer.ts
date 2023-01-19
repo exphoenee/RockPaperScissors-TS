@@ -1,42 +1,46 @@
 import imageMap from "../../../common/imageMap";
-import games from "../../../../../../constants/games";
 import ruleType from "../../../../../../types/ruleType";
-import getGameMode from "../../../../../../utils/getGameMode";
 
-export const gameImages = (user: string, parent?: HTMLElement) => {
-  const gameMode = getGameMode();
-
-  const thisGame = games.find((game) => game.name === gameMode);
-
-  if (!thisGame) {
-    throw new Error("No game found");
-  } else {
-    const gameImages = thisGame?.rules?.map((game: ruleType) => {
-      return {
-        fileName: game?.image,
-        alt: game?.alt,
-      };
+export const gameImages = ({
+  rules,
+  user,
+  parent,
+}: {
+  rules: ruleType[];
+  user: string;
+  parent?: HTMLElement;
+}) => {
+  const images = rules.map((game: ruleType) => {
+    return {
+      fileName: game?.image,
+      alt: game?.alt,
+    };
+  });
+  return images.map(({ alt, fileName }, i) => {
+    return imageMap({
+      className: [i > 0 ? "hidden" : "showen", user, "image"].join(" "),
+      alt,
+      fileName,
+      dataset: { choice: alt },
+      parent,
     });
-    return gameImages.map(({ alt, fileName }, i) => {
-      return imageMap({
-        className: [i > 0 ? "hidden" : "showen", user, "image"].join(" "),
-        alt,
-        fileName,
-        dataset: { choice: alt },
-        parent,
-      });
-    });
-  }
+  });
 };
 
-const playerImageContainer = (user: string) => {
+const playerImageContainer = ({
+  user,
+  rules,
+}: {
+  user: string;
+  rules: ruleType[];
+}) => {
   return {
     tag: "div",
     attrs: {
       class: `${user} image-container`,
       dataset: { user: user },
     },
-    children: gameImages(user),
+    children: gameImages({ user, rules }),
   };
 };
 
