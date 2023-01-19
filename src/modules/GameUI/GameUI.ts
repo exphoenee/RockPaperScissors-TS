@@ -437,7 +437,7 @@ export default class GameUI {
     });
   };
 
-  public startComputer = (choosen: number) => {
+  public startComputerAnimation = (choosen: number) => {
     const possibilties = this.rules.length;
     const animSteps = Math.floor(Math.random() * 7) + 8;
 
