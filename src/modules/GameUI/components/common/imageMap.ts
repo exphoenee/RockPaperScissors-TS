@@ -26,7 +26,7 @@ const imageMap = ({
       alt,
       dataset,
       id,
-      src: `${mediaFolder}/loader.png`,
+      src: `${mediaFolder}/loader.svg`,
     },
   });
 
