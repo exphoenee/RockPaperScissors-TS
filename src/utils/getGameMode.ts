@@ -6,7 +6,6 @@ import setState from "./setState";
 const getGameMode = () => {
   const defaultMode: gameNames =
     gameNames[Object.keys(gameNames)[0] as keyof typeof gameNames];
-  console.log(defaultMode);
   const gameMode = getState(appStates.GAMEMODE);
 
   if (gameMode) {
