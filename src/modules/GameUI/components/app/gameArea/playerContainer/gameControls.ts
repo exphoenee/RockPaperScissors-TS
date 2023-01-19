@@ -1,8 +1,9 @@
 import buttonMap from "../../../common/buttonMap";
+import { directions } from "../../../../../../constants/directions";
 
 const gameButtons = [
   {
-    className: ["prev"],
+    className: [directions.PREV],
     fileName: "arrow.png",
     id: "prev-button",
   },
@@ -12,7 +13,7 @@ const gameButtons = [
     id: "start-button",
   },
   {
-    className: ["next"],
+    className: [directions.NEXT],
     fileName: "arrow.png",
     id: "next-button",
   },
