@@ -1,7 +1,8 @@
 enum appStates {
   GAMEMODE = "gamemode",
   LANG = "language",
-  STATMODE = "statisticMode",
+  STATCALCMODE = "statisticMode",
+  STATGAMEMODE = "statisticGameMode",
   STATISTICS = "statistics",
   THEMA = "thema",
 }
