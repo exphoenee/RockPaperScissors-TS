@@ -1,6 +1,6 @@
 import selectMap from "../../../common/selectMap";
 
-import { statModes } from "../../../../../../types/statistics.type";
+import { statCalcModes } from "../../../../../../types/statistics.type";
 import { gameModes, gameNames } from "../../../../../../types/gameType";
 
 const statisticsModal = [
@@ -21,7 +21,7 @@ const statisticsModal = [
     },
     children: [
       ...selectMap({
-        options: Object.values(statModes).map((mode) => {
+        options: Object.values(statCalcModes).map((mode) => {
           return { text: mode, value: mode };
         }),
         label: "Statistics mode",
