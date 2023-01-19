@@ -6,7 +6,7 @@ export type appElementType = {
 };
 
 const appElements: appElementType[] = [
-  { name: "app", id: "app" },
+  { name: "rps-ui", id: "rps-ui" },
   { name: "menu", id: "menu" },
   { name: "settings", id: "settings" },
   { name: "loaderScreen", id: "loader-screen" },
