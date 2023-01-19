@@ -14,8 +14,6 @@ import dictionary, { dictionaryType } from "../../constants/dictionary";
 /* utils */
 import getThema from "../../utils/getThema";
 import setThema from "../../utils/setThema";
-import setLang from "../../utils/setLang";
-import getLang from "../../utils/getLang";
 
 /* enums */
 import options from "./constants/themas";
@@ -86,9 +84,13 @@ export default class GameUI {
     throw new Error("The setGameMode is not defined");
   };
 
+  public setLanguage: (lang: string) => void = () => {
+    throw new Error("The setLanguage is not defined");
+  };
+
   private rules: ruleType[];
 
-  constructor({ rules }: { rules: ruleType[] }) {
+  constructor({ rules, lang }: { rules: ruleType[]; lang: string }) {
     this.userChoice = 0;
     this.opponentChoice = 0;
 
@@ -166,7 +168,7 @@ export default class GameUI {
 
     this.rules = rules;
 
-    this.initialize({ rules });
+    this.initialize({ rules, lang });
   }
 
   private createUI = () => {
@@ -195,7 +197,13 @@ export default class GameUI {
     this.opponentNameElem.textContent = name;
   }
 
-  private initialize = ({ rules }: { rules: ruleType[] }) => {
+  private initialize = ({
+    rules,
+    lang,
+  }: {
+    rules: ruleType[];
+    lang: string;
+  }) => {
     this.initSettings();
     this.initModals();
     this.initLangButtons();
@@ -203,7 +211,7 @@ export default class GameUI {
     this.initGameMode();
     this.initStatistics();
     this.initGameButtons();
-    this.initTitleChange({ rules });
+    this.initTitleChange({ rules, lang });
     this.initPlayersChoices();
     this.initPlayersName();
     this.initScores();
@@ -226,13 +234,19 @@ export default class GameUI {
   }
 
   /* Fancy title and favicon change */
-  private initTitleChange({ rules }: { rules: ruleType[] }) {
+  private initTitleChange({
+    rules,
+    lang,
+  }: {
+    rules: ruleType[];
+    lang: string;
+  }) {
     setInterval(() => {
       const choice: ruleType = rules[Math.floor(Math.random() * rules.length)];
 
       if (choice?.value) {
         const choiceName =
-          dictionary[getLang() as keyof dictionaryType][choice.value as string];
+          dictionary[lang as keyof dictionaryType][choice.value as string];
 
         document.title =
           choiceName[0].toUpperCase() + choiceName.substring(1) + "!";
@@ -277,9 +291,7 @@ export default class GameUI {
   };
 
   /* Language update */
-  private generateTitle(rules: ruleType[]) {
-    const lang = getLang();
-
+  private generateTitle({ rules, lang }: { rules: ruleType[]; lang: string }) {
     return rules
       .map(
         (threw: ruleType) =>
@@ -288,20 +300,31 @@ export default class GameUI {
       .join(", ");
   }
 
-  private updateTitle = (rules: ruleType[]) => {
-    this.mainTitle.innerHTML = this.generateTitle(rules);
+  private updateTitle = ({
+    rules,
+    lang,
+  }: {
+    rules: ruleType[];
+    lang: string;
+  }) => {
+    this.mainTitle.innerHTML = this.generateTitle({ rules, lang });
   };
 
-  private updateLang = ({ rules }: { rules: ruleType[] }) => {
+  public updateLang = ({
+    rules,
+    lang,
+  }: {
+    rules: ruleType[];
+    lang: string;
+  }) => {
     const otherElse = (elem: HTMLElement) => {
       const key = elem.getAttribute("data-dictionary") as string;
-      elem.innerHTML = dictionary[getLang() as keyof typeof dictionary][key];
-      console.log(dictionary[getLang() as keyof typeof dictionary][key]);
+      elem.innerHTML = dictionary[lang as keyof typeof dictionary][key];
     };
 
     this.dictionary.forEach((elem) => {
       elem.id === "main-title"
-        ? this.updateTitle(rules)
+        ? this.updateTitle({ rules, lang })
         : otherElse(elem as HTMLElement);
     });
   };
@@ -310,10 +333,8 @@ export default class GameUI {
   private initLangButtons = () => {
     this.languageButtons.forEach((elem) => {
       elem.addEventListener("click", () => {
-        console.log(elem);
         const lang = elem.getAttribute("data-lang") as string;
-        setLang(lang);
-        this.updateLang();
+        this.setLanguage(lang);
       });
     });
   };
@@ -358,7 +379,7 @@ export default class GameUI {
   };
 
   /* gameMode */
-  changeGameMode(newRules: ruleType[]) {
+  changeGameMode({ rules, lang }: { rules: ruleType[]; lang: string }) {
     Array.from(this.gameModeButton.children).forEach((elem) => {
       ["on", "off"].forEach((className) => elem.classList.toggle(className));
     });
@@ -387,7 +408,7 @@ export default class GameUI {
         )) as HTMLImageElement[]);
     });
 
-    this.updateTitle(newRules);
+    this.updateTitle({ rules, lang });
   }
 
   private initGameMode = () => {
