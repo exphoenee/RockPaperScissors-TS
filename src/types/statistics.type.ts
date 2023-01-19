@@ -1,5 +1,10 @@
+export enum statCalcModes {
+  VALUE = "value",
+  PERCENT = "percent",
+}
+
 export type gameStatisticsType = {
-  name: string;
+  name: statCalcModes;
   values: {
     opponent: {
       [key: string]: number;
@@ -9,13 +14,6 @@ export type gameStatisticsType = {
     };
   };
 };
-
-export enum statModes {
-  VALUE = "value",
-  PERCENT = "percent",
-}
-
-
 
 type statisticsType = gameStatisticsType[];
 
