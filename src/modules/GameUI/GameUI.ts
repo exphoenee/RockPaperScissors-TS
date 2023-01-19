@@ -17,9 +17,11 @@ import setThema from "../../utils/setThema";
 
 /* enums */
 import options from "./constants/themas";
-import gameType, { gameNames } from "../../types/gameType";
+import { gameNames } from "../../types/gameType";
 import { gameImages } from "./components/app/gameArea/playerContainer/playerImageContainer";
 import { statCalcModes } from "../../types/statistics.type";
+import { playerNames } from "../../types/playerName";
+import { directions } from "../../constants/directions";
 
 export type GameUIType = {
   user?: string;
@@ -76,7 +78,7 @@ export default class GameUI {
   public setChoice: (isUserCoiceSet: boolean) => void = () => {
     throw new Error("The setChoice is not defined");
   };
-  public changeChoice: (direction: "next" | "prev") => number = () => {
+  public changeChoice: (direction: directions) => number = () => {
     throw new Error("The choiceChange is not defined");
   };
 
@@ -87,14 +89,28 @@ export default class GameUI {
   public setLanguage: (lang: string) => void = () => {
     throw new Error("The setLanguage is not defined");
   };
+  private static instance: GameUI;
 
-  constructor({ rules, lang }: { rules: ruleType[]; lang: string }) {
+  public static getInstance({
+    rules,
+    lang,
+  }: {
+    rules: ruleType[];
+    lang: string;
+  }): GameUI {
+    if (!this.instance) {
+      this.instance = new GameUI({ rules, lang });
+    }
+    return this.instance;
+  }
+
+  private constructor({ rules, lang }: { rules: ruleType[]; lang: string }) {
     this.userChoice = 0;
     this.opponentChoice = 0;
 
     this.createUI({ rules });
 
-    this.app = document.querySelector("#app") as Element;
+    this.app = document.querySelector("#rps-ui") as Element;
     this.modals = Array.from(document.querySelectorAll(".modal"));
     this.modalButtons = Array.from(document.querySelectorAll(".modal-button"));
     this.closeButtons = Array.from(document.querySelectorAll(".close-button"));
@@ -211,8 +227,8 @@ export default class GameUI {
   };
 
   private initPlayersChoices() {
-    // this.stepImage("user", this.userChoice);
-    // this.stepImage("opponent", this.opponentChoice);
+    // this.stepImage(playerNames.USER this.userChoice);
+    // this.stepImage(plyerNames.OPPONENT, this.opponentChoice);
   }
 
   private initScores() {
@@ -364,8 +380,6 @@ export default class GameUI {
         newThemaId[0] as keyof typeof options
       ] as string;
 
-      console.log(newThema);
-
       this.setUIThema(newThema);
     });
   };
@@ -390,11 +404,11 @@ export default class GameUI {
 
       gameImages({ user, rules, parent: userContainer });
 
-      user === "user" &&
+      user === playerNames.USER &&
         ((this.userImages = Array.from(
           userContainer.children as HTMLCollectionOf<HTMLImageElement>
         )) as HTMLImageElement[]);
-      user === "opponent" &&
+      user === playerNames.OPPONENT &&
         ((this.opponentImages = Array.from(
           userContainer.children as HTMLCollectionOf<HTMLImageElement>
         )) as HTMLImageElement[]);
@@ -442,8 +456,14 @@ export default class GameUI {
     });
   };
 
-  public startComputerAnimation = (choosen: number) => {
-    const possibilties = this.rules.length;
+  public startComputerAnimation = ({
+    choosen,
+    rules,
+  }: {
+    choosen: number;
+    rules: ruleType[];
+  }) => {
+    const possibilties = rules.length;
     const animSteps = Math.floor(Math.random() * 7) + 8;
 
     let anim = new Array(animSteps).fill(0);
@@ -461,7 +481,7 @@ export default class GameUI {
     let delay = 200;
     for (let i = 0; i < anim.length; i++) {
       const to = setTimeout(() => {
-        this.stepImage("opponent", anim[i]);
+        this.stepImage(playerNames.OPPONENT, anim[i]);
         clearTimeout(to);
         if (i === anim.length - 1) {
           this.setChoice(false);
@@ -471,10 +491,7 @@ export default class GameUI {
     }
   };
 
-  private stepImage = (
-    user: "user" | "opponent",
-    direction: "next" | "prev"
-  ) => {
+  private stepImage = (user: playerNames, direction: directions) => {
     const images = user === "user" ? this.userImages : this.opponentImages;
 
     const changeClass = (elem: HTMLElement, action: "set" | "unset") => {
@@ -497,12 +514,14 @@ export default class GameUI {
 
     this.nextButton.addEventListener(
       "click",
-      () => !this.isUIFreezed && this.stepImage("user", "next")
+      () =>
+        !this.isUIFreezed && this.stepImage(playerNames.USER, directions.NEXT)
     );
 
     this.prevButton.addEventListener(
       "click",
-      () => !this.isUIFreezed && this.stepImage("user", "prev")
+      () =>
+        !this.isUIFreezed && this.stepImage(playerNames.USER, directions.PREV)
     );
   };
 }
