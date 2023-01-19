@@ -10,7 +10,6 @@ import ruleType from "../../types/ruleType";
 
 /* constants */
 import dictionary, { dictionaryType } from "../../constants/dictionary";
-import games from "../../constants/games";
 
 /* utils */
 import getThema from "../../utils/getThema";
@@ -69,18 +68,20 @@ export default class GameUI {
   private gameButtons: HTMLButtonElement[];
 
   private isUIFreezed: boolean = false;
-  public action: (userChoice: ruleType) => void = () => {
+  public setChoice: (userChoice: ruleType) => void = () => {
     throw new Error("The action is not defined");
   };
   public changeChoice: (direction: "next" | "prev") => number = () => {
     throw new Error("The choiceChange is not defined");
   };
 
-  constructor() {
+  private rules: ruleType[];
+
+  constructor({ rules }: { rules: ruleType[] }) {
     this.userChoice = 0;
     this.opponentChoice = 0;
 
-    this.creaeUI();
+    this.createUI();
 
     this.app = document.querySelector("#app") as Element;
     this.modals = Array.from(document.querySelectorAll(".modal"));
@@ -152,14 +153,20 @@ export default class GameUI {
       this.startButton,
     ] as HTMLButtonElement[];
 
+    this.rules = rules;
+
     this.initialize();
   }
 
-  private creaeUI = () => {
+  private createUI = () => {
     domelemjs(loaderScreenMap);
     domelemjs(settingsMap);
     domelemjs(appMap());
   };
+
+  public setRules(rules: ruleType[]) {
+    this.rules = rules;
+  }
 
   public setUserWins(value: number) {
     this.userWins.textContent = String(value);
@@ -191,12 +198,6 @@ export default class GameUI {
     this.initScores();
     window.onload = () => this.loaderScreen.remove();
   };
-
-  public getRules() {
-    return (
-      games.find((game) => game.name === getGameMode())?.rules || games[0].rules
-    );
-  }
 
   private initPlayersChoices() {
     // this.stepImage("user", this.userChoice);
@@ -488,7 +489,7 @@ export default class GameUI {
   private initGameButtons = () => {
     this.startButton.addEventListener(
       "click",
-      () => !this.isUIFreezed && this.action(this.rules[this.userChoice])
+      () => !this.isUIFreezed && this.setChoice(this.rules[this.userChoice])
     );
 
     this.nextButton.addEventListener(
