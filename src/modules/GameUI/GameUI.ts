@@ -15,8 +15,6 @@ import dictionary, { dictionaryType } from "../../constants/dictionary";
 import getThema from "../../utils/getThema";
 import setThema from "../../utils/setThema";
 import setLang from "../../utils/setLang";
-import setGameMode from "../../utils/setGameMode";
-import getGameMode from "../../utils/getGameMode";
 import getLang from "../../utils/getLang";
 
 /* enums */
