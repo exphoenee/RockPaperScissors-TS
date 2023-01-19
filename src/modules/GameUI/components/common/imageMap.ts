@@ -7,15 +7,24 @@ export type imageMapType = {
   fileName: string;
   id?: string;
   parent?: HTMLElement;
+  dataset?: { [key: string]: string };
 };
 
-const imageMap = ({ className, alt, id, fileName, parent }: imageMapType) => {
+const imageMap = ({
+  className,
+  alt,
+  id,
+  fileName,
+  parent,
+  dataset,
+}: imageMapType) => {
   const img = domelemjs({
     tag: "img",
     parent,
     attrs: {
       class: [className, `loader-image`].join(" "),
       alt,
+      dataset,
       id,
       src: `${mediaFolder}/loader.png`,
     },
