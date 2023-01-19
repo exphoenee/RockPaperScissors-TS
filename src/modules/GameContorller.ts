@@ -32,6 +32,7 @@ class GameContorller {
   private localhosts: string[] = ["localhost", "127.0.0.1"];
   private userChoiceIndex: number = 0;
   private opponentChoiceIndex: number = 0;
+  private userChoiceSet: boolean = false;
   private gameUI: GameUI;
   private rules: ruleType[];
 
@@ -75,8 +76,6 @@ class GameContorller {
   }
 
   private setUserChoice(direction: "next" | "prev"): number {
-    console.log(direction);
-
     const possibleChoices = this.rules.length;
 
     this.userChoiceIndex =
@@ -96,11 +95,16 @@ class GameContorller {
     return this.rules[index];
   }
 
-  private setChoice(userChoice: ruleType): void {
-    this.userChoice = userChoice;
+  private setChoice(isUserCoiceSet: boolean): void {
+    this.userChoiceSet = isUserCoiceSet;
 
-    if (this.appSettings.gameType === "singleplayer") {
-      this.computerPlay();
+    if (this.userChoiceSet) {
+      this.gameUI.freezeUI();
+      if (this.appSettings.gameType === "singleplayer") {
+        this.computerPlay();
+      }
+    } else {
+      this.gameUI.unfreezeUI();
     }
   }
 }
