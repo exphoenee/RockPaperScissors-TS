@@ -166,7 +166,7 @@ export default class GameUI {
 
     this.rules = rules;
 
-    this.initialize();
+    this.initialize({ rules });
   }
 
   private createUI = () => {
@@ -195,7 +195,7 @@ export default class GameUI {
     this.opponentNameElem.textContent = name;
   }
 
-  private initialize = () => {
+  private initialize = ({ rules }: { rules: ruleType[] }) => {
     this.initSettings();
     this.initModals();
     this.initLangButtons();
@@ -203,7 +203,7 @@ export default class GameUI {
     this.initGameMode();
     this.initStatistics();
     this.initGameButtons();
-    this.initTitleChange();
+    this.initTitleChange({ rules });
     this.initPlayersChoices();
     this.initPlayersName();
     this.initScores();
@@ -226,10 +226,9 @@ export default class GameUI {
   }
 
   /* Fancy title and favicon change */
-  private initTitleChange() {
+  private initTitleChange({ rules }: { rules: ruleType[] }) {
     setInterval(() => {
-      const choice: ruleType =
-        this.rules[Math.floor(Math.random() * this.rules.length)];
+      const choice: ruleType = rules[Math.floor(Math.random() * rules.length)];
 
       if (choice?.value) {
         const choiceName =
@@ -278,9 +277,8 @@ export default class GameUI {
   };
 
   /* Language update */
-  private generateTitle() {
+  private generateTitle(rules: ruleType[]) {
     const lang = getLang();
-    const rules = this.getRules();
 
     return rules
       .map(
@@ -290,11 +288,11 @@ export default class GameUI {
       .join(", ");
   }
 
-  private updateTitle = () => {
-    this.mainTitle.innerHTML = this.generateTitle();
+  private updateTitle = (rules: ruleType[]) => {
+    this.mainTitle.innerHTML = this.generateTitle(rules);
   };
 
-  private updateLang = () => {
+  private updateLang = ({ rules }: { rules: ruleType[] }) => {
     const otherElse = (elem: HTMLElement) => {
       const key = elem.getAttribute("data-dictionary") as string;
       elem.innerHTML = dictionary[getLang() as keyof typeof dictionary][key];
@@ -303,7 +301,7 @@ export default class GameUI {
 
     this.dictionary.forEach((elem) => {
       elem.id === "main-title"
-        ? this.updateTitle()
+        ? this.updateTitle(rules)
         : otherElse(elem as HTMLElement);
     });
   };
@@ -360,7 +358,7 @@ export default class GameUI {
   };
 
   /* gameMode */
-  changeGameMode(newGameMode: string) {
+  changeGameMode(newRules: ruleType[]) {
     Array.from(this.gameModeButton.children).forEach((elem) => {
       ["on", "off"].forEach((className) => elem.classList.toggle(className));
     });
@@ -389,7 +387,7 @@ export default class GameUI {
         )) as HTMLImageElement[]);
     });
 
-    this.updateTitle();
+    this.updateTitle(newRules);
   }
 
   private initGameMode = () => {
