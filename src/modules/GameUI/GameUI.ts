@@ -88,13 +88,11 @@ export default class GameUI {
     throw new Error("The setLanguage is not defined");
   };
 
-  private rules: ruleType[];
-
   constructor({ rules, lang }: { rules: ruleType[]; lang: string }) {
     this.userChoice = 0;
     this.opponentChoice = 0;
 
-    this.createUI();
+    this.createUI({ rules });
 
     this.app = document.querySelector("#app") as Element;
     this.modals = Array.from(document.querySelectorAll(".modal"));
@@ -166,20 +164,14 @@ export default class GameUI {
       this.startButton,
     ] as HTMLButtonElement[];
 
-    this.rules = rules;
-
     this.initialize({ rules, lang });
   }
 
-  private createUI = () => {
+  private createUI = ({ rules }: { rules: ruleType[] }) => {
     domelemjs(loaderScreenMap);
     domelemjs(settingsMap);
-    domelemjs(appMap());
+    domelemjs(appMap({ rules }));
   };
-
-  public setRules(rules: ruleType[]) {
-    this.rules = rules;
-  }
 
   public setUserWins(value: number) {
     this.userWins.textContent = String(value);
@@ -396,7 +388,7 @@ export default class GameUI {
         elem.remove();
       });
 
-      gameImages(user, userContainer);
+      gameImages({ user, rules, parent: userContainer });
 
       user === "user" &&
         ((this.userImages = Array.from(
