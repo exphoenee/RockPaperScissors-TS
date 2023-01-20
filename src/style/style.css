@@ -65,9 +65,34 @@ table {
 }
 
 #settings.closed {
-  transform: translate(-90%, -50%);
+  transform: translate(-95%, -50%);
   opacity: 0.2;
-  background-color: purple;
+  -webkit-animation: blink 2.5s ease-in-out infinite alternate;
+          animation: blink 2.5s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes blink {
+  0% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: red;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes blink {
+  0% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: red;
+  }
+  100% {
+    background-color: transparent;
+  }
 }
 
 #settings.closed .button.settings {
