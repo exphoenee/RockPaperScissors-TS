@@ -67,6 +67,7 @@ table {
 #settings.closed {
   transform: translate(-90%, -50%);
   opacity: 0.2;
+  background-color: purple;
 }
 
 #settings.closed .button.settings {
@@ -555,6 +556,6 @@ tr:nth-child(odd):hover {
   );
 }
 
-#flashlight.light {
+#flashlight.off {
   display: none;
 }
