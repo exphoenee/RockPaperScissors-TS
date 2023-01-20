@@ -61,11 +61,14 @@ export default class GameUI {
   private dictionary: Element[];
   private themable: Element[];
   private selects: HTMLSelectElement[];
-  private flashlight: Element;
+  private flashlight: HTMLElement;
 
   private userChoice: number;
   private opponentChoice: number;
   private gameButtons: HTMLButtonElement[];
+
+  private mouseX: number = 0;
+  private mouseY: number = 0;
 
   private isUIFreezed: boolean = false;
 
@@ -181,7 +184,7 @@ export default class GameUI {
       this.prevButton,
       this.startButton,
     ] as HTMLButtonElement[];
-    this.flashlight = document.querySelector("#flash") as Element;
+    this.flashlight = document.querySelector("#flashlight") as HTMLElement;
 
     this.initialize({ rules, lang });
   }
@@ -231,9 +234,28 @@ export default class GameUI {
   };
 
   private initFlaslight() {
-    const thema = getThema();
-    if (thema === themas.DARK) {
+    if (getThema() === themas.LIGHT) {
+      this.flashlight.classList.add("off");
     }
+
+    const isTouchDevice = () => {
+      try {
+        document.createEvent("TouchEvent");
+        return true;
+      } catch (e) {
+        return false;
+      }
+    };
+
+    const getMousePosition = (e: MouseEvent | TouchEvent) => {
+      this.mouseX = !isTouchDevice() ? e.pageX : e.touches[0].pageX;
+      this.mouseY = !isTouchDevice() ? e.pageY : e.touches[0].pageY;
+      this.flashlight.style.setProperty("--Xpos", `${this.mouseX}px`);
+      this.flashlight.style.setProperty("--Ypos", `${this.mouseY}px`);
+    };
+
+    document.addEventListener("mousemove", (e) => getMousePosition(e));
+    document.addEventListener("touchmove", getMousePosition);
   }
 
   private initPlayersChoices() {
@@ -359,10 +381,18 @@ export default class GameUI {
 
   /* Theming */
   private setUIThema(newThema: string) {
+    const prevThema = getThema();
     setThema(newThema);
 
     Array.from(this.themaButton.children).forEach((elem) => {
-      ["on", "off"].forEach((className) => elem.classList.toggle(className));
+      if (elem.classList.contains(`${newThema}-img`)) {
+        elem.classList.remove("off");
+        elem.classList.add("on");
+      } else {
+        elem.classList.remove("on");
+        elem.classList.add("off");
+      }
+      // ["on", "off"].forEach((className) => elem.classList.toggle(className));
     });
 
     const themaNames = Object.values(options).filter(
@@ -373,6 +403,10 @@ export default class GameUI {
       themaNames.forEach((name) => elem.classList.remove(name));
       elem.classList.add(newThema);
     });
+
+    newThema === "flashlight"
+      ? this.flashlight.classList.remove("off")
+      : this.flashlight.classList.add("off");
   }
 
   // TODO: Refactor this
