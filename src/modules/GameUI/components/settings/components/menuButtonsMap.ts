@@ -1,5 +1,7 @@
 import { buttonMapType } from "../../common/buttonMap";
 import modalNames from "../../../constants/modalNames";
+import flashlight from "../../app/flashlight/flashlight";
+import themas from "../../../constants/themas";
 
 const menuButtonsMap: buttonMapType[] = [
   {
@@ -25,8 +27,12 @@ const menuButtonsMap: buttonMapType[] = [
   {
     className: ["thema"],
     id: "thema-button",
-    imageClass: ["sun on", "moon off"],
-    fileName: ["sunny.png", "moon.png"],
+    imageClass: [
+      `sun on ${themas.LIGHT}-img`,
+      `moon off ${themas.DARK}-img`,
+      `flashlight off ${themas.FLASHLIGHT}-img`,
+    ],
+    fileName: ["sunny.png", "moon.png", "flashlight.png"],
   },
   {
     className: ["gamemode"],
