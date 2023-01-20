@@ -381,7 +381,6 @@ export default class GameUI {
 
   /* Theming */
   private setUIThema(newThema: string) {
-    const prevThema = getThema();
     setThema(newThema);
 
     Array.from(this.themaButton.children).forEach((elem) => {
@@ -392,7 +391,6 @@ export default class GameUI {
         elem.classList.remove("on");
         elem.classList.add("off");
       }
-      // ["on", "off"].forEach((className) => elem.classList.toggle(className));
     });
 
     const themaNames = Object.values(options).filter(
