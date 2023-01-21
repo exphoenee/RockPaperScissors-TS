@@ -1,5 +1,5 @@
 import appStates from "../constants/appStates";
-import themas from "../modules/GameUI/constants/themas";
+import { themas } from "../constants/themas";
 import getState from "./getState";
 import checkStrIsInEnum from "./checkStrIsInEnum";
 
