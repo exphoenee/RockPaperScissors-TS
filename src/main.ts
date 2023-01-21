@@ -8,4 +8,4 @@ import "./style/style.css";
 import StateHandler from "./modules/StorageHandler/StateHangler";
 
 new GameContorller();
-// const state = new StateHandler({mata: "faka"});
+const state = new StateHandler({ mata: "faka" });
