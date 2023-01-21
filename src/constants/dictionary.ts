@@ -1,9 +1,3 @@
-export enum usedLangs {
-  ENGLISH = "en",
-  GERMAN = "de",
-  HUNGARIAN = "hu",
-}
-
 export const langImages = {
   en: "en.png",
   de: "de.png",
