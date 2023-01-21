@@ -5,4 +5,7 @@ import GameContorller from "./modules/GameContorller";
 import "./style/reset.css";
 import "./style/style.css";
 
+import StateHandler from "./modules/StorageHandler/StateHangler";
+
 new GameContorller();
+// const state = new StateHandler({mata: "faka"});
