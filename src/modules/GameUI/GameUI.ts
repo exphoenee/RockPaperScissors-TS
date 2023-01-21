@@ -16,13 +16,12 @@ import getThema from "../../utils/getThema";
 import setThema from "../../utils/setThema";
 
 /* enums */
-import options from "./constants/themas";
-import { gameNames } from "../../types/gameType";
+import { gameNames } from "../../constants/gameNames";
 import { gameImages } from "./components/app/gameArea/playerContainer/playerImageContainer";
-import { statCalcModes } from "../../types/statistics.type";
+import { statCalcModes } from "../../constants/statCalcModes";
 import { playerNames } from "../../types/playerName";
 import { directions } from "../../constants/directions";
-import themas from "./constants/themas";
+import { themas } from "../../constants/themas";
 
 export type GameUIType = {
   user?: string;
@@ -393,7 +392,7 @@ export default class GameUI {
       }
     });
 
-    const themaNames = Object.values(options).filter(
+    const themaNames = Object.values(themas).filter(
       (name) => name !== newThema
     );
 
@@ -413,13 +412,13 @@ export default class GameUI {
 
     this.themaButton.addEventListener("click", () => {
       const thema = getThema();
-      const themaDate = Object.entries(options);
+      const themaDate = Object.entries(themas);
       const nrOfTemas = themaDate.length;
 
       const themaIndex = themaDate.findIndex(([_, value]) => value === thema);
       const newThemaId = themaDate[(themaIndex + 1) % nrOfTemas];
-      const newThema: string = options[
-        newThemaId[0] as keyof typeof options
+      const newThema: string = themas[
+        newThemaId[0] as keyof typeof themas
       ] as string;
 
       this.setUIThema(newThema);
