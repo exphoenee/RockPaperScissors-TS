@@ -1,4 +1,4 @@
-import { gameNames } from "../types/gameType";
+import { gameNames } from "../constants/gameNames";
 import gameType from "../types/gameType";
 
 const games: gameType[] = [
