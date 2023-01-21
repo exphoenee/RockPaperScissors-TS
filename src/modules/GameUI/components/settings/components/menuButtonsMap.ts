@@ -1,7 +1,7 @@
 import { buttonMapType } from "../../common/buttonMap";
 import modalNames from "../../../constants/modalNames";
 import flashlight from "../../app/flashlight/flashlight";
-import themas from "../../../constants/themas";
+import { themas } from "../../../../../constants/themas";
 
 const menuButtonsMap: buttonMapType[] = [
   {
