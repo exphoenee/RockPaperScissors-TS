@@ -1,7 +1,7 @@
 import selectMap from "../../../common/selectMap";
 
-import { statCalcModes } from "../../../../../../types/statistics.type";
-import { gameModes, gameNames } from "../../../../../../types/gameType";
+import { statCalcModes } from "../../../../../../constants/statCalcModes";
+import { gameNames } from "../../../../../../constants/gameNames";
 
 const statisticsModal = [
   {
