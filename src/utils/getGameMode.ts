@@ -1,6 +1,6 @@
 import appStates from "../constants/appStates";
 import getState from "./getState";
-import { gameNames } from "../types/gameType";
+import { gameNames } from "../constants/gameNames";
 import setState from "./setState";
 
 const getGameMode = () => {
