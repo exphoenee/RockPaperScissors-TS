@@ -46,6 +46,7 @@ class StateHandler {
       this.setState(defaultState);
       console.log("StateHandler: No state found, creating new default state!");
     }
+    console.log("StateHandler: last state loaded!");
   }
 
   public getState(): any {
