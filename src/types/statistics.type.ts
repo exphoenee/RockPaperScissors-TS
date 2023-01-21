@@ -1,19 +1,4 @@
-export enum statCalcModes {
-  VALUE = "value",
-  PERCENT = "percent",
-}
-
-export type gameStatisticsType = {
-  name: statCalcModes;
-  values: {
-    opponent: {
-      [key: string]: number;
-    };
-    player: {
-      [key: string]: number;
-    };
-  };
-};
+import { gameStatisticsType } from "../types/gameStatisticsType";
 
 type statisticsType = gameStatisticsType[];
 
