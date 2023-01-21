@@ -21,7 +21,7 @@ function getFirstValue<T>(obj: T): T[keyof T] {
   return obj[Object.keys(obj)[0] as keyof T];
 }
 
-const deafultState: stateType = {
+const defaultState: stateType = {
   gamemode: getFirstValue(gameNames),
   language: getFirstValue(usedLangs),
   statisticMode: getFirstValue(statCalcModes),
@@ -31,12 +31,18 @@ const deafultState: stateType = {
 };
 
 class StateHandler {
-  private state: {};
+  private state: stateType;
 
-  constructor(defaultState: stateType) {
+  constructor() {
     this.state = this.getState();
-    if (!this.state || typeof this.state !== typeof defaultState) {
-      this.state = deafultState;
+
+    const stateKeys = Object.keys(this.state);
+    const defaultKeys = Object.keys(defaultState);
+
+    const isCorrectType = defaultKeys.every((key) => stateKeys.includes(key));
+
+    if (!this.state || !isCorrectType) {
+      this.state = defaultState;
       this.setState(defaultState);
       console.log("StateHandler: No state found, creating new default state!");
     }
