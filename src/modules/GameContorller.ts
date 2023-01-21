@@ -2,8 +2,8 @@
 import GameUI from "./GameUI/GameUI";
 
 /* enums */
-import gameType, { gameNames } from "../types/gameType";
-import { statCalcModes } from "../types/statistics.type";
+import { gameNames } from "../constants/gameNames";
+import { statCalcModes } from "../constants/statCalcModes";
 
 /* constants */
 import games from "../constants/games";
