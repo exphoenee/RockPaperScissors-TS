@@ -56,8 +56,11 @@ class StateHandler {
 
   public getState(): any {
     try {
-      const value = localStorage.getItem("state");
-      if (value) return JSON.parse(value);
+      const decoder = new TextDecoder();
+      const value = localStorage.getItem("state") as string;
+      const encodedState = JSON.parse(value) as Uint8Array;
+      console.log(encodedState);
+      if (value) return decoder.decode(encodedState as Uint8Array);
       return null;
     } catch (e) {
       console.error(e);
@@ -68,16 +71,9 @@ class StateHandler {
   public async setState(value: any): Promise<boolean> {
     try {
       const encoder = new TextEncoder();
-
-      const byteArr = encoder.encode(value);
-
-      console.log(byteArr);
-      localStorage.setItem("state", JSON.stringify(byteArr));
-
-      const decoder = new TextDecoder();
-      const text = decoder.decode(byteArr);
-
-      console.log(text);
+      const encodedState = encoder.encode(JSON.stringify(value));
+      console.log(encodedState.map(num=>num.toString()));
+      localStorage.setItem("state", JSON.stringify({state: encodedState}));
 
       return true;
     } catch (e) {
