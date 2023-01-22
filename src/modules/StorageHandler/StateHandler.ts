@@ -58,12 +58,11 @@ class StateHandler {
     try {
       const decoder = new TextDecoder();
       const value = localStorage.getItem("state") as string;
-      const encodedState = JSON.parse(value) as Uint8Array;
-      console.log(encodedState);
+      const encodedState = new Uint8Array(JSON.parse(value).split(","));
       if (value) return decoder.decode(encodedState as Uint8Array);
       return null;
     } catch (e) {
-      console.error(e);
+      console.log("StateHandler: No state found!");
       return null;
     }
   }
@@ -72,9 +71,7 @@ class StateHandler {
     try {
       const encoder = new TextEncoder();
       const encodedState = encoder.encode(JSON.stringify(value));
-      console.log(encodedState.map(num=>num.toString()));
-      localStorage.setItem("state", JSON.stringify({state: encodedState}));
-
+      localStorage.setItem("state", JSON.stringify(encodedState.toString()));
       return true;
     } catch (e) {
       console.error(e);
