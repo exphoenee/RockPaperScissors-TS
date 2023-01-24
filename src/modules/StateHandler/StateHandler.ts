@@ -84,7 +84,7 @@ class StateHandler {
   }
 
   public getThema(): themas {
-    return this.state.thema;
+    return this.state.thema as themas;
   }
 
   public setThema(value: themas): void {
