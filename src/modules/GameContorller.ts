@@ -93,7 +93,7 @@ class GameContorller {
   private setLanguage(lang: string): void {
     this.appSettings.language = lang;
     this.gameUI.updateLang({ rules: this.rules, lang });
-    setLang(lang);
+    this.state.setLang(lang);
   }
 
   setGameMode(): void {
@@ -113,19 +113,19 @@ class GameContorller {
       rules: this.rules,
       lang: this.appSettings.language,
     });
-    setGameMode(newGame);
+    this.state.setGameMode(newGame);
   }
 
   setStatCalcMode(mode: statCalcModes): void {
     this.appSettings.statCalcMode = mode;
     console.log(mode);
-    setStateCalcMode(mode);
+    this.state.setStatCalcMode(mode);
   }
 
   setStatGameMode(mode: gameNames): void {
     this.appSettings.statGameMode = mode;
     console.log(mode);
-    setStateGameMode(mode);
+    this.state.setGameMode(mode);
   }
 
   private setUserChoice(direction: directions): number {
