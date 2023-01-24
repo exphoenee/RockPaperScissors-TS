@@ -11,9 +11,7 @@ import ruleType from "../../types/ruleType";
 /* constants */
 import dictionary, { dictionaryType } from "../../constants/dictionary";
 
-/* utils */
-import getThema from "../../utils/getThema";
-import setThema from "../../utils/setThema";
+import StateHandler from "../StateHandler/StateHandler";
 
 /* enums */
 import { gameNames } from "../../constants/gameNames";
@@ -31,6 +29,7 @@ export type GameUIType = {
 export default class GameUI {
   // private settings: Element;
 
+  private state: StateHandler;
   private app: Element;
   private modals: Element[];
   private loaderScreen: Element;
@@ -108,9 +107,19 @@ export default class GameUI {
     return this.instance;
   }
 
-  private constructor({ rules, lang }: { rules: ruleType[]; lang: string }) {
+  private constructor({
+    rules,
+    lang,
+    state,
+  }: {
+    rules: ruleType[];
+    lang: string;
+    state: StateHandler;
+  }) {
     this.userChoice = 0;
     this.opponentChoice = 0;
+
+    this.state = state;
 
     this.createUI({ rules });
 
@@ -233,7 +242,7 @@ export default class GameUI {
   };
 
   private initFlaslight() {
-    if (getThema() === themas.LIGHT) {
+    if (this.state.getThema() === themas.LIGHT) {
       this.flashlight.classList.add("off");
     }
 
@@ -380,7 +389,7 @@ export default class GameUI {
 
   /* Theming */
   private setUIThema(newThema: string) {
-    setThema(newThema);
+    this.state.setThema(newThema);
 
     Array.from(this.themaButton.children).forEach((elem) => {
       if (elem.classList.contains(`${newThema}-img`)) {
@@ -408,10 +417,11 @@ export default class GameUI {
 
   // TODO: Refactor this
   private initTheming = () => {
-    this.setUIThema(getThema());
+    const thema: themas = this.state.getThema();
+    this.setUIThema(thema);
 
     this.themaButton.addEventListener("click", () => {
-      const thema = getThema();
+      const thema = this.state.getThema();
       const themaDate = Object.entries(themas);
       const nrOfTemas = themaDate.length;
 
