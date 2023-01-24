@@ -1,5 +1,6 @@
 /* modules */
 import GameUI from "./GameUI/GameUI";
+import StateHandler from "./StateHandler/StateHandler";
 
 /* enums */
 import { gameNames } from "../constants/gameNames";
@@ -9,15 +10,6 @@ import { statCalcModes } from "../constants/statCalcModes";
 import games from "../constants/games";
 
 /* utils */
-import getGameMode from "../utils/getGameMode";
-import setGameMode from "../utils/setGameMode";
-import getThema from "../utils/getThema";
-import setLang from "../utils/setLang";
-import getLang from "../utils/getLang";
-import getStatCalcMode from "../utils/getStatCalcMode";
-import setStateCalcMode from "../utils/setStatCalcMode";
-import getStatGameMode from "../utils/getStatGameMode";
-import setStateGameMode from "../utils/setStatGameMode";
 import ruleType from "../types/ruleType";
 import { directions } from "../constants/directions";
 
@@ -43,17 +35,18 @@ class GameContorller {
   private userChoiceSet: boolean = false;
   private gameUI: GameUI;
   private rules: ruleType[];
+  private state: StateHandler = new StateHandler();
 
   constructor() {
     /* Setting up appSettings */
     this.appSettings = {
       developerMode: this.checkRunsLocal(),
       gameType: "singleplayer",
-      thema: getThema(),
-      gameMode: getGameMode(),
-      language: getLang(),
-      statCalcMode: getStatCalcMode(),
-      statGameMode: getStatGameMode(),
+      thema: this.state.getThema(),
+      gameMode: this.state.getGameMode(),
+      language: this.state.getLang(),
+      statCalcMode: this.state.getStatCalcMode(),
+      statGameMode: this.state.getStatGameMode(),
       userName: "You",
       opponentName: "Opponent",
       imageLoaded: 0,
@@ -72,6 +65,7 @@ class GameContorller {
     this.gameUI = GameUI.getInstance({
       rules: this.rules,
       lang: this.appSettings.language,
+      state: this.state,
     });
 
     this.gameUI.setUserName(this.appSettings.userName);
