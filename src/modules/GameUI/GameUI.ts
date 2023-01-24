@@ -21,9 +21,14 @@ import { playerNames } from "../../types/playerName";
 import { directions } from "../../constants/directions";
 import { themas } from "../../constants/themas";
 
+/* style */
+import "../../style/reset.css";
+import "../../style/style.css";
+
 export type GameUIType = {
-  user?: string;
-  opponent?: string;
+  rules: ruleType[];
+  lang: string;
+  state: StateHandler;
 };
 
 export default class GameUI {
@@ -97,12 +102,10 @@ export default class GameUI {
   public static getInstance({
     rules,
     lang,
-  }: {
-    rules: ruleType[];
-    lang: string;
-  }): GameUI {
+    state
+  }: GameUIType): GameUI {
     if (!this.instance) {
-      this.instance = new GameUI({ rules, lang });
+      this.instance = new GameUI({ rules, lang, state });
     }
     return this.instance;
   }
@@ -111,11 +114,7 @@ export default class GameUI {
     rules,
     lang,
     state,
-  }: {
-    rules: ruleType[];
-    lang: string;
-    state: StateHandler;
-  }) {
+  }: GameUIType) {
     this.userChoice = 0;
     this.opponentChoice = 0;
 
