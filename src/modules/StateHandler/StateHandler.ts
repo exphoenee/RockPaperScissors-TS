@@ -5,6 +5,7 @@ import { gameStatisticsType } from "../../types/gameStatisticsType";
 import { themas } from "../../constants/themas";
 
 export type stateType = {
+  developerMode: boolean;
   gamemode: gameNames;
   language: usedLangs;
   statisticMode: statCalcModes;
@@ -22,6 +23,7 @@ function getFirstValue(obj: {}): {}[keyof {}] {
 }
 
 const defaultState: stateType = {
+  developerMode: false,
   gamemode: getFirstValue(gameNames),
   language: getFirstValue(usedLangs),
   statisticMode: getFirstValue(statCalcModes),
@@ -32,9 +34,17 @@ const defaultState: stateType = {
 
 class StateHandler {
   public state: stateType;
+  private localhosts: string[] = ["localhost", "127.0.0.1"];
 
   constructor() {
     this.state = this.getState();
+    this.state.developerMode = this.checkRunsLocal();
+  }
+
+  private checkRunsLocal(): boolean {
+    return !!this.localhosts.find(
+      (host) => window.location.origin.indexOf(host) > -1
+    );
   }
 
   public getGameMode(): gameNames {
@@ -130,7 +140,8 @@ class StateHandler {
       const encoder = new TextEncoder();
       const encodedState = encoder.encode(JSON.stringify(value));
       localStorage.setItem("state", JSON.stringify(encodedState.toString()));
-      localStorage.setItem("readable", JSON.stringify(value));
+      this.state.developerMode &&
+        localStorage.setItem("readable", JSON.stringify(value));
       return true;
     } catch (e) {
       console.error(e);
