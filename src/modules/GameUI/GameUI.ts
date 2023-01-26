@@ -249,8 +249,16 @@ export default class GameUI {
     };
 
     const getMousePosition = (e: MouseEvent | TouchEvent) => {
-      this.mouseX = !isTouchDevice() ? e.pageX : e.touches[0].pageX;
-      this.mouseY = !isTouchDevice() ? e.pageY : e.touches[0].pageY;
+      this.mouseX = !isTouchDevice()
+        ? e instanceof MouseEvent
+          ? e.pageX
+          : e.touches[0].pageX
+        : 0;
+      this.mouseY = !isTouchDevice()
+        ? e instanceof MouseEvent
+          ? e.pageY
+          : e.touches[0].pageY
+        : 0;
       this.flashlight.style.setProperty("--Xpos", `${this.mouseX}px`);
       this.flashlight.style.setProperty("--Ypos", `${this.mouseY}px`);
     };
@@ -382,7 +390,7 @@ export default class GameUI {
 
   /* Theming */
   private setUIThema(newThema: string) {
-    this.stateHandler.setThema(newThema);
+    this.stateHandler.setThema(newThema as themas);
 
     Array.from(this.themaButton.children).forEach((elem) => {
       if (elem.classList.contains(`${newThema}-img`)) {
