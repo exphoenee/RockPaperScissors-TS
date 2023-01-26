@@ -4,7 +4,7 @@ import { statCalcModes } from "../../constants/statCalcModes";
 import { gameStatisticsType } from "../../types/gameStatisticsType";
 import { themas } from "../../constants/themas";
 
-type stateType = {
+export type stateType = {
   gamemode: gameNames;
   language: usedLangs;
   statisticMode: statCalcModes;
@@ -31,7 +31,7 @@ const defaultState: stateType = {
 };
 
 class StateHandler {
-  private state: stateType;
+  public state: stateType;
 
   constructor() {
     this.state = this.getState();
