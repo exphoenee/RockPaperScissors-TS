@@ -38,6 +38,7 @@ class GameContorller {
   private state: StateHandler = new StateHandler();
 
   constructor() {
+
     /* Setting up appSettings */
     this.appSettings = {
       developerMode: this.checkRunsLocal(),
