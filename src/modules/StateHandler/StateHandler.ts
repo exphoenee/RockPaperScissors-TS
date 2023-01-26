@@ -35,7 +35,6 @@ class StateHandler {
 
   constructor() {
     this.state = this.getState();
-    this.setState(this.state);
   }
 
   public getGameMode(): gameNames {
@@ -122,9 +121,8 @@ class StateHandler {
       }
     } catch (e) {
       console.log("StateHandler: No state found!");
-    } finally {
-      return defaultState;
     }
+    return defaultState;
   }
 
   private setState(value: stateType): boolean {
