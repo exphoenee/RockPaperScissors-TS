@@ -7,6 +7,7 @@ import appMap from "./components/app/appMap";
 
 /* types */
 import ruleType from "../../types/ruleType";
+import { stateType } from "../StateHandler/StateHandler";
 
 /* constants */
 import dictionary, { dictionaryType } from "../../constants/dictionary";
@@ -27,14 +28,14 @@ import "../../style/style.css";
 
 export type GameUIType = {
   rules: ruleType[];
-  lang: string;
-  state: StateHandler;
+  stateHandler: StateHandler;
 };
 
 export default class GameUI {
   // private settings: Element;
 
-  private state: StateHandler;
+  private stateHandler: StateHandler;
+  private state: stateType;
   private app: Element;
   private modals: Element[];
   private loaderScreen: Element;
@@ -99,26 +100,19 @@ export default class GameUI {
   };
   private static instance: GameUI;
 
-  public static getInstance({
-    rules,
-    lang,
-    state
-  }: GameUIType): GameUI {
+  public static getInstance({ rules, stateHandler }: GameUIType): GameUI {
     if (!this.instance) {
-      this.instance = new GameUI({ rules, lang, state });
+      this.instance = new GameUI({ rules, stateHandler });
     }
     return this.instance;
   }
 
-  private constructor({
-    rules,
-    lang,
-    state,
-  }: GameUIType) {
+  private constructor({ rules, stateHandler }: GameUIType) {
     this.userChoice = 0;
     this.opponentChoice = 0;
 
-    this.state = state;
+    this.stateHandler = stateHandler;
+    this.state = stateHandler.state;
 
     this.createUI({ rules });
 
@@ -193,7 +187,7 @@ export default class GameUI {
     ] as HTMLButtonElement[];
     this.flashlight = document.querySelector("#flashlight") as HTMLElement;
 
-    this.initialize({ rules, lang });
+    this.initialize({ rules, lang: this.state.language });
   }
 
   private createUI = ({ rules }: { rules: ruleType[] }) => {
@@ -241,7 +235,7 @@ export default class GameUI {
   };
 
   private initFlaslight() {
-    if (this.state.getThema() === themas.LIGHT) {
+    if (this.stateHandler.getThema() === themas.LIGHT) {
       this.flashlight.classList.add("off");
     }
 
@@ -388,7 +382,7 @@ export default class GameUI {
 
   /* Theming */
   private setUIThema(newThema: string) {
-    this.state.setThema(newThema);
+    this.stateHandler.setThema(newThema);
 
     Array.from(this.themaButton.children).forEach((elem) => {
       if (elem.classList.contains(`${newThema}-img`)) {
@@ -416,11 +410,11 @@ export default class GameUI {
 
   // TODO: Refactor this
   private initTheming = () => {
-    const thema: themas = this.state.getThema();
+    const thema: themas = this.stateHandler.getThema();
     this.setUIThema(thema);
 
     this.themaButton.addEventListener("click", () => {
-      const thema = this.state.getThema();
+      const thema = this.stateHandler.getThema();
       const themaDate = Object.entries(themas);
       const nrOfTemas = themaDate.length;
 
