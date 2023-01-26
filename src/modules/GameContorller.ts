@@ -10,23 +10,20 @@ import { statCalcModes } from "../constants/statCalcModes";
 import games from "../constants/games";
 
 /* utils */
+import { stateType } from "./StateHandler/StateHandler";
 import ruleType from "../types/ruleType";
 import { directions } from "../constants/directions";
+import { usedLangs } from "../constants/usedLangs";
 
 class GameContorller {
   private appSettings: {
     developerMode: boolean;
-    gameMode: gameNames;
     gameType: "singleplayer" | "multiplayer";
-    thema: string;
-    language: string;
     userName: string;
     opponentName: string;
     imageLoaded: number;
     imageCount: number;
     popupTimeout: number;
-    statCalcMode: statCalcModes;
-    statGameMode: gameNames;
     computerRollLength: number;
   };
   private localhosts: string[] = ["localhost", "127.0.0.1"];
@@ -35,19 +32,16 @@ class GameContorller {
   private userChoiceSet: boolean = false;
   private gameUI: GameUI;
   private rules: ruleType[];
-  private state: StateHandler = new StateHandler();
+  private stateHandler: StateHandler = new StateHandler();
+  private state: stateType;
 
   constructor() {
+    this.state = this.stateHandler.state;
 
     /* Setting up appSettings */
     this.appSettings = {
       developerMode: this.checkRunsLocal(),
       gameType: "singleplayer",
-      thema: this.state.getThema(),
-      gameMode: this.state.getGameMode(),
-      language: this.state.getLang(),
-      statCalcMode: this.state.getStatCalcMode(),
-      statGameMode: this.state.getStatGameMode(),
       userName: "You",
       opponentName: "Opponent",
       imageLoaded: 0,
@@ -58,15 +52,14 @@ class GameContorller {
 
     /* Setting up games */
     this.rules =
-      games.find((game) => game.name === this.appSettings.gameMode)?.rules ||
+      games.find((game) => game.name === this.state.gamemode)?.rules ||
       games[0]?.rules;
     this.opponentChoiceIndex = this.userChoiceIndex = 0;
 
     /* Setting up gameUi */
     this.gameUI = GameUI.getInstance({
       rules: this.rules,
-      lang: this.appSettings.language,
-      state: this.state,
+      stateHandler: this.stateHandler,
     });
 
     this.gameUI.setUserName(this.appSettings.userName);
@@ -92,14 +85,13 @@ class GameContorller {
   }
 
   private setLanguage(lang: string): void {
-    this.appSettings.language = lang;
     this.gameUI.updateLang({ rules: this.rules, lang });
-    this.state.setLang(lang);
+    this.stateHandler.setLang(lang as usedLangs);
   }
 
   setGameMode(): void {
     const gameIdx = games.findIndex(
-      (game) => game.name === this.appSettings.gameMode
+      (game) => game.name === this.state.gamemode
     );
 
     const newGame: gameNames =
@@ -109,24 +101,24 @@ class GameContorller {
 
     this.rules = games.find((game) => game.name === newGame)?.rules || [];
 
-    this.appSettings.gameMode = newGame;
+    this.state.gamemode = newGame;
     this.gameUI.changeGameMode({
       rules: this.rules,
-      lang: this.appSettings.language,
+      lang: this.state.language,
     });
-    this.state.setGameMode(newGame);
+    this.stateHandler.setGameMode(newGame);
   }
 
   setStatCalcMode(mode: statCalcModes): void {
-    this.appSettings.statCalcMode = mode;
+    this.state.statisticMode = mode;
     console.log(mode);
-    this.state.setStatCalcMode(mode);
+    this.stateHandler.setStatCalcMode(mode);
   }
 
   setStatGameMode(mode: gameNames): void {
-    this.appSettings.statGameMode = mode;
+    this.state.statisticGameMode = mode;
     console.log(mode);
-    this.state.setGameMode(mode);
+    this.stateHandler.setGameMode(mode);
   }
 
   private setUserChoice(direction: directions): number {
