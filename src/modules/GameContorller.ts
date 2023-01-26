@@ -17,7 +17,6 @@ import { usedLangs } from "../constants/usedLangs";
 
 class GameContorller {
   private appSettings: {
-    developerMode: boolean;
     gameType: "singleplayer" | "multiplayer";
     userName: string;
     opponentName: string;
@@ -26,7 +25,7 @@ class GameContorller {
     popupTimeout: number;
     computerRollLength: number;
   };
-  private localhosts: string[] = ["localhost", "127.0.0.1"];
+
   private userChoiceIndex: number = 0;
   private opponentChoiceIndex: number = 0;
   private userChoiceSet: boolean = false;
@@ -40,7 +39,6 @@ class GameContorller {
 
     /* Setting up appSettings */
     this.appSettings = {
-      developerMode: this.checkRunsLocal(),
       gameType: "singleplayer",
       userName: "You",
       opponentName: "Opponent",
@@ -72,12 +70,6 @@ class GameContorller {
     this.gameUI.setStatGameMode = this.setStatGameMode.bind(this);
     this.gameUI.setGameMode = this.setGameMode.bind(this);
     this.gameUI.setLanguage = this.setLanguage.bind(this);
-  }
-
-  private checkRunsLocal(): boolean {
-    return !!this.localhosts.find(
-      (host) => window.location.origin.indexOf(host) > -1
-    );
   }
 
   setGameType(type: "singleplayer" | "multiplayer"): void {
