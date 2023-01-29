@@ -1,7 +1,7 @@
 import playerContainer from "./playerContainer/playerContainer";
 import vsImageContainer from "./vsImageContainer/vsImageContainer";
 import ruleType from "../../../../../types/ruleType";
-import { playerNames } from "../../../../../types/playerName";
+import { userNames } from "../../../../../constants/userNames";
 
 const gameAreaMap = ({ rules }: { rules: ruleType[] }) => {
   return {
@@ -10,9 +10,9 @@ const gameAreaMap = ({ rules }: { rules: ruleType[] }) => {
       class: "game-area",
     },
     children: [
-      playerContainer({ user: playerNames.USER, rules }),
+      playerContainer({ user: userNames.USER, rules }),
       vsImageContainer,
-      playerContainer({ user: playerNames.OPPONENT, rules }),
+      playerContainer({ user: userNames.OPPONENT, rules }),
     ],
   };
 };
