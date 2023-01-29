@@ -4,6 +4,7 @@ import { userNames } from "../constants/userNames";
 export type gameResultType = [
   {
     threwName: string;
+    timeDate: string;
     value: number;
   }
 ];
