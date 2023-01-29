@@ -6,12 +6,55 @@ import { gameResultType } from "../../types/gameResultType";
 class StatisticsHandler {
   private statistics: gameStatisticsType | [] = [];
 
-  constructor() {
-    console.log("StatisticsHandler constructor");
+  constructor(statistics?: gameStatisticsType) {
+    if (statistics) this.statistics = statistics as gameStatisticsType;
   }
 
-  addStatistics(statistics: gameStatisticsType) {
+  fillStatistics(statistics: gameStatisticsType) {
     this.statistics = statistics;
+  }
+
+  getTable() {
+    const data = this.statistics;
+    const header = [
+      "userName",
+      ...new Set(
+        data.flatMap((x) =>
+          x.statistics.flatMap((y) => y.results.map((z) => z.threwName))
+        )
+      ),
+    ];
+    const rows = data.map((x) => [
+      x.userName,
+      ...header
+        .slice(1)
+        .map(
+          (y) =>
+            x.statistics
+              .flatMap((z) => z.results)
+              .find((w) => w.threwName === y)?.value || 0
+        ),
+      x.statistics
+        .flatMap((y) => y.results.map((z) => z.value))
+        .reduce((a, b) => a + b, 0),
+    ]);
+    const footer = [
+      "Total",
+      ...header
+        .slice(1)
+        .map((x) => rows.reduce((a, b) => a + (b[header.indexOf(x)] || 0), 0)),
+      rows.reduce((a, b) => a + b[header.length - 2], 0),
+    ];
+
+    const result = [header, ...rows, footer];
+    console.log(result);
+    return result;
+  }
+
+  getTableTransposed() {
+    const result = this.getTable();
+    const transposed = result[0].map((col, i) => result.map((row) => row[i]));
+    console.log(transposed);
   }
 
   getStatistics(): gameStatisticsType | [] {
