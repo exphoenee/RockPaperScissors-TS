@@ -9,7 +9,7 @@ const playerContainer = ({
   rules,
 }: {
   user: string;
-  rules: ruleType;
+  rules: ruleType[];
 }) => {
   return {
     tag: "div",
