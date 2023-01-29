@@ -2,12 +2,12 @@ import imageMap from "../../../common/imageMap";
 import ruleType from "../../../../../../types/ruleType";
 
 export const gameImages = ({
-  rules,
   user,
+  rules,
   parent,
 }: {
-  rules: ruleType[];
   user: string;
+  rules: ruleType[];
   parent?: HTMLElement;
 }) => {
   const images = rules.map((game: ruleType) => {
