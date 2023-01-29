@@ -1,13 +1,23 @@
-import { statCalcModes } from "../constants/statCalcModes";
+import { gameNames } from "../constants/gameNames";
+import { userNames } from "../constants/userNames";
 
-export type gameStatisticsType = {
-  name: statCalcModes;
-  values: {
-    opponent: {
-      [key: string]: number;
-    };
-    player: {
-      [key: string]: number;
-    };
-  };
-};
+export type gameResultType = [
+  {
+    threwName: string;
+    value: number;
+  }
+];
+
+export type statisticsType = [
+  {
+    gameName: gameNames;
+    results: gameResultType;
+  }
+];
+
+export type gameStatisticsType = [
+  {
+    userName: userNames;
+    statistics: statisticsType;
+  }
+];
