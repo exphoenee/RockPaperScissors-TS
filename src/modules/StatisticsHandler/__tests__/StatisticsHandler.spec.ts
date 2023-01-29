@@ -1,10 +1,37 @@
 import StatisticsHandler from "../StatisticsHandler";
-import { gameStatisticsType } from "../../../types/gameStatisticsType";
-import { gameNames } from "../../../constants/gameNames";
-import { userNames } from "../../../constants/userNames";
 
 describe("StatisticsHandler", () => {
-  it("should return the correct statistics", () => {
-    const statisticsHandler = new StatisticsHandler();
-  }).toBe("true");
+  let statisticsHandler: StatisticsHandler;
+
+  beforeEach(() => {
+    statisticsHandler = new StatisticsHandler();
+  });
+
+  test("addValue adds a value to statistics", () => {
+    statisticsHandler.addValue({
+      userName: "John",
+      gameName: "Rock Paper Scissors",
+      threwName: "Rock",
+    });
+
+    const statistics = statisticsHandler.getStatistics();
+
+    expect(statistics).toEqual([
+      {
+        userName: "John",
+        statistics: [
+          {
+            gameName: "Rock Paper Scissors",
+            results: [
+              {
+                threwName: "Rock",
+                value: 1,
+                timeDate: expect.any(String),
+              },
+            ],
+          },
+        ],
+      },
+    ]);
+  });
 });
