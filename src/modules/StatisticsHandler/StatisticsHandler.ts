@@ -3,32 +3,66 @@ import { userNames } from "../../constants/userNames";
 import { gameNames } from "../../constants/gameNames";
 import { gameResultType } from "../../types/gameResultType";
 
-class statisticsHandler {
-  private statistics: gameStatisticsType;
+class StatisticsHandler {
+  private statistics: gameStatisticsType | [] = [];
 
-  constructor({ statistics }: { statistics: gameStatisticsType }) {
-    this.statistics = statistics;
+  constructor() {
+    console.log("StatisticsHandler constructor");
   }
 
   addStatistics(statistics: gameStatisticsType) {
     this.statistics = statistics;
   }
 
-  getStatistics(): gameStatisticsType {
+  getStatistics(): gameStatisticsType | [] {
     return this.statistics;
   }
 
-  addValue(gameName: string, userName: string, threwName: string) {
-    const user = this.statistics.find((user) => user.userName === userName);
-    if (!user) return false;
-    const game = user.statistics.find((game) => game.gameName === gameName);
-    if (!game) return false;
-    const threw = game.results.find((result) => result.threwName === threwName);
-    threw
-      ? threw.value++
-      : (game?.results = [...game.results, { threwName, value: 1 }]);
+  addValue({
+    userName,
+    gameName,
+    threwName,
+  }: {
+    userName: string;
+    gameName: string;
+    threwName: string;
+  }) {
+    const user = this.statistics?.find((user) => user.userName === userName);
+    if (!user) {
+      this.statistics = [
+        {
+          ...this.statistics,
+          userName: userName as userNames,
+          statistics: [
+            {
+              gameName: gameName as gameNames,
+              results: [{ threwName, value: 1 }],
+            },
+          ],
+        },
+      ];
+    }
+    const game = user?.statistics.find((game) => game.gameName === gameName);
+    if (!game) {
+      this.statistics = [
+        {
+          ...this.statistics,
+          userName: userName as userNames,
+          statistics: [
+            {
+              gameName: gameName as gameNames,
+              results: [{ threwName, value: 1 }],
+            },
+          ],
+        },
+      ];
+    }
+    const threw = game?.results.find(
+      (result) => result.threwName === threwName
+    );
+    threw ? threw.value++ : game?.results.push({ threwName, value: 1 });
     return true;
   }
 }
 
-export default statisticsHandler;
+export default StatisticsHandler;
