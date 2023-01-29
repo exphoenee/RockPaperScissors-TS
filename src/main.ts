@@ -36,3 +36,6 @@ console.log(statisticsHandler.getStatistics());
 const valami = statisticsHandler.getStatistics().map((user) => user.userName);
 
 console.log(valami);
+
+statisticsHandler.getTable();
+statisticsHandler.getTableTransposed();
