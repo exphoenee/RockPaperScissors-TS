@@ -27,6 +27,8 @@ class StatisticsHandler {
     gameName: string;
     threwName: string;
   }) {
+    const timeDate = new Date().toISOString();
+
     const user = this.statistics?.find((user) => user.userName === userName);
     if (!user) {
       this.statistics = [
@@ -36,7 +38,7 @@ class StatisticsHandler {
           statistics: [
             {
               gameName: gameName as gameNames,
-              results: [{ threwName, value: 1 }],
+              results: [{ threwName, value: 1, timeDate }],
             },
           ],
         },
@@ -51,7 +53,7 @@ class StatisticsHandler {
           statistics: [
             {
               gameName: gameName as gameNames,
-              results: [{ threwName, value: 1 }],
+              results: [{ threwName, value: 1, timeDate }],
             },
           ],
         },
@@ -60,7 +62,9 @@ class StatisticsHandler {
     const threw = game?.results.find(
       (result) => result.threwName === threwName
     );
-    threw ? threw.value++ : game?.results.push({ threwName, value: 1 });
+    threw
+      ? threw.value++
+      : game?.results.push({ threwName, value: 1, timeDate });
     return true;
   }
 }
