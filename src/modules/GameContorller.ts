@@ -103,13 +103,11 @@ class GameContorller {
 
   setStatCalcMode(mode: statCalcModes): void {
     this.state.statisticMode = mode;
-    console.log(mode);
     this.stateHandler.setStatCalcMode(mode);
   }
 
   setStatGameMode(mode: gameNames): void {
     this.state.statisticGameMode = mode;
-    console.log(mode);
     this.stateHandler.setGameMode(mode);
   }
 
