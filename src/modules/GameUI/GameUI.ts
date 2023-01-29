@@ -18,7 +18,7 @@ import StateHandler from "../StateHandler/StateHandler";
 import { gameNames } from "../../constants/gameNames";
 import { gameImages } from "./components/app/gameArea/playerContainer/playerImageContainer";
 import { statCalcModes } from "../../constants/statCalcModes";
-import { playerNames } from "../../types/playerName";
+import { userNames } from "../../constants/userNames";
 import { directions } from "../../constants/directions";
 import { themas } from "../../constants/themas";
 
@@ -268,8 +268,8 @@ export default class GameUI {
   }
 
   private initPlayersChoices() {
-    // this.stepImage(playerNames.USER this.userChoice);
-    // this.stepImage(playerNames.OPPONENT, this.opponentChoice);
+    // this.stepImage(userNames.USER this.userChoice);
+    // this.stepImage(userNames.OPPONENT, this.opponentChoice);
   }
 
   private initScores() {
@@ -456,11 +456,11 @@ export default class GameUI {
 
       gameImages({ user, rules, parent: userContainer });
 
-      user === playerNames.USER &&
+      user === userNames.USER &&
         ((this.userImages = Array.from(
           userContainer.children as HTMLCollectionOf<HTMLImageElement>
         )) as HTMLImageElement[]);
-      user === playerNames.OPPONENT &&
+      user === userNames.OPPONENT &&
         ((this.opponentImages = Array.from(
           userContainer.children as HTMLCollectionOf<HTMLImageElement>
         )) as HTMLImageElement[]);
@@ -535,7 +535,7 @@ export default class GameUI {
     let delay = 200;
     for (let i = 0; i < anim.length; i++) {
       const to = setTimeout(() => {
-        this.stepImage(playerNames.OPPONENT, anim[i]);
+        this.stepImage(userNames.OPPONENT, anim[i]);
         clearTimeout(to);
         if (i === anim.length - 1) {
           this.setChoice(false);
@@ -545,7 +545,7 @@ export default class GameUI {
     }
   };
 
-  private stepImage = (user: playerNames, direction: directions) => {
+  private stepImage = (user: userNames, direction: directions) => {
     const images = user === "user" ? this.userImages : this.opponentImages;
 
     const newChoice = this.changeChoice(direction);
@@ -568,14 +568,12 @@ export default class GameUI {
 
     this.nextButton.addEventListener(
       "click",
-      () =>
-        !this.isUIFreezed && this.stepImage(playerNames.USER, directions.NEXT)
+      () => !this.isUIFreezed && this.stepImage(userNames.USER, directions.NEXT)
     );
 
     this.prevButton.addEventListener(
       "click",
-      () =>
-        !this.isUIFreezed && this.stepImage(playerNames.USER, directions.PREV)
+      () => !this.isUIFreezed && this.stepImage(userNames.USER, directions.PREV)
     );
   };
 }
