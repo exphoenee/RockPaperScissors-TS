@@ -31,33 +31,24 @@ class StatisticsHandler {
 
     const user = this.statistics?.find((user) => user.userName === userName);
     if (!user) {
-      this.statistics = [
-        {
-          ...this.statistics,
-          userName: userName as userNames,
-          statistics: [
-            {
-              gameName: gameName as gameNames,
-              results: [{ threwName, value: 1, timeDate }],
-            },
-          ],
-        },
-      ];
+      const newUserRecord = {
+        userName: userName as userNames,
+        statistics: [
+          {
+            gameName: gameName as gameNames,
+            results: [{ threwName, value: 1, timeDate }],
+          },
+        ],
+      };
+      this.statistics.push(newUserRecord);
     }
     const game = user?.statistics.find((game) => game.gameName === gameName);
     if (!game) {
-      this.statistics = [
-        {
-          ...this.statistics,
-          userName: userName as userNames,
-          statistics: [
-            {
-              gameName: gameName as gameNames,
-              results: [{ threwName, value: 1, timeDate }],
-            },
-          ],
-        },
-      ];
+      const newGameRecord = {
+        gameName: gameName as gameNames,
+        results: [{ threwName, value: 1, timeDate }],
+      };
+      user?.statistics?.push(newGameRecord);
     }
     const threw = game?.results.find(
       (result) => result.threwName === threwName
