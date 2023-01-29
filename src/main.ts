@@ -17,7 +17,7 @@ statisticsHandler.addValue({
 });
 statisticsHandler.addValue({
   userName: "Lolla",
-  gameName: "Pelenka",
+  gameName: "Tucsok",
   threwName: "Majom",
 });
 statisticsHandler.addValue({
