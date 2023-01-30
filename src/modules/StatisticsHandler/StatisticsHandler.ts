@@ -17,6 +17,7 @@ class StatisticsHandler {
 
   public fillStatistics(statistics: gameStatisticsType) {
     /* itt ne csak így bebeszkodva legyen */
+    console.log(statistics);
     this.statistics = statistics;
   }
 
@@ -96,12 +97,14 @@ class StatisticsHandler {
     gameName,
     userName,
     threwName,
+    timeDate = false,
   }: {
     gameName: string;
     userName: string;
     threwName: string;
+    timeDate: string | false;
   }) {
-    const timeDate = new Date().toISOString();
+    if (!timeDate) timeDate = new Date().toISOString();
 
     console.log("addValue", gameName, userName, threwName);
 
@@ -132,7 +135,7 @@ class StatisticsHandler {
       (threw) => threw.threwName === threwName
     );
     console.log(sThrew);
-    (!sThrew)
+    !sThrew
       ? sUser?.results.push({ threwName, wins: [timeDate] })
       : sThrew.wins.push(timeDate);
     return true;
