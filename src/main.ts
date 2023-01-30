@@ -11,31 +11,17 @@ statisticsHandler.addValue({
   threwName: "Scissors",
 });
 statisticsHandler.addValue({
-  userName: "User2",
+  userName: "User1",
   gameName: "Classic",
   threwName: "Scissors",
 });
 statisticsHandler.addValue({
   userName: "User2",
   gameName: "Classic",
-  threwName: "Rock",
-});
-statisticsHandler.addValue({
-  userName: "User3",
-  gameName: "Classic",
-  threwName: "Paper",
-});
-statisticsHandler.addValue({
-  userName: "User3",
-  gameName: "Big Band Theory",
   threwName: "Paper",
 });
 
-console.log(statisticsHandler.getStatistics());
-
-const valami = statisticsHandler.getStatistics().map((game) => game.gameName);
-
-console.log(valami);
+console.log("STATISTICS: ", statisticsHandler.getStatistics());
 
 statisticsHandler.getTable();
 statisticsHandler.getTableTransposed();
