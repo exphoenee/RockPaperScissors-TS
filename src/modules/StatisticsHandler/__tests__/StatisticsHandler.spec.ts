@@ -11,24 +11,23 @@ describe("StatisticsHandler", () => {
 
   it("should be adding user: John, an normal RPS game a win with Rock", () => {
     statisticsHandler.addValue({
-      userName: "John",
       gameName: "Rock Paper Scissors",
+      userName: "John",
       threwName: "Rock",
     });
 
     const statistics = statisticsHandler.getStatistics();
     const table = statisticsHandler.getTable();
 
-    expect(statistics).toEqual([
+    expect(statistics).toStrictEqual([
       {
-        userName: "John",
+        gameName: "Rock Paper Scissors",
         statistics: [
           {
-            gameName: "Rock Paper Scissors",
+            userName: "John",
             results: [
               {
                 threwName: "Rock",
-                value: 1,
                 timeDate: expect.any(String),
               },
             ],
@@ -42,7 +41,6 @@ describe("StatisticsHandler", () => {
       ["John", 1, 0, 0, 1],
       ["Total", 1, 0, 0, 1],
     ]);
-
   });
 
   it("should be adding user: John, an normal RPS game a win with Rock 2 times", () => {
@@ -60,12 +58,12 @@ describe("StatisticsHandler", () => {
 
     const statistics = statisticsHandler.getStatistics();
 
-    expect(statistics).toEqual([
+    expect(statistics).toStrictEqual([
       {
-        userName: "John",
+        gameName: "Rock Paper Scissors",
         statistics: [
           {
-            gameName: "Rock Paper Scissors",
+            userName: "John",
             results: [
               {
                 threwName: "Rock",
@@ -81,51 +79,49 @@ describe("StatisticsHandler", () => {
 
   it("should be adding user: John, an normal RPS game a win with Rock 2 times and Eric a paper win once", () => {
     statisticsHandler.addValue({
-      userName: "John",
       gameName: "Rock Paper Scissors",
+      userName: "John",
       threwName: "Rock",
     });
 
     statisticsHandler.addValue({
-      userName: "John",
       gameName: "Rock Paper Scissors",
+      userName: "John",
       threwName: "Rock",
     });
 
     statisticsHandler.addValue({
+      gameName: "Rock Paper Scissors",
       userName: "Eric",
-      gameName: "Rock Paper Scissors",
       threwName: "Paper",
     });
 
     const statistics = statisticsHandler.getStatistics();
 
-    expect(statistics).toEqual([
+    expect(statistics).toStrictEqual([
       {
-        userName: "John",
+        gameName: "Rock Paper Scissors",
         statistics: [
           {
-            gameName: "Rock Paper Scissors",
+            userName: "John",
             results: [
               {
                 threwName: "Rock",
-                value: 2,
-                timeDate: expect.any(String),
+                wins: expect.any(Array),
               },
             ],
           },
         ],
       },
       {
-        userName: "Eric",
+        gameName: "Rock Paper Scissors",
         statistics: [
           {
-            gameName: "Rock Paper Scissors",
+            userName: "Eric",
             results: [
               {
                 threwName: "Paper",
-                value: 1,
-                timeDate: expect.any(String),
+                wins: expect.any(Array),
               },
             ],
           },
