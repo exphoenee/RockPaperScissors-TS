@@ -6,34 +6,34 @@ new GameContorller();
 const statisticsHandler = new StatisticsHandler();
 
 statisticsHandler.addValue({
-  userName: "test",
-  gameName: "Cricket",
+  userName: "User1",
+  gameName: "Classic",
   threwName: "Scissors",
 });
 statisticsHandler.addValue({
-  userName: "test",
-  gameName: "Cricket",
+  userName: "User2",
+  gameName: "Classic",
   threwName: "Scissors",
 });
 statisticsHandler.addValue({
-  userName: "Lolla",
-  gameName: "Tucsok",
-  threwName: "Majom",
+  userName: "User2",
+  gameName: "Classic",
+  threwName: "Rock",
 });
 statisticsHandler.addValue({
-  userName: "Lolla",
-  gameName: "Tucsok",
-  threwName: "Majom",
+  userName: "User3",
+  gameName: "Classic",
+  threwName: "Paper",
 });
 statisticsHandler.addValue({
-  userName: "Lolla",
-  gameName: "Tucsok",
-  threwName: "Rokka",
+  userName: "User3",
+  gameName: "Big Band Theory",
+  threwName: "Paper",
 });
 
 console.log(statisticsHandler.getStatistics());
 
-const valami = statisticsHandler.getStatistics().map((user) => user.userName);
+const valami = statisticsHandler.getStatistics().map((game) => game.gameName);
 
 console.log(valami);
 
