@@ -29,13 +29,18 @@ class StatisticsHandler {
 
     if (!gameStatistics || !threws) return [];
 
-    const result = gameStatistics.statistics.reduce((acc, user) => {
+    const table = gameStatistics.statistics.reduce((acc, user) => {
       const userName = user.userName;
 
       const threwValues = threws.map((threwName) =>
         user.results
-          .filter((result) => result.threwName === threwName)
-          .reduce((sum, result) => sum + result.value, 0)
+          .filter(
+            (result) =>
+              result.threwName.toUpperCase() === threwName.toUpperCase()
+          )
+          .reduce((sum, result) => {
+            return sum + result.value;
+          }, 0)
       );
 
       const total = threwValues.reduce((sum, value) => sum + value, 0);
@@ -44,30 +49,33 @@ class StatisticsHandler {
       return acc;
     }, []);
 
-    const headers = ["User", ...threws, "Total"];
+    const headerTitles = threws.map((threw) => {
+      return threw.charAt(0).toUpperCase() + threw.slice(1).toLowerCase();
+    });
+    const headers = ["User", ...headerTitles, "Total"];
 
-    const total = result.reduce(
-      (acc, row) => {
-        return row.slice(1).reduce((sum, value, i) => {
+    const total = table.reduce(
+      (acc, row) =>
+        row.slice(1).reduce((_, value, i) => {
           acc[i + 1] += value;
           return acc;
-        }, acc);
-      },
+        }, acc),
       [...Array(headers.length)].map(() => 0)
     );
 
     total[0] = "Total";
-    result.push(total);
-    result.unshift(headers);
+    table.push(total);
+    table.unshift(headers);
 
-    console.log("getTable", result);
-    return result;
+    console.log("getTable", table);
+    return table;
   }
 
   getTableTransposed() {
     const result = this.getTable();
-    const transposed = result[0].map((col, i) => result.map((row) => row[i]));
+    const transposed = result[0].map((_, i) => result.map((row) => row[i]));
     console.log(transposed);
+    return transposed;
   }
 
   getStatistics(): gameStatisticsType | [] {
