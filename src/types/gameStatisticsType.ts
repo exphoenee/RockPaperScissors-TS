@@ -1,7 +1,7 @@
 import { gameNames } from "../constants/gameNames";
 import { userNames } from "../constants/userNames";
 
-export type gameResultType = [
+export type threwStatisticsType = [
   {
     threwName: string;
     timeDate: string;
@@ -9,16 +9,16 @@ export type gameResultType = [
   }
 ];
 
-export type statisticsType = [
+export type userStatisticsType = [
   {
-    gameName: gameNames;
-    results: gameResultType;
+    userName: userNames;
+    results: threwStatisticsType;
   }
 ];
 
 export type gameStatisticsType = [
   {
-    userName: userNames;
-    statistics: statisticsType;
+    gameName: gameNames;
+    statistics: userStatisticsType;
   }
 ];
