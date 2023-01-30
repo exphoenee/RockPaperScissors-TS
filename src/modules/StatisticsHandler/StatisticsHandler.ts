@@ -14,40 +14,45 @@ class StatisticsHandler {
     this.statistics = statistics;
   }
 
-  getTable() {
-    const data = this.statistics;
-    const header = [
-      "userName",
-      ...new Set(
-        data.flatMap((x) =>
-          x.statistics.flatMap((y) => y.results.map((z) => z.threwName))
-        )
-      ),
-    ];
-    const rows = data.map((x) => [
-      x.userName,
-      ...header
-        .slice(1)
-        .map(
-          (y) =>
-            x.statistics
-              .flatMap((z) => z.results)
-              .find((w) => w.threwName === y)?.value || 0
-        ),
-      x.statistics
-        .flatMap((y) => y.results.map((z) => z.value))
-        .reduce((a, b) => a + b, 0),
-    ]);
-    const footer = [
-      "Total",
-      ...header
-        .slice(1)
-        .map((x) => rows.reduce((a, b) => a + (b[header.indexOf(x)] || 0), 0)),
-      rows.reduce((a, b) => a + b[header.length - 2], 0),
-    ];
+  getTable(gameName = "Classic") {
+    const classicGameData = this.statistics.filter(
+      (game) => game.gameName === gameName
+    )[0];
 
-    const result = [header, ...rows, footer];
-    console.log(result);
+    const result = classicGameData.statistics.reduce((acc, user) => {
+      const userName = user.userName;
+
+      const rock = user.results
+        .filter((result) => result.threwName === "Rock")
+        .reduce((sum, result) => sum + result.value, 0);
+      const paper = user.results
+        .filter((result) => result.threwName === "Paper")
+        .reduce((sum, result) => sum + result.value, 0);
+      const scissors = user.results
+        .filter((result) => result.threwName === "Scissors")
+        .reduce((sum, result) => sum + result.value, 0);
+      const total = rock + paper + scissors;
+
+      acc.push([userName, rock, paper, scissors, total]);
+      return acc;
+    }, []);
+
+    const headers = ["User", "Rock", "Paper", "Scissors", "Total"];
+    result.unshift(headers);
+
+    const total = result.reduce(
+      (acc, row) => {
+        for (let i = 1; i < row.length; i++) {
+          acc[i] += row[i];
+        }
+        return acc;
+      },
+      [...Array(headers.length)].map(() => 0)
+    );
+    total[0] = "Total";
+    result.push(total);
+
+    console.log("getTable", result);
     return result;
   }
 
@@ -62,43 +67,43 @@ class StatisticsHandler {
   }
 
   addValue({
-    userName,
     gameName,
+    userName,
     threwName,
   }: {
-    userName: string;
     gameName: string;
+    userName: string;
     threwName: string;
   }) {
     const timeDate = new Date().toISOString();
 
-    const user = this.statistics?.find((user) => user.userName === userName);
-    if (!user) {
-      const newUserRecord = {
-        userName: userName as userNames,
+    const game = this.statistics?.find((game) => game.gameName === gameName);
+    if (!game) {
+      const newGameRecord = {
+        gameName: gameName as gameNames,
         statistics: [
           {
-            gameName: gameName as gameNames,
+            userName: userName as userNames,
             results: [{ threwName, value: 1, timeDate }],
           },
         ],
       };
-      this.statistics.push(newUserRecord);
+      this.statistics.push(newGameRecord);
     }
-    const game = user?.statistics.find((game) => game.gameName === gameName);
-    if (!game) {
-      const newGameRecord = {
-        gameName: gameName as gameNames,
+    const user = game?.statistics.find((user) => user.userName === userName);
+    if (!user) {
+      const newUserRecord = {
+        userName: userName as userNames,
         results: [{ threwName, value: 1, timeDate }],
       };
-      user?.statistics?.push(newGameRecord);
+      game?.statistics?.push(newUserRecord);
     }
-    const threw = game?.results.find(
+    const threw = user?.results.find(
       (result) => result.threwName === threwName
     );
     threw
       ? threw.value++
-      : game?.results.push({ threwName, value: 1, timeDate });
+      : user?.results.push({ threwName, value: 1, timeDate });
     return true;
   }
 }
