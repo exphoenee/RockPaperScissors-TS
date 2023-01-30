@@ -46,7 +46,7 @@ class StatisticsHandler {
                 result.threwName.toUpperCase() === threwName.toUpperCase()
             )
             .reduce((sum, result) => {
-              return sum + result.value;
+              return sum + result.wins.length;
             }, 0)
         );
 
@@ -64,7 +64,7 @@ class StatisticsHandler {
     const headerTitles = threws.map((threw) => {
       return threw.charAt(0).toUpperCase() + threw.slice(1).toLowerCase();
     });
-    const headers = ["User", ...headerTitles, "Total"];
+    const headers = ["Player", ...headerTitles, "Total"];
 
     const total: (string | number)[] = table.reduce(
       (acc: number[], row) =>
@@ -78,15 +78,12 @@ class StatisticsHandler {
     total[0] = "Total";
     table.push(total);
     table.unshift(headers);
-
-    console.log("getTable", table);
     return table;
   }
 
   public getTableTransposed() {
     const result = this.getTable();
     const transposed = result[0].map((_, i) => result.map((row) => row[i]));
-    console.log(transposed);
     return transposed;
   }
 
@@ -105,37 +102,39 @@ class StatisticsHandler {
   }) {
     const timeDate = new Date().toISOString();
 
+    console.log("addValue", gameName, userName, threwName);
+
     const sGame = this.statistics?.find((game) => game.gameName === gameName);
     if (!sGame) {
+      console.log("new game");
       const newGameRecord: gameStatisticsType = {
         gameName: gameName as gameNames,
         statistics: [
           {
             userName: userName as userNames,
-            results: [{ threwName, value: 1, timeDate }] as threwStatisticsType,
+            results: [{ threwName, wins: [timeDate] }] as threwStatisticsType,
           },
         ],
       };
       this.statistics.push(newGameRecord);
-
-      const sUser = sGame?.statistics?.find(
-        (user) => user.userName === userName
-      );
-      if (!sUser) {
-        const newUserRecord: userStatisticsType = {
-          userName: userName as userNames,
-          results: [{ threwName, value: 1, timeDate }] as threwStatisticsType,
-        };
-        sGame?.statistics?.push(newUserRecord);
-      }
-      const sThrew = sUser?.results.find(
-        (threw) => threw.threwName === threwName
-      );
-      sThrew
-        ? sThrew.value++
-        : sUser?.results.push({ threwName, value: 1, timeDate });
-      return true;
     }
+    const sUser = sGame?.statistics?.find((user) => user.userName === userName);
+    if (!sUser) {
+      const newUserRecord: userStatisticsType = {
+        userName: userName as userNames,
+        results: [{ threwName, wins: [timeDate] }] as threwStatisticsType,
+      };
+      sGame?.statistics?.push(newUserRecord);
+    }
+
+    const sThrew = sUser?.results.find(
+      (threw) => threw.threwName === threwName
+    );
+    console.log(sThrew);
+    (!sThrew)
+      ? sUser?.results.push({ threwName, wins: [timeDate] })
+      : sThrew.wins.push(timeDate);
+    return true;
   }
 }
 
