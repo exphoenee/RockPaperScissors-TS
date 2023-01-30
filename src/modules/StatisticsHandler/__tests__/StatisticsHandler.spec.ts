@@ -17,6 +17,7 @@ describe("StatisticsHandler", () => {
     });
 
     const statistics = statisticsHandler.getStatistics();
+    const table = statisticsHandler.getTable();
 
     expect(statistics).toEqual([
       {
@@ -35,6 +36,13 @@ describe("StatisticsHandler", () => {
         ],
       },
     ]);
+
+    expect(table).toEqual([
+      ["Player", "Rock", "Paper", "Scissors", "Total"],
+      ["John", 1, 0, 0, 1],
+      ["Total", 1, 0, 0, 1],
+    ]);
+
   });
 
   it("should be adding user: John, an normal RPS game a win with Rock 2 times", () => {
