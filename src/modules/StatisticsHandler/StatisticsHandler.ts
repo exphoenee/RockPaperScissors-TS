@@ -16,6 +16,7 @@ class StatisticsHandler {
   }
 
   public fillStatistics(statistics: gameStatisticsType) {
+    /* itt ne csak így bebeszkodva legyen */
     this.statistics = statistics;
   }
 
