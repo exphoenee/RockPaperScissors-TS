@@ -4,8 +4,7 @@ import { userNames } from "../constants/userNames";
 export type threwStatisticsType = [
   {
     threwName: string;
-    timeDate: string;
-    value: number;
+    wins: string[];
   }
 ];
 
