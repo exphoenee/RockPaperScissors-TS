@@ -2,6 +2,7 @@ import { gameStatisticsType } from "../../types/gameStatisticsType";
 import { userNames } from "../../constants/userNames";
 import { gameNames } from "../../constants/gameNames";
 import { gameResultType } from "../../types/gameResultType";
+import games from "../../constants/games";
 
 class StatisticsHandler {
   private statistics: gameStatisticsType | [] = [];
@@ -14,43 +15,50 @@ class StatisticsHandler {
     this.statistics = statistics;
   }
 
-  getTable(gameName = "Classic") {
-    const classicGameData = this.statistics.filter(
-      (game) => game.gameName === gameName
-    )[0];
+  getThrewsFromGame(gameName: string) {
+    const game = games.find((game) => game.name === gameName);
+    if (!game) return [];
+    return game.rules.map((game) => game.value);
+  }
 
-    const result = classicGameData.statistics.reduce((acc, user) => {
+  getTable(gameName = "Classic") {
+    const gameStatistics = this.statistics.find(
+      (game) => game.gameName === gameName
+    );
+    const threws = this.getThrewsFromGame(gameName);
+
+    if (!gameStatistics || !threws) return [];
+
+    const result = gameStatistics.statistics.reduce((acc, user) => {
       const userName = user.userName;
 
-      const rock = user.results
-        .filter((result) => result.threwName === "Rock")
-        .reduce((sum, result) => sum + result.value, 0);
-      const paper = user.results
-        .filter((result) => result.threwName === "Paper")
-        .reduce((sum, result) => sum + result.value, 0);
-      const scissors = user.results
-        .filter((result) => result.threwName === "Scissors")
-        .reduce((sum, result) => sum + result.value, 0);
-      const total = rock + paper + scissors;
+      const threwValues = threws.map((threwName) =>
+        user.results
+          .filter((result) => result.threwName === threwName)
+          .reduce((sum, result) => sum + result.value, 0)
+      );
 
-      acc.push([userName, rock, paper, scissors, total]);
+      const total = threwValues.reduce((sum, value) => sum + value, 0);
+
+      acc.push([userName, ...threwValues, total]);
       return acc;
     }, []);
 
-    const headers = ["User", "Rock", "Paper", "Scissors", "Total"];
-    result.unshift(headers);
+    const headers = ["User", ...threws, "Total"];
 
     const total = result.reduce(
       (acc, row) => {
-        for (let i = 1; i < row.length; i++) {
-          acc[i] += row[i];
-        }
-        return acc;
+        return row.slice(1).reduce((sum, value, i) => {
+          acc[i + 1] += value;
+          return acc;
+        }, acc);
       },
       [...Array(headers.length)].map(() => 0)
     );
+
     total[0] = "Total";
     result.push(total);
+    result.unshift(headers);
 
     console.log("getTable", result);
     return result;
