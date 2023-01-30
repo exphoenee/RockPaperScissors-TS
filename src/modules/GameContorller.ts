@@ -1,6 +1,7 @@
 /* modules */
 import GameUI from "./GameUI/GameUI";
 import StateHandler from "./StateHandler/StateHandler";
+import StatisticsHandler from "./StatisticsHandler/StatisticsHandler";
 
 /* enums */
 import { gameNames } from "../constants/gameNames";
@@ -32,10 +33,12 @@ class GameContorller {
   private gameUI: GameUI;
   private rules: ruleType[];
   private stateHandler: StateHandler = new StateHandler();
+  private statisticsHandler: StatisticsHandler = new StatisticsHandler();
   private state: stateType;
 
   constructor() {
     this.state = this.stateHandler.state;
+    this.statisticsHandler.fillStatistics(this.state.gameStatistics);
 
     /* Setting up appSettings */
     this.appSettings = {
