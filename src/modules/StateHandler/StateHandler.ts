@@ -25,6 +25,7 @@ function getFirstValue(obj: {}): {}[keyof {}] {
 
 class StateHandler {
   public state: stateType;
+  private secretKey: number = 512;
   private defaultState: stateType = {
     developerMode: false,
     gamemode: getFirstValue(gameNames),
@@ -127,19 +128,19 @@ class StateHandler {
   }
 
   private decodeState(value: string): stateType {
-    const chCode = Array.from(value)
-      .map((code) => String.fromCharCode(255 - code.charCodeAt(0)))
+    const decoded = Array.from(value)
+      .map((code) => String.fromCharCode(this.secretKey - code.charCodeAt(0)))
       .join("")
       .slice(1, -1);
-    return JSON.parse(chCode);
+    return JSON.parse(decoded);
   }
 
   private encodeState(value: stateType): string {
-    const encodedState = JSON.stringify(value)
+    const encoded = JSON.stringify(value)
       .split("")
-      .map((code) => String.fromCharCode(255 - code.charCodeAt(0)))
+      .map((code) => String.fromCharCode(this.secretKey - code.charCodeAt(0)))
       .join("");
-    return encodedState.toString();
+    return encoded.toString();
   }
 
   private setState(value: stateType): boolean {
