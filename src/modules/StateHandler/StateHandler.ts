@@ -127,28 +127,18 @@ class StateHandler {
   }
 
   private decodeState(value: string): stateType {
-    const decoder = new TextDecoder();
-    const encodedState = new Uint8Array(JSON.parse(value).split(","));
-    return JSON.parse(decoder.decode(encodedState as Uint8Array));
+    const chCode = Array.from(value)
+      .map((code) => String.fromCharCode(255 - code.charCodeAt(0)))
+      .join("")
+      .slice(1, -1);
+    return JSON.parse(chCode);
   }
 
   private encodeState(value: stateType): string {
-    const encoder = new TextEncoder();
-    const encodedState = encoder.encode(JSON.stringify(value));
-
-    const chCode = Array.from(encodedState)
-      .map((code) => String.fromCharCode(255 - code))
+    const encodedState = JSON.stringify(value)
+      .split("")
+      .map((code) => String.fromCharCode(255 - code.charCodeAt(0)))
       .join("");
-
-    console.log(chCode);
-
-    const revertedState = new Uint8Array(
-      Array.from(chCode).map((code) => 255 - code.charCodeAt(0))
-    );
-
-    console.log("encodedState", encodedState);
-    console.log(revertedState);
-
     return encodedState.toString();
   }
 
