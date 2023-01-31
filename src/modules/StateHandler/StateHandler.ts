@@ -131,7 +131,7 @@ class StateHandler {
     const decoded = Array.from(value)
       .map((code) => String.fromCharCode(this.secretKey - code.charCodeAt(0)))
       .join("")
-      .slice(1, -1);
+      .replaceAll('"', "");
     return JSON.parse(decoded);
   }
 
