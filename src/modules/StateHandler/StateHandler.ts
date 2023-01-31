@@ -22,18 +22,19 @@ function getFirstValue(obj: {}): {}[keyof {}] {
   return obj[Object.keys(obj)[0] as keyof {}];
 }
 
-const defaultState: stateType = {
-  developerMode: false,
-  gamemode: getFirstValue(gameNames),
-  language: getFirstValue(usedLangs),
-  statisticMode: getFirstValue(statCalcModes),
-  statisticGameMode: getFirstValue(gameNames),
-  thema: getFirstValue(themas),
-  gameStatistics: [{}] as gameStatisticsType,
-};
 
 class StateHandler {
   public state: stateType;
+  private defaultState: stateType = {
+    developerMode: false,
+    gamemode: getFirstValue(gameNames),
+    language: getFirstValue(usedLangs),
+    statisticMode: getFirstValue(statCalcModes),
+    statisticGameMode: getFirstValue(gameNames),
+    thema: getFirstValue(themas),
+    gameStatistics: [{}] as gameStatisticsType,
+  };
+
   private localhosts: string[] = ["localhost", "127.0.0.1"];
 
   constructor() {
@@ -101,83 +102,60 @@ class StateHandler {
     this.setState(this.state);
   }
 
+  private checkState(state: typeof this.defaultState): boolean {
+    const stateKeys = Object.keys(state);
+    const defaultKeys = Object.keys(this.defaultState);
+
+    return defaultKeys.every((key) => stateKeys.includes(key));
+  }
+
   private getState(): stateType {
     try {
-      const decoder = new TextDecoder();
       const value = localStorage.getItem("state") as string;
-      const encodedState = new Uint8Array(JSON.parse(value).split(","));
-      const state = JSON.parse(decoder.decode(encodedState as Uint8Array));
+      const state = this.decodeState(value);
 
-      if (state) {
-        const stateKeys = Object.keys(state);
-        const defaultKeys = Object.keys(defaultState);
-
-        const isCorrectType = defaultKeys.every((key) =>
-          stateKeys.includes(key)
-        );
-
-        if (isCorrectType) {
-          console.log("StateHandler: last state loaded!");
-          return state;
-        } else {
-          console.log(
-            "StateHandler: the loaded state was in incorrect format!"
-          );
-        }
+      if (this.checkState(state)) {
+        console.log("StateHandler: last state loaded!");
+        return state;
       } else {
-        console.log(
-          "StateHandler: No state found, creating new default state!"
-        );
+        console.log("StateHandler: the loaded state was in incorrect format!");
       }
     } catch (e) {
       console.log("StateHandler: No state found!");
     }
-    return defaultState;
+    return this.defaultState;
+  }
+
+  private decodeState(value: string): stateType {
+    const decoder = new TextDecoder();
+    const encodedState = new Uint8Array(JSON.parse(value).split(","));
+    return JSON.parse(decoder.decode(encodedState as Uint8Array));
+  }
+
+  private encodeState(value: stateType): string {
+    const encoder = new TextEncoder();
+    const encodedState = encoder.encode(JSON.stringify(value));
+
+    const chCode = Array.from(encodedState)
+      .map((code) => String.fromCharCode(255 - code))
+      .join("");
+
+    console.log(chCode);
+
+    const revertedState = new Uint8Array(
+      Array.from(chCode).map((code) => 255 - code.charCodeAt(0))
+    );
+
+    console.log("encodedState", encodedState);
+    console.log(revertedState);
+
+    return encodedState.toString();
   }
 
   private setState(value: stateType): boolean {
-    function padZeros(num: number | string, length = 3): string {
-      typeof num === "number" && (num = num.toString());
-      while (num.length < length) {
-        num = "0" + num;
-      }
-      return num.slice(-length);
-    }
-
     try {
-      const encoder = new TextEncoder();
-      const encodedState = encoder.encode(JSON.stringify(value));
-
-      const chCode = Array.from(encodedState)
-        .map((code) => String.fromCharCode(255 - code))
-        .join("");
-
-      console.log(chCode);
-
-      const revertedState = new Uint8Array(
-        Array.from(chCode).map((code) => 255 - code.charCodeAt(0))
-      );
-
-      console.log(revertedState);
-      console.log(encodedState);
-
-      // const paddedZeroState: string[] = Array.from(encodedState).map((num) =>
-      //   padZeros(num)
-      // );
-      // console.log(paddedZeroState.join(""));
-
-      // const paddedZeroStateBack = Array.from(
-      //   { length: Math.ceil(paddedZeroState.length / 3) },
-      //   (_, i) => paddedZeroState.slice(i * 3, (i + 1) * 3)
-      // ).flat(1);
-
-      // console.log(paddedZeroStateBack);
-
-      // const encodedStateBack = new Uint8Array(paddedZeroStateBack);
-
-      // console.log(encodedStateBack);
-
-      localStorage.setItem("state", JSON.stringify(encodedState.toString()));
+      const encodedState = this.encodeState(value);
+      localStorage.setItem("state", JSON.stringify(encodedState));
       this.state.developerMode &&
         localStorage.setItem("readable", JSON.stringify(value));
       return true;
