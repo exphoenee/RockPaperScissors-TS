@@ -160,7 +160,13 @@ class GameContorller {
           ? gameResults.OPPONENT
           : gameResults.DRAW;
 
-      this.gameUI.showResult(result);
+      this.gameUI.showResult({
+        result,
+        user: this.appSettings.userName,
+        opponent: this.appSettings.opponentName,
+        userChoice: userChoice.value,
+        opponentChoice: opponentChoice.value,
+      });
 
       this.statisticsHandler.updateStatistics(
         this.state.gameStatistics,
