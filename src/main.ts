@@ -1,4 +1,4 @@
-import GameContorller from "./modules/GameContorller";
+import GameContorller from "./modules/GameController";
 import StatisticsHandler from "./modules/StatisticsHandler/StatisticsHandler";
 
 new GameContorller();
