@@ -508,13 +508,16 @@ export default class GameUI {
     });
   };
 
-  public startComputerAnimation = ({
-    choosen,
-    rules,
-  }: {
-    choosen: number;
-    rules: ruleType[];
-  }) => {
+  public startComputerAnimation = (
+    {
+      choosen,
+      rules,
+    }: {
+      choosen: number;
+      rules: ruleType[];
+    },
+    callBack: () => void
+  ) => {
     const possibilties = rules.length;
     const animSteps = Math.floor(Math.random() * 7) + 8;
 
@@ -530,15 +533,16 @@ export default class GameUI {
     }
     anim.push(choosen);
 
-    console.log(anim);
-
     let delay = 200;
     for (let i = 0; i < anim.length; i++) {
       const to = setTimeout(() => {
         this.stepImage(userNames.OPPONENT, anim[i]);
         clearTimeout(to);
         if (i === anim.length - 1) {
-          this.setChoice(false);
+          setTimeout(() => {
+            callBack();
+            this.setChoice(false);
+          }, 750);
         }
       }, delay);
       delay *= 1.15;
