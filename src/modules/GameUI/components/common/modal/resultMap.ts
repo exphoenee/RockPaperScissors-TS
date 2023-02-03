@@ -22,13 +22,7 @@ const resultMap = ({
     [gameResults.DRAW]: `It's a draw!`,
   };
 
-  return {
-    tag: "p",
-    attrs: {
-      class: "result-test",
-    },
-    text: resultText[result],
-  };
+  return `<p>${resultText[result]}</p>`;
 };
 
 export default resultMap;
