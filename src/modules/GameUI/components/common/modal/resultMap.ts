@@ -1,16 +1,33 @@
+import moduleName from "module";
+import { gameResults } from "../../../../../constants/gameResults";
+
 export type resultMapType = {
-  winner: string;
-  winnerChoice: string;
-  looserChoice: string;
+  result: gameResults;
+  user: string;
+  opponent: string;
+  userChoice: string;
+  opponentChoice: string;
 };
 
-const resultMap = ({ winner, winnerChoice, looserChoice }: resultMapType) => {
+const resultMap = ({
+  result,
+  user,
+  opponent,
+  userChoice,
+  opponentChoice,
+}: resultMapType) => {
+  const resultText = {
+    [gameResults.USER]: `${user} won with ${userChoice} against ${opponentChoice}`,
+    [gameResults.OPPONENT]: `${opponent} won with ${opponentChoice} against ${userChoice}`,
+    [gameResults.DRAW]: `It's a draw!`,
+  };
+
   return {
     tag: "p",
     attrs: {
       class: "result-test",
     },
-    text: `${winner} won with ${winnerChoice} against ${looserChoice}`,
+    text: resultText[result],
   };
 };
 
