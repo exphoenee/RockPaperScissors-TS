@@ -4,6 +4,7 @@ import domelemjs from "domelemjs";
 import loaderScreenMap from "./components/loaderScreen/loaderScreenMap";
 import settingsMap from "./components/settings/settingsMap";
 import appMap from "./components/app/appMap";
+import modalBodyMap from "./components/common/modal/modalBodyMap";
 
 /* types */
 import ruleType from "../../types/ruleType";
@@ -11,7 +12,6 @@ import { stateType } from "../StateHandler/StateHandler";
 
 /* constants */
 import dictionary, { dictionaryType } from "../../constants/dictionary";
-
 import StateHandler from "../StateHandler/StateHandler";
 
 /* enums */
@@ -21,6 +21,8 @@ import { statCalcModes } from "../../constants/statCalcModes";
 import { userNames } from "../../constants/userNames";
 import { directions } from "../../constants/directions";
 import { themas } from "../../constants/themas";
+import { gameResults } from "../../constants/gameResults";
+import modalNames from "./constants/modalNames";
 
 /* style */
 import "../../style/reset.css";
@@ -508,6 +510,15 @@ export default class GameUI {
     });
   };
 
+  public showResult = (result: gameResults) => {
+    console.log(result);
+    const resultModal = this.modals.find(
+      (elem) => elem.id === modalNames.RESULT
+    );
+
+    resultModal?.querySelector(".modal-body")?.innerHTML = modalBodyMap();
+  };
+
   public startComputerAnimation = (
     {
       choosen,
@@ -564,6 +575,7 @@ export default class GameUI {
     );
   };
 
+  /* GAME buttons */
   private initGameButtons = () => {
     this.startButton.addEventListener(
       "click",
