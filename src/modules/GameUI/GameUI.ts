@@ -523,9 +523,11 @@ export default class GameUI {
       (elem) => elem.id === modalNames.RESULT
     );
     const modelBody = resultModal?.querySelector(".modal-body");
-    console.log(modelBody.innerHTML);
 
-    modelBody.innerHTML = modalBodyMap(resultMap(resultInfo));
+    if (modelBody) {
+      modelBody.innerHTML = resultMap(resultInfo);
+      resultModal?.classList.add("show");
+    }
   };
 
   public startComputerAnimation = (
