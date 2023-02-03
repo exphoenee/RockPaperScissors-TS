@@ -5,6 +5,7 @@ import loaderScreenMap from "./components/loaderScreen/loaderScreenMap";
 import settingsMap from "./components/settings/settingsMap";
 import appMap from "./components/app/appMap";
 import modalBodyMap from "./components/common/modal/modalBodyMap";
+import resultMap from "./components/common/modal/resultMap";
 
 /* types */
 import ruleType from "../../types/ruleType";
@@ -510,13 +511,21 @@ export default class GameUI {
     });
   };
 
-  public showResult = (result: gameResults) => {
-    console.log(result);
+  public showResult = (resultInfo: {
+    result: gameResults;
+    user: string;
+    opponent: string;
+    userChoice: string;
+    opponentChoice: string;
+  }) => {
+    console.log(resultInfo);
     const resultModal = this.modals.find(
       (elem) => elem.id === modalNames.RESULT
     );
+    const modelBody = resultModal?.querySelector(".modal-body");
+    console.log(modelBody.innerHTML);
 
-    resultModal?.querySelector(".modal-body")?.innerHTML = modalBodyMap();
+    modelBody.innerHTML = modalBodyMap(resultMap(resultInfo));
   };
 
   public startComputerAnimation = (
