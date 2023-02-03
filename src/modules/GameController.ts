@@ -9,6 +9,7 @@ import { statCalcModes } from "../constants/statCalcModes";
 
 /* constants */
 import games from "../constants/games";
+import { gameResults } from "../constants/gameResults";
 
 /* utils */
 import { stateType } from "./StateHandler/StateHandler";
@@ -133,8 +134,45 @@ class GameContorller {
         choosen: this.opponentChoiceIndex,
         rules: this.rules,
       },
-      () => (this.opponentChoiceSet = true)
+      () => {
+        this.opponentChoiceSet = true;
+        this.evaluateGame();
+      }
     );
+  }
+
+  private evaluateGame(): void {
+    if (this.userChoiceSet && this.opponentChoiceSet) {
+      const userChoice = this.getChoice(this.userChoiceIndex);
+      const opponentChoice = this.getChoice(this.opponentChoiceIndex);
+
+      console.log(userChoice, opponentChoice);
+
+      const userWins = userChoice.beats.includes(opponentChoice.value);
+      const opponentWins = opponentChoice.beats.includes(userChoice.value);
+
+      console.log(userWins, opponentWins);
+
+      const result =
+        userWins && !opponentWins
+          ? gameResults.USER
+          : opponentWins && !userWins
+          ? gameResults.OPPONENT
+          : gameResults.DRAW;
+
+      this.gameUI.showResult(result);
+
+      this.statisticsHandler.updateStatistics(
+        this.state.gameStatistics,
+        this.state.gamemode,
+        result
+      );
+
+      this.stateHandler.updateStatistics(this.state.gameStatistics);
+
+      this.userChoiceSet = false;
+      this.opponentChoiceSet = false;
+    }
   }
 
   getChoice(index: number): ruleType {
