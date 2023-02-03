@@ -30,6 +30,7 @@ class GameContorller {
   private userChoiceIndex: number = 0;
   private opponentChoiceIndex: number = 0;
   private userChoiceSet: boolean = false;
+  private opponentChoiceSet: boolean = false;
   private gameUI: GameUI;
   private rules: ruleType[];
   private stateHandler: StateHandler = new StateHandler();
@@ -127,10 +128,13 @@ class GameContorller {
 
   private computerPlay(): void {
     this.opponentChoiceIndex = Math.floor(Math.random() * this.rules.length);
-    this.gameUI.startComputerAnimation({
-      choosen: this.opponentChoiceIndex,
-      rules: this.rules,
-    });
+    this.gameUI.startComputerAnimation(
+      {
+        choosen: this.opponentChoiceIndex,
+        rules: this.rules,
+      },
+      () => (this.opponentChoiceSet = true)
+    );
   }
 
   getChoice(index: number): ruleType {
