@@ -10,7 +10,7 @@ describe("StatisticsHandler", () => {
   });
 
   it("should be adding user: John, an normal RPS game a win with Rock", () => {
-    statisticsHandler.addValue({
+    statisticsHandler.addScore({
       gameName: "Rock Paper Scissors",
       userName: "John",
       threwName: "Rock",
