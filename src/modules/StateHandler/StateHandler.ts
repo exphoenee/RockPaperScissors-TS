@@ -10,7 +10,7 @@ export type stateType = {
   language: usedLangs;
   statisticMode: statCalcModes;
   statisticGameMode: string;
-  gameStatistics: gameStatisticsType;
+  gameStatistics: gameStatisticsType | [];
   thema: themas;
 };
 
@@ -21,7 +21,6 @@ export type stateType = {
 function getFirstValue(obj: {}): {}[keyof {}] {
   return obj[Object.keys(obj)[0] as keyof {}];
 }
-
 
 class StateHandler {
   public state: stateType;
@@ -85,11 +84,11 @@ class StateHandler {
     this.setState(this.state);
   }
 
-  public getGameStatistics(): gameStatisticsType {
+  public getGameStatistics(): gameStatisticsType | [] {
     return this.state.gameStatistics;
   }
 
-  public setGameStatistics(value: gameStatisticsType): void {
+  public setGameStatistics(value: gameStatisticsType | []): void {
     this.state.gameStatistics = value;
     this.setState(this.state);
   }
@@ -116,14 +115,10 @@ class StateHandler {
       const state = this.decodeState(value);
 
       if (this.checkState(state)) {
-        console.log("StateHandler: last state loaded!");
         return state;
       } else {
-        console.log("StateHandler: the loaded state was in incorrect format!");
       }
-    } catch (e) {
-      console.log("StateHandler: No state found!");
-    }
+    } catch (e) {}
     return this.defaultState;
   }
 
