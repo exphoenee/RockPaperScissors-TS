@@ -555,10 +555,12 @@ export default class GameUI {
     }
     anim.push(choosen);
 
+    console.log(anim);
+
     let delay = 200;
     for (let i = 0; i < anim.length; i++) {
       const to = setTimeout(() => {
-        this.stepImage(userNames.OPPONENT, anim[i]);
+        this.setImage(userNames.OPPONENT, anim[i]);
         clearTimeout(to);
         if (i === anim.length - 1) {
           setTimeout(() => {
@@ -583,6 +585,20 @@ export default class GameUI {
 
     images.forEach((elem, i) =>
       i === newChoice ? changeClass(elem, "set") : changeClass(elem, "unset")
+    );
+  };
+
+  private setImage = (user: userNames, index: number) => {
+    const images =
+      user === userNames.USER ? this.userImages : this.opponentImages;
+
+    const changeClass = (elem: HTMLElement, action: "set" | "unset") => {
+      elem.classList.add(action === "set" ? "showen" : "hidden");
+      elem.classList.remove(action === "set" ? "hidden" : "showen");
+    };
+
+    images.forEach((elem, i) =>
+      i === index ? changeClass(elem, "set") : changeClass(elem, "unset")
     );
   };
 
