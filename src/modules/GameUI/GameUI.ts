@@ -554,9 +554,6 @@ export default class GameUI {
       anim[i] = nextNumber;
     }
     anim.push(choosen);
-
-    console.log(anim);
-
     let delay = 200;
     for (let i = 0; i < anim.length; i++) {
       const to = setTimeout(() => {
