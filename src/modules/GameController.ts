@@ -187,21 +187,14 @@ class GameContorller {
       };
 
       if (result !== gameResults.DRAW) {
-        console.table({
-          userChoice: userChoice.value,
-          userChoiceIndex: this.userChoiceIndex,
-          opponentChoice: opponentChoice.value,
-          opponentChoiceIndex: this.opponentChoiceIndex,
-          userWins,
-          opponentWins,
-          result,
-        });
-
-        this.statisticsHandler.addValue({
+        const score = this.statisticsHandler.addScore({
           gameName: this.state.gamemode,
           ...getWinner(result),
           timeDate: false,
         });
+
+        // here must be rerender the score of the player who won!!!
+        this.gameUI.updateScore(getWinner(result).userName, score);
 
         const gameStatistics = this.statisticsHandler.getStatistics();
 
