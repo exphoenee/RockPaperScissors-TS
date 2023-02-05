@@ -573,19 +573,8 @@ export default class GameUI {
   };
 
   private stepImage = (user: userNames, direction: directions) => {
-    const images =
-      user === userNames.USER ? this.userImages : this.opponentImages;
-
     const newChoice = this.changeChoice(user, direction);
-
-    const changeClass = (elem: HTMLElement, action: "set" | "unset") => {
-      elem.classList.add(action === "set" ? "showen" : "hidden");
-      elem.classList.remove(action === "set" ? "hidden" : "showen");
-    };
-
-    images.forEach((elem, i) =>
-      i === newChoice ? changeClass(elem, "set") : changeClass(elem, "unset")
-    );
+    this.setImage(user, newChoice);
   };
 
   private setImage = (user: userNames, index: number) => {
