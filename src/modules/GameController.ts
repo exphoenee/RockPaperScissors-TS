@@ -135,7 +135,6 @@ class GameContorller {
 
   private computerPlay(): void {
     this.opponentChoiceIndex = Math.floor(Math.random() * this.rules.length);
-    console.log(this.opponentChoiceIndex);
     this.gameUI.startComputerAnimation(
       {
         choosen: this.opponentChoiceIndex,
