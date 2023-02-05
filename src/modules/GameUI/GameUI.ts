@@ -83,6 +83,15 @@ export default class GameUI {
     throw new Error("The setStatCalcMode is not defined");
   };
 
+  public updateScore(userName: userNames, score: number): void {
+    console.log("updateScore", userName, score);
+    if (userName === userNames.USER) {
+      this.userWins.textContent = score.toString();
+    } else if (userName === userNames.OPPONENT) {
+      this.opponentWins.textContent = score.toString();
+    }
+  }
+
   public setStatGameMode: (mode: gameNames) => void = () => {
     throw new Error("The setStatGameMode is not defined");
   };
