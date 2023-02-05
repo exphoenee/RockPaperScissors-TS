@@ -83,7 +83,6 @@ export default class GameUI {
   };
 
   public updateScore(userName: userNames, score: number): void {
-    console.log("updateScore", userName, score);
     if (userName === userNames.USER) {
       this.userWins.textContent = score.toString();
     } else if (userName === userNames.OPPONENT) {
