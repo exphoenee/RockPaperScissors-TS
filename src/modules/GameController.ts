@@ -207,11 +207,9 @@ class GameContorller {
           timeDate: false,
         });
 
-        this.gameUI.updateScore(winner as userNames, score);
-
         const gameStatistics = this.statisticsHandler.getStatistics();
-
         this.stateHandler.setGameStatistics(gameStatistics);
+        this.gameUI.updateScore(winner as userNames, score);
       }
 
       this.userChoiceSet = false;
