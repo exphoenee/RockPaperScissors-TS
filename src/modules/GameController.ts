@@ -202,7 +202,7 @@ class GameContorller {
           ...getWinner(result),
           timeDate: false,
         });
-        console.table(this.statisticsHandler.getStatistics());
+        console.table(this.statisticsHandler.getTable());
       }
 
       this.userChoiceSet = false;
