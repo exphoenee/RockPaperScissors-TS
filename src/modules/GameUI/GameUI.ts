@@ -528,6 +528,10 @@ export default class GameUI {
     if (modelBody) {
       modelBody.innerHTML = resultMap(resultInfo);
       resultModal?.classList.add("show");
+      const interval = setInterval(() => {
+        resultModal?.classList.remove("show");
+        clearInterval(interval);
+      }, 5000);
     }
   };
 
