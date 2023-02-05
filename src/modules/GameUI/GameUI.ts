@@ -10,6 +10,7 @@ import resultMap from "./components/common/modal/resultMap";
 /* types */
 import ruleType from "../../types/ruleType";
 import { stateType } from "../StateHandler/StateHandler";
+import { resultMapType } from "./components/common/modal/resultMap";
 
 /* constants */
 import dictionary, { dictionaryType } from "../../constants/dictionary";
@@ -521,13 +522,7 @@ export default class GameUI {
     });
   };
 
-  public showResult = (resultInfo: {
-    result: gameResults;
-    user: string;
-    opponent: string;
-    userChoice: string;
-    opponentChoice: string;
-  }) => {
+  public showResult = (resultInfo: resultMapType) => {
     const resultModal = this.modals.find(
       (elem) => elem.id === modalNames.RESULT
     );
