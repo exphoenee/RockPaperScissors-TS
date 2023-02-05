@@ -4,6 +4,9 @@ import { statCalcModes } from "../../constants/statCalcModes";
 import { gameStatisticsType } from "../../types/gameStatisticsType";
 import { themas } from "../../constants/themas";
 
+/* utils */
+import getFirstValue from "../../utils/getFirstValue";
+
 export type stateType = {
   developerMode: boolean;
   gamemode: gameNames;
@@ -13,14 +16,6 @@ export type stateType = {
   gameStatistics: gameStatisticsType | [];
   thema: themas;
 };
-
-// This is a generic function that returns the first value of an object
-// It's used to get the first value of the enum usedLangs and gameNames
-// to set the deafult state
-
-function getFirstValue(obj: {}): {}[keyof {}] {
-  return obj[Object.keys(obj)[0] as keyof {}];
-}
 
 class StateHandler {
   public state: stateType;
