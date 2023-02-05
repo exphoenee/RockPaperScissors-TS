@@ -156,35 +156,41 @@ class GameContorller {
       const userWins = userChoice.beats.includes(opponentChoice.value);
       const opponentWins = opponentChoice.beats.includes(userChoice.value);
 
-      const result =
+      const getWinner = (): { winner: string; winsWidth: string,winnerName: string, against: string } => {
+
+        const result: gameResults =
         userWins && !opponentWins
           ? gameResults.USER
           : opponentWins && !userWins
           ? gameResults.OPPONENT
           : gameResults.DRAW;
 
-      this.gameUI.showResult({
-        result,
-        user: this.appSettings.userName,
-        opponent: this.appSettings.opponentName,
-        userChoice: userChoice.value,
-        opponentChoice: opponentChoice.value,
-      });
+        if (result !== gameResults.DRAW) {
+          return { winner: "", winsWidth: "", winnerName: "", against: "" };
+        };
 
-      const getWinner = (
-        result: gameResults
-      ): { userName: string; threwName: string } => {
         return {
-          userName:
+          winner:
             result === gameResults.USER
+              ? userNames.USER : userNames.OPPONENT,
+          winnerName: result === gameResults.USER
               ? this.appSettings.userName
               : this.appSettings.opponentName,
-          threwName:
+          winsWidth:
             result === gameResults.USER
               ? userChoice.value
               : opponentChoice.value,
+          against: result === gameResults.USER ? opponentChoice.value : userChoice.value,
         };
       };
+
+      const { winner, winnerName, winsWidth, against } = getWinner();
+
+      this.gameUI.showResult({
+        winner:
+      });
+
+
 
       if (result !== gameResults.DRAW) {
         const score = this.statisticsHandler.addScore({
