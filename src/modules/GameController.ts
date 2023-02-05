@@ -10,6 +10,7 @@ import { statCalcModes } from "../constants/statCalcModes";
 /* constants */
 import games from "../constants/games";
 import { gameResults } from "../constants/gameResults";
+import { userNames } from "../constants/userNames";
 
 /* utils */
 import { stateType } from "./StateHandler/StateHandler";
@@ -116,15 +117,19 @@ class GameContorller {
     this.stateHandler.setGameMode(mode);
   }
 
-  private setUserChoice(direction: directions): number {
-    const possibleChoices = this.rules.length;
+  private setUserChoice(user: userNames, direction: directions): number {
+    const newChoice = (choice: number): number => {
+      const possibleChoices = this.rules.length;
+      return direction === directions.NEXT
+        ? (choice + 1) % possibleChoices
+        : (choice + possibleChoices - 1) % possibleChoices;
+    };
 
-    this.userChoiceIndex =
-      direction === directions.NEXT
-        ? (this.userChoiceIndex + 1) % possibleChoices
-        : (this.userChoiceIndex + possibleChoices - 1) % possibleChoices;
+    if (user === userNames.USER)
+      this.userChoiceIndex = newChoice(this.userChoiceIndex);
+    if (user === userNames.OPPONENT)
+      this.opponentChoiceIndex = newChoice(this.opponentChoiceIndex);
 
-    console.log(this.userChoiceIndex);
     return this.userChoiceIndex;
   }
 
@@ -191,6 +196,7 @@ class GameContorller {
           opponentWins,
           result,
         });
+
         this.statisticsHandler.addValue({
           gameName: this.state.gamemode,
           ...getWinner(result),
