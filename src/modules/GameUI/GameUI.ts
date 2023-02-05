@@ -518,7 +518,6 @@ export default class GameUI {
     userChoice: string;
     opponentChoice: string;
   }) => {
-    console.log(resultInfo);
     const resultModal = this.modals.find(
       (elem) => elem.id === modalNames.RESULT
     );
@@ -572,7 +571,8 @@ export default class GameUI {
   };
 
   private stepImage = (user: userNames, direction: directions) => {
-    const images = user === "user" ? this.userImages : this.opponentImages;
+    const images =
+      user === userNames.USER ? this.userImages : this.opponentImages;
 
     const newChoice = this.changeChoice(direction);
 
