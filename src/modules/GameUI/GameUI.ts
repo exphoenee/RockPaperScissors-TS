@@ -90,9 +90,10 @@ export default class GameUI {
   public setChoice: (isUserCoiceSet: boolean) => void = () => {
     throw new Error("The setChoice is not defined");
   };
-  public changeChoice: (direction: directions) => number = () => {
-    throw new Error("The choiceChange is not defined");
-  };
+  public changeChoice: (user: userNames, direction: directions) => number =
+    () => {
+      throw new Error("The choiceChange is not defined");
+    };
 
   public setGameMode: () => void = () => {
     throw new Error("The setGameMode is not defined");
@@ -573,7 +574,7 @@ export default class GameUI {
     const images =
       user === userNames.USER ? this.userImages : this.opponentImages;
 
-    const newChoice = this.changeChoice(direction);
+    const newChoice = this.changeChoice(user, direction);
 
     const changeClass = (elem: HTMLElement, action: "set" | "unset") => {
       elem.classList.add(action === "set" ? "showen" : "hidden");
