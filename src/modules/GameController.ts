@@ -119,16 +119,19 @@ class GameContorller {
   private setUserChoice(direction: directions): number {
     const possibleChoices = this.rules.length;
 
+
     this.userChoiceIndex =
       direction === directions.NEXT
-        ? (this.userChoiceIndex + 1) % possibleChoices
-        : (this.userChoiceIndex + possibleChoices - 1) % possibleChoices;
+      ? (this.userChoiceIndex + 1) % possibleChoices
+      : (this.userChoiceIndex + possibleChoices - 1) % possibleChoices;
 
+    console.log(this.userChoiceIndex)
     return this.userChoiceIndex;
   }
 
   private computerPlay(): void {
     this.opponentChoiceIndex = Math.floor(Math.random() * this.rules.length);
+    console.log(this.opponentChoiceIndex);
     this.gameUI.startComputerAnimation(
       {
         choosen: this.opponentChoiceIndex,
@@ -146,12 +149,8 @@ class GameContorller {
       const userChoice = this.getChoice(this.userChoiceIndex);
       const opponentChoice = this.getChoice(this.opponentChoiceIndex);
 
-      console.log(userChoice, opponentChoice);
-
       const userWins = userChoice.beats.includes(opponentChoice.value);
       const opponentWins = opponentChoice.beats.includes(userChoice.value);
-
-      console.log(userWins, opponentWins);
 
       const result =
         userWins && !opponentWins
@@ -168,13 +167,38 @@ class GameContorller {
         opponentChoice: opponentChoice.value,
       });
 
-      this.statisticsHandler.updateStatistics(
-        this.state.gameStatistics,
-        this.state.gamemode,
-        result
-      );
+      const getWinner = (
+        result: gameResults
+      ): { userName: string; threwName: string } => {
+        return {
+          userName:
+            result === gameResults.USER
+              ? this.appSettings.userName
+              : this.appSettings.opponentName,
+          threwName:
+            result === gameResults.USER
+              ? userChoice.value
+              : opponentChoice.value,
+        };
+      };
 
-      this.stateHandler.updateStatistics(this.state.gameStatistics);
+      if (result !== gameResults.DRAW) {
+        console.table({
+          userChoice: userChoice.value,
+          userChoiceIndex: this.userChoiceIndex,
+          opponentChoice: opponentChoice.value,
+          opponentChoiceIndex: this.opponentChoiceIndex,
+          userWins,
+          opponentWins,
+          result,
+        });
+        this.statisticsHandler.addValue({
+          gameName: this.state.gamemode,
+          ...getWinner(result),
+          timeDate: false,
+        });
+        console.table(this.statisticsHandler.getStatistics());
+      }
 
       this.userChoiceSet = false;
       this.opponentChoiceSet = false;
