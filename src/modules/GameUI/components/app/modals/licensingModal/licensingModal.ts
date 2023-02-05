@@ -7,7 +7,7 @@ const licensingModal = [
     children: [
       {
         tag: "span",
-        text: "©2022",
+        text: "©2023",
       },
     ],
   },
