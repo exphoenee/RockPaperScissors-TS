@@ -119,13 +119,12 @@ class GameContorller {
   private setUserChoice(direction: directions): number {
     const possibleChoices = this.rules.length;
 
-
     this.userChoiceIndex =
       direction === directions.NEXT
-      ? (this.userChoiceIndex + 1) % possibleChoices
-      : (this.userChoiceIndex + possibleChoices - 1) % possibleChoices;
+        ? (this.userChoiceIndex + 1) % possibleChoices
+        : (this.userChoiceIndex + possibleChoices - 1) % possibleChoices;
 
-    console.log(this.userChoiceIndex)
+    console.log(this.userChoiceIndex);
     return this.userChoiceIndex;
   }
 
@@ -209,8 +208,8 @@ class GameContorller {
     return this.rules[index];
   }
 
-  private setChoice(isUserCoiceSet: boolean): void {
-    this.userChoiceSet = isUserCoiceSet;
+  private setChoice(isUserChoiceSet: boolean): void {
+    this.userChoiceSet = isUserChoiceSet;
 
     if (this.userChoiceSet) {
       this.gameUI.freezeUI();
