@@ -4,7 +4,6 @@ import domelemjs from "domelemjs";
 import loaderScreenMap from "./components/loaderScreen/loaderScreenMap";
 import settingsMap from "./components/settings/settingsMap";
 import appMap from "./components/app/appMap";
-import modalBodyMap from "./components/common/modal/modalBodyMap";
 import resultMap from "./components/common/modal/resultMap";
 
 /* types */
@@ -23,7 +22,6 @@ import { statCalcModes } from "../../constants/statCalcModes";
 import { userNames } from "../../constants/userNames";
 import { directions } from "../../constants/directions";
 import { themas } from "../../constants/themas";
-import { gameResults } from "../../constants/gameResults";
 import modalNames from "./constants/modalNames";
 
 /* style */
