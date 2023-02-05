@@ -15,7 +15,7 @@ class StatisticsHandler {
     if (statistics) this.statistics = statistics as gameStatisticsType;
   }
 
-  public fillStatistics(statistics: gameStatisticsType) {
+  public fillStatistics(statistics: gameStatisticsType | []) {
     /* itt ne csak így bebeszkodva legyen */
     this.statistics = statistics;
   }
@@ -37,12 +37,13 @@ class StatisticsHandler {
   }
 
   public getTable(gameName = "Classic") {
-    const gameStatistics = this.getGameStatistics(gameName);
+    const gameStatistics: userStatisticsType | null =
+      this.getGameStatistics(gameName)?.statistics || null;
     const threws = this.getThrewsFromGame(gameName);
 
     if (!gameStatistics || !threws) return [];
 
-    const table: (string | number)[][] = gameStatistics.statistics.reduce(
+    const table: (string | number)[][] = gameStatistics.reduce(
       (acc: (string | number)[][], user) => {
         const threwValues = threws.map((threwName) =>
           user.results
@@ -108,12 +109,8 @@ class StatisticsHandler {
     timeDate: string | false;
   }) {
     if (!timeDate) timeDate = new Date().toISOString();
-
-    console.log("addValue", gameName, userName, threwName);
-
     const sGame = this.statistics?.find((game) => game.gameName === gameName);
     if (!sGame) {
-      console.log("new game");
       const newGameRecord: gameStatisticsType = {
         gameName: gameName as gameNames,
         statistics: [
@@ -137,7 +134,7 @@ class StatisticsHandler {
     const sThrew = sUser?.results.find(
       (threw) => threw.threwName === threwName
     );
-    console.log(sThrew);
+
     !sThrew
       ? sUser?.results.push({ threwName, wins: [timeDate] })
       : sThrew.wins.push(timeDate);
