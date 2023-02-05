@@ -97,7 +97,28 @@ class StatisticsHandler {
     return this.statistics;
   }
 
-  public addValue({
+  public getScore({
+    gameName,
+    userName,
+  }: {
+    gameName: string;
+    userName: string;
+  }): number {
+    const gameStatistics: userStatisticsType | null =
+      this.getGameStatistics(gameName)?.statistics || null;
+
+    const userResults = gameStatistics?.find(
+      (user) => user.userName === userName
+    )?.results;
+
+    const score = userResults?.reduce((sum, result) => {
+      return sum + result.wins.length;
+    }, 0);
+
+    return score || 0;
+  }
+
+  public addScore({
     gameName,
     userName,
     threwName,
@@ -138,7 +159,7 @@ class StatisticsHandler {
     !sThrew
       ? sUser?.results.push({ threwName, wins: [timeDate] })
       : sThrew.wins.push(timeDate);
-    return true;
+    return this.getScore({ gameName, userName });
   }
 }
 
