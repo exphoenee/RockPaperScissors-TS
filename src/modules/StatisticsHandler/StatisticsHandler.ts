@@ -30,10 +30,14 @@ class StatisticsHandler {
     return game.rules.map((game) => game.value);
   }
 
-  public getTable(gameName = "Classic") {
-    const gameStatistics = this.statistics.find(
-      (game) => game.gameName === gameName
+  private getGameStatistics(gameName: string) {
+    return this.statistics.find(
+      (game) => game?.gameName?.toUpperCase() === gameName?.toUpperCase()
     );
+  }
+
+  public getTable(gameName = "Classic") {
+    const gameStatistics = this.getGameStatistics(gameName);
     const threws = this.getThrewsFromGame(gameName);
 
     if (!gameStatistics || !threws) return [];
