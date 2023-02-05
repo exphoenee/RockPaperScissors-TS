@@ -562,7 +562,6 @@ export default class GameUI {
         if (i === anim.length - 1) {
           setTimeout(() => {
             callBack();
-            this.setChoice(false);
           }, 750);
         }
       }, delay);
