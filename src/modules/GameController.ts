@@ -156,51 +156,58 @@ class GameContorller {
       const userWins = userChoice.beats.includes(opponentChoice.value);
       const opponentWins = opponentChoice.beats.includes(userChoice.value);
 
-      const getWinner = (): { winner: string; winsWidth: string,winnerName: string, against: string } => {
-
+      const getWinner = (): {
+        winner: string;
+        winsWith: string;
+        winnerName: string;
+        against: string;
+      } => {
         const result: gameResults =
-        userWins && !opponentWins
-          ? gameResults.USER
-          : opponentWins && !userWins
-          ? gameResults.OPPONENT
-          : gameResults.DRAW;
+          userWins && !opponentWins
+            ? gameResults.USER
+            : opponentWins && !userWins
+            ? gameResults.OPPONENT
+            : gameResults.DRAW;
 
-        if (result !== gameResults.DRAW) {
-          return { winner: "", winsWidth: "", winnerName: "", against: "" };
-        };
+        if (result === gameResults.DRAW) {
+          return { winner: "", winsWith: "", winnerName: "", against: "" };
+        }
 
         return {
           winner:
+            result === gameResults.USER ? userNames.USER : userNames.OPPONENT,
+          winnerName:
             result === gameResults.USER
-              ? userNames.USER : userNames.OPPONENT,
-          winnerName: result === gameResults.USER
               ? this.appSettings.userName
               : this.appSettings.opponentName,
-          winsWidth:
+          winsWith:
             result === gameResults.USER
               ? userChoice.value
               : opponentChoice.value,
-          against: result === gameResults.USER ? opponentChoice.value : userChoice.value,
+          against:
+            result === gameResults.USER
+              ? opponentChoice.value
+              : userChoice.value,
         };
       };
 
-      const { winner, winnerName, winsWidth, against } = getWinner();
+      const { winner, winnerName, winsWith, against } = getWinner();
 
       this.gameUI.showResult({
-        winner:
+        winner: winnerName,
+        winsWith,
+        against,
       });
 
-
-
-      if (result !== gameResults.DRAW) {
+      if (winner !== "") {
         const score = this.statisticsHandler.addScore({
           gameName: this.state.gamemode,
-          ...getWinner(result),
+          userName: winner,
+          threwName: winsWith,
           timeDate: false,
         });
 
-        // here must be rerender the score of the player who won!!!
-        this.gameUI.updateScore(getWinner(result).userName, score);
+        this.gameUI.updateScore(winner as userNames, score);
 
         const gameStatistics = this.statisticsHandler.getStatistics();
 
