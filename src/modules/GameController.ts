@@ -144,6 +144,7 @@ class GameContorller {
       () => {
         this.opponentChoiceSet = true;
         this.evaluateGame();
+        this.gameUI.unfreezeUI();
       }
     );
   }
