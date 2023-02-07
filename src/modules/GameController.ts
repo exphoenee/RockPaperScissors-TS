@@ -41,6 +41,7 @@ class GameContorller {
 
   constructor() {
     this.state = this.stateHandler.state;
+
     this.statisticsHandler.fillStatistics(this.state.gameStatistics);
 
     /* Setting up appSettings */
