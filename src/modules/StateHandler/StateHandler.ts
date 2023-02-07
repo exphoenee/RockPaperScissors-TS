@@ -27,13 +27,14 @@ class StateHandler {
     statisticMode: getFirstValue(statCalcModes),
     statisticGameMode: getFirstValue(gameNames),
     thema: getFirstValue(themas),
-    gameStatistics: [{}] as gameStatisticsType,
+    gameStatistics: [],
   };
 
   private localhosts: string[] = ["localhost", "127.0.0.1"];
 
   constructor() {
     this.state = this.getState();
+    console.log(this.state);
     this.state.developerMode = this.checkRunsLocal();
   }
 
@@ -112,16 +113,20 @@ class StateHandler {
       if (this.checkState(state)) {
         return state;
       } else {
+        console.error("State is not valid");
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error("Error while getting state");
+    }
     return this.defaultState;
   }
 
   private decodeState(value: string): stateType {
+    console.log(value);
     const decoded = Array.from(value)
       .map((code) => String.fromCharCode(this.secretKey - code.charCodeAt(0)))
       .join("")
-      .replaceAll('"', "");
+      .replaceAll("Ǟ", "");
     return JSON.parse(decoded);
   }
 
