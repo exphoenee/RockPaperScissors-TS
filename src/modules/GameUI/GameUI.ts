@@ -82,6 +82,27 @@ export default class GameUI {
     throw new Error("The setStatCalcMode is not defined");
   };
 
+  public updateStaisticsTable = (tableDate: (number | string)[][]) => {
+    // statisticTableMap(tableDate)
+    const { modalBody: statModalBody } = this.getModal(modalNames.STAT);
+
+    statModalBody.innerHTML = "";
+
+    domelemjs({
+      tag: "table",
+      attrs: { class: "statistics-table" },
+      parent: statModalBody,
+      children: tableDate.map((row) => {
+        return {
+          tag: "tr",
+          children: row.map((cell) => {
+            return { tag: "td", text: cell };
+          }),
+        };
+      }),
+    });
+  };
+
   public updateScore(userName: userNames, score: number): void {
     if (userName === userNames.USER) {
       this.userWins.textContent = score.toString();
@@ -519,14 +540,19 @@ export default class GameUI {
     });
   };
 
-  public showResult = (resultInfo: resultMapType) => {
-    const resultModal = this.modals.find(
-      (elem) => elem.id === modalNames.RESULT
-    );
-    const modelBody = resultModal?.querySelector(".modal-body");
+  private getModal = (modalName: modalNames) => {
+    const modal = this.modals.find((elem) => elem.id === modalName);
+    const modalBody = modal?.querySelector(".modal-body");
+    const modalHeader = modal?.querySelector(".modal-header");
+    const modalFooter = modal?.querySelector(".modal-footer");
+    return { modal, modalHeader, modalBody, modalFooter };
+  };
 
-    if (modelBody) {
-      modelBody.innerHTML = resultMap(resultInfo);
+  public showResult = (resultInfo: resultMapType) => {
+    const { modal: resultModal, modalBody } = this.getModal(modalNames.RESULT);
+
+    if (modalBody) {
+      modalBody.innerHTML = resultMap(resultInfo);
       resultModal?.classList.add("show");
       const interval = setInterval(() => {
         resultModal?.classList.remove("show");
