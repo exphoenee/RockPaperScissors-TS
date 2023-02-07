@@ -86,21 +86,24 @@ export default class GameUI {
     // statisticTableMap(tableDate)
     const { modalBody: statModalBody } = this.getModal(modalNames.STAT);
 
-    statModalBody.innerHTML = "";
+    if (statModalBody) {
+      const tableContainer = statModalBody.querySelector("#table-container");
+      tableContainer.innerHTML = "";
 
-    domelemjs({
-      tag: "table",
-      attrs: { class: "statistics-table" },
-      parent: statModalBody,
-      children: tableDate.map((row) => {
-        return {
-          tag: "tr",
-          children: row.map((cell) => {
-            return { tag: "td", text: cell };
-          }),
-        };
-      }),
-    });
+      domelemjs({
+        tag: "table",
+        attrs: { class: "statistics-table" },
+        parent: tableContainer,
+        children: tableDate.map((row) => {
+          return {
+            tag: "tr",
+            children: row.map((cell) => {
+              return { tag: "td", text: cell };
+            }),
+          };
+        }),
+      });
+    }
   };
 
   public updateScore(userName: userNames, score: number): void {
