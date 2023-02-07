@@ -211,7 +211,9 @@ class GameContorller {
         const gameStatistics = this.statisticsHandler.getStatistics();
         this.stateHandler.setGameStatistics(gameStatistics);
         this.gameUI.updateScore(winner as userNames, score);
-        this.gameUI.updateStaisticsTable(this.statisticsHandler.getTable());
+        this.gameUI.updateStaisticsTable(
+          this.statisticsHandler.getTable(this.state.gamemode)
+        );
       }
 
       this.userChoiceSet = false;
