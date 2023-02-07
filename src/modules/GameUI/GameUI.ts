@@ -82,42 +82,6 @@ export default class GameUI {
     throw new Error("The setStatCalcMode is not defined");
   };
 
-  // TODO: at initialization must the scores and the statistics table also set
-
-  public updateStaisticsTable = (tableDate: (number | string)[][]) => {
-    // statisticTableMap(tableDate)
-    const { modalBody: statModalBody } = this.getModal(modalNames.STAT);
-
-    if (statModalBody) {
-      const tableContainer = statModalBody.querySelector("#table-container");
-      if (tableContainer) {
-        tableContainer.innerHTML = "";
-
-        domelemjs({
-          tag: "table",
-          attrs: { class: "statistics-table" },
-          parent: tableContainer,
-          children: tableDate.map((row) => {
-            return {
-              tag: "tr",
-              children: row.map((cell) => {
-                return { tag: "td", text: cell };
-              }),
-            };
-          }),
-        });
-      }
-    }
-  };
-
-  public updateScore(userName: userNames, score: number): void {
-    if (userName === userNames.USER) {
-      this.userWins.textContent = score.toString();
-    } else if (userName === userNames.OPPONENT) {
-      this.opponentWins.textContent = score.toString();
-    }
-  }
-
   public setStatGameMode: (mode: gameNames) => void = () => {
     throw new Error("The setStatGameMode is not defined");
   };
@@ -234,6 +198,41 @@ export default class GameUI {
     domelemjs(settingsMap);
     domelemjs(appMap({ rules }));
   };
+
+  // TODO: at initialization must the scores and the statistics table also set
+  public updateStaisticsTable = (tableDate: (number | string)[][]) => {
+    // statisticTableMap(tableDate)
+    const { modalBody: statModalBody } = this.getModal(modalNames.STAT);
+
+    if (statModalBody) {
+      const tableContainer = statModalBody.querySelector("#table-container");
+      if (tableContainer) {
+        tableContainer.innerHTML = "";
+
+        domelemjs({
+          tag: "table",
+          attrs: { class: "statistics-table" },
+          parent: tableContainer,
+          children: tableDate.map((row) => {
+            return {
+              tag: "tr",
+              children: row.map((cell) => {
+                return { tag: "td", text: cell };
+              }),
+            };
+          }),
+        });
+      }
+    }
+  };
+
+  public updateScore(userName: userNames, score: number): void {
+    if (userName === userNames.USER) {
+      this.userWins.textContent = score.toString();
+    } else if (userName === userNames.OPPONENT) {
+      this.opponentWins.textContent = score.toString();
+    }
+  }
 
   public setUserWins(value: number) {
     this.userWins.textContent = String(value);
