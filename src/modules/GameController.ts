@@ -77,6 +77,19 @@ class GameContorller {
     this.gameUI.setStatGameMode = this.setStatGameMode.bind(this);
     this.gameUI.setGameMode = this.setGameMode.bind(this);
     this.gameUI.setLanguage = this.setLanguage.bind(this);
+
+
+    [userNames.USER, userNames.OPPONENT].forEach(user => this.gameUI.updateScore(user as userNames, this.statisticsHandler.getScore({
+        gameName: this.state.statisticGameMode,
+        userName: user})
+      ));
+
+    this.gameUI.updateStaisticsTable(
+      this.statisticsHandler.getTable(
+        this.state.statisticGameMode,
+        this.state.statisticMode
+      )
+    );
   }
 
   setGameType(type: "singleplayer" | "multiplayer"): void {
@@ -212,7 +225,10 @@ class GameContorller {
         this.stateHandler.setGameStatistics(gameStatistics);
         this.gameUI.updateScore(winner as userNames, score);
         this.gameUI.updateStaisticsTable(
-          this.statisticsHandler.getTable(this.state.gamemode)
+          this.statisticsHandler.getTable(
+            this.state.statisticGameMode,
+            this.state.statisticMode
+          )
         );
       }
 
