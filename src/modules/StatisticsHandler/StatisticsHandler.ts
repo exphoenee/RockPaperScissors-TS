@@ -36,7 +36,8 @@ class StatisticsHandler {
     );
   }
 
-  public getTable(gameName = "Classic") {
+  // TODO: add here the enums not the strings!!!
+  public getTable(gameName = "Classic", statisticMode = "value") {
     const gameStatistics: userStatisticsType | null =
       this.getGameStatistics(gameName)?.statistics || null;
     const threws = this.getThrewsFromGame(gameName);
