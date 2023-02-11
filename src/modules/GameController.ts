@@ -61,12 +61,15 @@ class GameContorller {
       games[0]?.rules;
     this.opponentChoiceIndex = this.userChoiceIndex = 0;
 
-    /* Setting up gameUi */
+    /* Setting up gameUI */
     this.gameUI = GameUI.getInstance({
       rules: this.rules,
       stateHandler: this.stateHandler,
     });
+    this.initializeGameUI();
+  }
 
+  initializeGameUI(): void {
     this.gameUI.setUserName(this.appSettings.userName);
     this.gameUI.setOpponentName(this.appSettings.opponentName);
 
@@ -78,11 +81,20 @@ class GameContorller {
     this.gameUI.setGameMode = this.setGameMode.bind(this);
     this.gameUI.setLanguage = this.setLanguage.bind(this);
 
+    this.gameUI.changeGameMode({
+      rules: this.rules,
+      lang: this.state.language,
+    });
 
-    [userNames.USER, userNames.OPPONENT].forEach(user => this.gameUI.updateScore(user as userNames, this.statisticsHandler.getScore({
-        gameName: this.state.statisticGameMode,
-        userName: user})
-      ));
+    [userNames.USER, userNames.OPPONENT].forEach((user) =>
+      this.gameUI.updateScore(
+        user as userNames,
+        this.statisticsHandler.getScore({
+          gameName: this.state.statisticGameMode,
+          userName: user,
+        })
+      )
+    );
 
     this.gameUI.updateStaisticsTable(
       this.statisticsHandler.getTable(
