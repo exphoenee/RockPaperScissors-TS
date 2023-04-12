@@ -1,26 +1,26 @@
 /* modules */
 import GameUI from "./GameUI/GameUI";
-import StateHandler from "./StateHandler/StateHandler";
+import StateHandler, {stateType} from "./StateHandler/StateHandler";
 import StatisticsHandler from "./StatisticsHandler/StatisticsHandler";
 
 /* enums */
-import { gameNames } from "../constants/gameNames";
-import { statCalcModes } from "../constants/statCalcModes";
+import {gameNames} from "../constants/gameNames";
+import {statCalcModes} from "../constants/statCalcModes";
 
 /* constants */
 import games from "../constants/games";
-import { gameResults } from "../constants/gameResults";
-import { userNames } from "../constants/userNames";
+import {gameResults} from "../constants/gameResults";
+import {userNames} from "../constants/userNames";
+import {gameTypes} from "../constants/gameTypes";
 
 /* utils */
-import { stateType } from "./StateHandler/StateHandler";
 import ruleType from "../types/ruleType";
-import { directions } from "../constants/directions";
-import { usedLangs } from "../constants/usedLangs";
+import {directions} from "../constants/directions";
+import {usedLangs} from "../constants/usedLangs";
 
 class GameContorller {
   private appSettings: {
-    gameType: "singleplayer" | "multiplayer";
+    gameType: gameTypes;
     userName: string;
     opponentName: string;
     imageLoaded: number;
@@ -34,10 +34,10 @@ class GameContorller {
   private userChoiceSet: boolean = false;
   private opponentChoiceSet: boolean = false;
   private gameUI: GameUI;
-  private rules: ruleType[];
-  private stateHandler: StateHandler = new StateHandler();
+  public rules: ruleType[];
+  public stateHandler: StateHandler = new StateHandler();
   private statisticsHandler: StatisticsHandler = new StatisticsHandler();
-  private state: stateType;
+  public state: stateType;
 
   constructor() {
     this.state = this.stateHandler.state;
@@ -46,7 +46,7 @@ class GameContorller {
 
     /* Setting up appSettings */
     this.appSettings = {
-      gameType: "singleplayer",
+      gameType: gameTypes.SINGLE_PLAYER,
       userName: "You",
       opponentName: "Opponent",
       imageLoaded: 0,
@@ -62,10 +62,7 @@ class GameContorller {
     this.opponentChoiceIndex = this.userChoiceIndex = 0;
 
     /* Setting up gameUI */
-    this.gameUI = GameUI.getInstance({
-      rules: this.rules,
-      stateHandler: this.stateHandler,
-    });
+    this.gameUI = GameUI.getInstance(this);
     this.initializeGameUI();
   }
 
@@ -109,7 +106,7 @@ class GameContorller {
   }
 
   private setLanguage(lang: string): void {
-    this.gameUI.updateLang({ rules: this.rules, lang });
+    this.gameUI.updateLang({rules: this.rules, lang});
     this.stateHandler.setLang(lang as usedLangs);
   }
 
@@ -196,7 +193,7 @@ class GameContorller {
             : gameResults.DRAW;
 
         if (result === gameResults.DRAW) {
-          return { winner: "", winsWith: "", winnerName: "", against: "" };
+          return {winner: "", winsWith: "", winnerName: "", against: ""};
         }
 
         return {
@@ -217,7 +214,7 @@ class GameContorller {
         };
       };
 
-      const { winner, winnerName, winsWith, against } = getWinner();
+      const {winner, winnerName, winsWith, against} = getWinner();
 
       this.gameUI.showResult({
         winner: winnerName,
