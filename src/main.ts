@@ -1,2 +1,2 @@
-import GameContorller from "./modules/GameController";
+import GameContorller from "./modules/GameContorller/GameController";
 new GameContorller();
