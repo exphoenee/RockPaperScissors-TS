@@ -233,12 +233,13 @@ export default class GameUI {
     this.opponentWins.textContent = String(value);
   }
 
-  public setUserName(name: string) {
-    this.userNameElem.textContent = name;
+  public setUserName() {
+    this.userNameElem.textContent = this.game.appSettings.userName ?? "?";
   }
 
-  public setOpponentName(name: string) {
-    this.opponentNameElem.textContent = name;
+  public setOpponentName() {
+    this.opponentNameElem.textContent =
+      this.game.appSettings.opponentName ?? "?";
   }
 
   private initialize = () => {
@@ -301,8 +302,8 @@ export default class GameUI {
   }
 
   private initPlayersName() {
-    this.setUserName("?");
-    this.setOpponentName("?");
+    this.setUserName();
+    this.setOpponentName();
   }
 
   /* Fancy title and favicon change */
