@@ -1,8 +1,9 @@
-import { gameNames } from "../../constants/gameNames";
-import { usedLangs } from "../../constants/usedLangs";
-import { statCalcModes } from "../../constants/statCalcModes";
-import { gameStatisticsType } from "../../types/gameStatisticsType";
-import { themas } from "../../constants/themas";
+/* constants */
+import {gameNames} from "../../constants/gameNames";
+import {usedLangs} from "../../constants/usedLangs";
+import {statCalcModes} from "../../constants/statCalcModes";
+import {gameStatisticsType} from "../../types/gameStatisticsType";
+import {themas} from "../../constants/themas";
 
 /* utils */
 import getFirstValue from "../../utils/getFirstValue";
@@ -34,7 +35,6 @@ class StateHandler {
 
   constructor() {
     this.state = this.getState();
-    console.log(this.state);
     this.state.developerMode = this.checkRunsLocal();
   }
 
@@ -90,7 +90,7 @@ class StateHandler {
   }
 
   public getThema(): themas {
-    return this.state.thema as themas;
+    return this.state.thema;
   }
 
   public setThema(value: themas): void {
