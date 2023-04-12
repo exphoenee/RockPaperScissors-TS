@@ -1,43 +1,36 @@
 import domelemjs from "domelemjs";
 
+/* modules */
+import GameContorller from "../GameController";
+
 /* components */
 import loaderScreenMap from "./components/loaderScreen/loaderScreenMap";
 import settingsMap from "./components/settings/settingsMap";
 import appMap from "./components/app/appMap";
-import resultMap from "./components/common/modal/resultMap";
+import resultMap, {resultMapType} from "./components/common/modal/resultMap";
 
 /* types */
 import ruleType from "../../types/ruleType";
-import { stateType } from "../StateHandler/StateHandler";
-import { resultMapType } from "./components/common/modal/resultMap";
 
 /* constants */
-import dictionary, { dictionaryType } from "../../constants/dictionary";
-import StateHandler from "../StateHandler/StateHandler";
+import dictionary, {dictionaryType} from "../../constants/dictionary";
 
 /* enums */
-import { gameNames } from "../../constants/gameNames";
-import { gameImages } from "./components/app/gameArea/playerContainer/playerImageContainer";
-import { statCalcModes } from "../../constants/statCalcModes";
-import { userNames } from "../../constants/userNames";
-import { directions } from "../../constants/directions";
-import { themas } from "../../constants/themas";
+import {gameNames} from "../../constants/gameNames";
+import {gameImages} from "./components/app/gameArea/playerContainer/playerImageContainer";
+import {statCalcModes} from "../../constants/statCalcModes";
+import {userNames} from "../../constants/userNames";
+import {directions} from "../../constants/directions";
+import {themas} from "../../constants/themas";
 import modalNames from "./constants/modalNames";
 
 /* style */
 import "../../style/reset.css";
 import "../../style/style.css";
 
-export type GameUIType = {
-  rules: ruleType[];
-  stateHandler: StateHandler;
-};
-
 export default class GameUI {
   // private settings: Element;
-
-  private stateHandler: StateHandler;
-  private state: stateType;
+  private game: GameContorller;
   private app: Element;
   private modals: Element[];
   private loaderScreen: Element;
@@ -103,21 +96,19 @@ export default class GameUI {
   };
   private static instance: GameUI;
 
-  public static getInstance({ rules, stateHandler }: GameUIType): GameUI {
+  public static getInstance(game: GameContorller): GameUI {
     if (!this.instance) {
-      this.instance = new GameUI({ rules, stateHandler });
+      this.instance = new GameUI(game);
     }
     return this.instance;
   }
 
-  private constructor({ rules, stateHandler }: GameUIType) {
+  private constructor(game: GameContorller) {
     this.userChoice = 0;
     this.opponentChoice = 0;
+    this.game = game;
 
-    this.stateHandler = stateHandler;
-    this.state = stateHandler.state;
-
-    this.createUI({ rules });
+    this.createUI();
 
     this.app = document.querySelector("#rps-ui") as Element;
     this.modals = Array.from(document.querySelectorAll(".modal"));
@@ -190,19 +181,19 @@ export default class GameUI {
     ] as HTMLButtonElement[];
     this.flashlight = document.querySelector("#flashlight") as HTMLElement;
 
-    this.initialize({ rules, lang: this.state.language });
+    this.initialize();
   }
 
-  private createUI = ({ rules }: { rules: ruleType[] }) => {
+  private createUI = () => {
     domelemjs(loaderScreenMap);
     domelemjs(settingsMap);
-    domelemjs(appMap({ rules }));
+    domelemjs(appMap({rules: this.game.rules}));
   };
 
   // TODO: at initialization must the scores and the statistics table also set
   public updateStaisticsTable = (tableDate: (number | string)[][]) => {
     // statisticTableMap(tableDate)
-    const { modalBody: statModalBody } = this.getModal(modalNames.STAT);
+    const {modalBody: statModalBody} = this.getModal(modalNames.STAT);
 
     if (statModalBody) {
       const tableContainer = statModalBody.querySelector("#table-container");
@@ -211,13 +202,13 @@ export default class GameUI {
 
         domelemjs({
           tag: "table",
-          attrs: { class: "statistics-table" },
+          attrs: {class: "statistics-table"},
           parent: tableContainer,
           children: tableDate.map((row) => {
             return {
               tag: "tr",
               children: row.map((cell) => {
-                return { tag: "td", text: cell };
+                return {tag: "td", text: cell};
               }),
             };
           }),
@@ -250,13 +241,7 @@ export default class GameUI {
     this.opponentNameElem.textContent = name;
   }
 
-  private initialize = ({
-    rules,
-    lang,
-  }: {
-    rules: ruleType[];
-    lang: string;
-  }) => {
+  private initialize = () => {
     this.initSettings();
     this.initModals();
     this.initLangButtons();
@@ -264,7 +249,7 @@ export default class GameUI {
     this.initGameMode();
     this.initStatistics();
     this.initGameButtons();
-    this.initTitleChange({ rules, lang });
+    this.initTitleChange();
     this.initPlayersChoices();
     this.initPlayersName();
     this.initScores();
@@ -273,7 +258,7 @@ export default class GameUI {
   };
 
   private initFlaslight() {
-    if (this.stateHandler.getThema() === themas.LIGHT) {
+    if (this.game.stateHandler.getThema() === themas.LIGHT) {
       this.flashlight.classList.add("off");
     }
 
@@ -321,19 +306,16 @@ export default class GameUI {
   }
 
   /* Fancy title and favicon change */
-  private initTitleChange({
-    rules,
-    lang,
-  }: {
-    rules: ruleType[];
-    lang: string;
-  }) {
+  private initTitleChange() {
     setInterval(() => {
-      const choice: ruleType = rules[Math.floor(Math.random() * rules.length)];
+      const choice: ruleType =
+        this.game.rules[Math.floor(Math.random() * this.game.rules.length)];
 
       if (choice?.value) {
         const choiceName =
-          dictionary[lang as keyof dictionaryType][choice.value as string];
+          dictionary[this.game.state.language as keyof dictionaryType][
+            choice.value
+          ];
 
         document.title =
           choiceName[0].toUpperCase() + choiceName.substring(1) + "!";
@@ -378,7 +360,7 @@ export default class GameUI {
   };
 
   /* Language update */
-  private generateTitle({ rules, lang }: { rules: ruleType[]; lang: string }) {
+  private generateTitle({rules, lang}: {rules: ruleType[]; lang: string}) {
     return rules
       .map(
         (threw: ruleType) =>
@@ -387,23 +369,11 @@ export default class GameUI {
       .join(", ");
   }
 
-  private updateTitle = ({
-    rules,
-    lang,
-  }: {
-    rules: ruleType[];
-    lang: string;
-  }) => {
-    this.mainTitle.innerHTML = this.generateTitle({ rules, lang });
+  private updateTitle = ({rules, lang}: {rules: ruleType[]; lang: string}) => {
+    this.mainTitle.innerHTML = this.generateTitle({rules, lang});
   };
 
-  public updateLang = ({
-    rules,
-    lang,
-  }: {
-    rules: ruleType[];
-    lang: string;
-  }) => {
+  public updateLang = ({rules, lang}: {rules: ruleType[]; lang: string}) => {
     const otherElse = (elem: HTMLElement) => {
       const key = elem.getAttribute("data-dictionary") as string;
       elem.innerHTML = dictionary[lang as keyof typeof dictionary][key];
@@ -411,7 +381,7 @@ export default class GameUI {
 
     this.dictionary.forEach((elem) => {
       elem.id === "main-title"
-        ? this.updateTitle({ rules, lang })
+        ? this.updateTitle({rules, lang})
         : otherElse(elem as HTMLElement);
     });
   };
@@ -428,7 +398,7 @@ export default class GameUI {
 
   /* Theming */
   private setUIThema(newThema: string) {
-    this.stateHandler.setThema(newThema as themas);
+    this.game.stateHandler.setThema(newThema as themas);
 
     Array.from(this.themaButton.children).forEach((elem) => {
       if (elem.classList.contains(`${newThema}-img`)) {
@@ -456,11 +426,11 @@ export default class GameUI {
 
   // TODO: Refactor this
   private initTheming = () => {
-    const thema: themas = this.stateHandler.getThema();
+    const thema: themas = this.game.stateHandler.getThema();
     this.setUIThema(thema);
 
     this.themaButton.addEventListener("click", () => {
-      const thema = this.stateHandler.getThema();
+      const thema = this.game.stateHandler.getThema();
       const themaDate = Object.entries(themas);
       const nrOfTemas = themaDate.length;
 
@@ -475,7 +445,7 @@ export default class GameUI {
   };
 
   /* gameMode */
-  changeGameMode({ rules, lang }: { rules: ruleType[]; lang: string }) {
+  changeGameMode({rules, lang}: {rules: ruleType[]; lang: string}) {
     Array.from(this.gameModeButton.children).forEach((elem) => {
       ["on", "off"].forEach((className) => elem.classList.toggle(className));
     });
@@ -492,7 +462,7 @@ export default class GameUI {
         elem.remove();
       });
 
-      gameImages({ user, rules, parent: userContainer });
+      gameImages({user, rules, parent: userContainer});
 
       user === userNames.USER &&
         ((this.userImages = Array.from(
@@ -504,7 +474,7 @@ export default class GameUI {
         )) as HTMLImageElement[]);
     });
 
-    this.updateTitle({ rules, lang });
+    this.updateTitle({rules, lang});
   }
 
   private initGameMode = () => {
@@ -551,11 +521,11 @@ export default class GameUI {
     const modalBody = modal?.querySelector(".modal-body");
     const modalHeader = modal?.querySelector(".modal-header");
     const modalFooter = modal?.querySelector(".modal-footer");
-    return { modal, modalHeader, modalBody, modalFooter };
+    return {modal, modalHeader, modalBody, modalFooter};
   };
 
   public showResult = (resultInfo: resultMapType) => {
-    const { modal: resultModal, modalBody } = this.getModal(modalNames.RESULT);
+    const {modal: resultModal, modalBody} = this.getModal(modalNames.RESULT);
 
     if (modalBody) {
       modalBody.innerHTML = resultMap(resultInfo);
