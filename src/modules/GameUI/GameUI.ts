@@ -1,7 +1,7 @@
 import domelemjs from "domelemjs";
 
 /* modules */
-import GameContorller from "../GameController";
+import GameContorller from "../GameContorller/GameController";
 
 /* components */
 import loaderScreenMap from "./components/loaderScreen/loaderScreenMap";
