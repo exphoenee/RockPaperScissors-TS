@@ -19,7 +19,7 @@ import {directions} from "../constants/directions";
 import {usedLangs} from "../constants/usedLangs";
 
 class GameContorller {
-  private appSettings: {
+  public appSettings: {
     gameType: gameTypes;
     userName: string;
     opponentName: string;
@@ -67,8 +67,8 @@ class GameContorller {
   }
 
   initializeGameUI(): void {
-    this.gameUI.setUserName(this.appSettings.userName);
-    this.gameUI.setOpponentName(this.appSettings.opponentName);
+    this.gameUI.setUserName();
+    this.gameUI.setOpponentName();
 
     this.gameUI.setChoice = this.setChoice.bind(this);
     this.gameUI.changeChoice = this.setUserChoice.bind(this);
