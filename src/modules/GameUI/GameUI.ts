@@ -278,14 +278,8 @@ export default class GameUI {
       this.flashlight.classList.add("off");
     }
 
-    const isTouchDevice = () => {
-      try {
-        document.createEvent("TouchEvent");
-        return true;
-      } catch (e) {
-        return false;
-      }
-    };
+    const isTouchDevice = () =>
+      "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
     const getMousePosition = (e: MouseEvent | TouchEvent) => {
       this.mouseX = !isTouchDevice()
@@ -347,7 +341,8 @@ export default class GameUI {
             const newUrl = URL.createObjectURL(blob);
             this.favicon.href = newUrl;
             previousFaviconUrl = newUrl;
-          });
+          })
+          .catch(() => {});
       }
     }, 1000);
   }
@@ -486,10 +481,19 @@ export default class GameUI {
     });
 
     this.imageContainer.forEach((userContainer: HTMLElement) => {
+      const existingHandler = (userContainer as HTMLElement & {
+        _transitionHandler?: () => void;
+      })._transitionHandler;
+      if (existingHandler) {
+        userContainer.removeEventListener("transitionend", existingHandler);
+      }
+
+      const handler = () => userContainer.classList.remove("disabled");
+      userContainer.addEventListener("transitionend", handler);
+      (userContainer as HTMLElement & { _transitionHandler?: () => void })._transitionHandler =
+        handler;
+
       userContainer.classList.add("disabled");
-      userContainer.addEventListener("transitionend", () =>
-        userContainer.classList.remove("disabled")
-      );
 
       const user = userContainer.getAttribute("data-user") as string;
 
@@ -577,7 +581,7 @@ export default class GameUI {
     },
     callBack: () => void
   ) => {
-    const possibilties = rules.length;
+    const possibilities = rules.length;
     const animSteps = Math.floor(Math.random() * 7) + 8;
 
     let anim = new Array(animSteps).fill(0);

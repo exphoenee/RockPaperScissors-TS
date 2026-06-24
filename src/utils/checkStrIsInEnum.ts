@@ -3,5 +3,8 @@ export default function checkStrIsInEnum(
   enumObj: { [key: string]: string }
 ): string {
   const values = Object.values(enumObj);
-  return values.includes(str) ? str : values[0];
+  if (!values.includes(str)) {
+    throw new Error(`"${str}" is not a valid enum value`);
+  }
+  return str;
 }

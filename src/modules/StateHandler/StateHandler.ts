@@ -102,7 +102,15 @@ class StateHandler {
     const stateKeys = Object.keys(state);
     const defaultKeys = Object.keys(this.defaultState);
 
-    return defaultKeys.every((key) => stateKeys.includes(key));
+    if (!defaultKeys.every((key) => stateKeys.includes(key))) {
+      return false;
+    }
+
+    return defaultKeys.every((key) => {
+      const value = (state as Record<string, unknown>)[key];
+      const defaultValue = this.defaultState[key as keyof typeof this.defaultState];
+      return typeof value === typeof defaultValue;
+    });
   }
 
   private getState(): stateType {
