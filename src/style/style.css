@@ -192,10 +192,8 @@ select {
 }
 
 .modal.dark .close-button img {
-  -webkit-filter: grayscale(90%);
-  filter: grayscale(90%);
-  -webkit-filter: hue-rotate(90deg);
-  filter: hue-rotate(210deg);
+  -webkit-filter: grayscale(90%) hue-rotate(90deg);
+          filter: grayscale(90%) hue-rotate(210deg);
   width: 100%;
 }
 
@@ -298,7 +296,7 @@ img {
   transition: all 0.15s ease-in-out;
 }
 
-.showen {
+.shown {
   transform: scale(1) translateY(0px) rotate(0deg);
   -webkit-filter: blur(0px);
           filter: blur(0px);
@@ -425,10 +423,8 @@ img {
 }
 
 .modal .close-button img {
-  -webkit-filter: grayscale(90%);
-  filter: grayscale(90%);
-  -webkit-filter: hue-rotate(150deg);
-  filter: hue-rotate(150deg);
+  -webkit-filter: grayscale(90%) hue-rotate(150deg);
+          filter: grayscale(90%) hue-rotate(150deg);
   width: 100%;
 }
 

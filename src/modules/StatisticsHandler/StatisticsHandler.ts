@@ -9,13 +9,13 @@ import { gameResultType } from "../../types/gameResultType";
 import games from "../../constants/games";
 
 class StatisticsHandler {
-  private statistics: gameStatisticsType | [] = [];
+  private statistics: gameStatisticsType[] = [];
 
   constructor(statistics?: gameStatisticsType) {
     if (statistics) this.statistics = statistics as gameStatisticsType;
   }
 
-  public fillStatistics(statistics: gameStatisticsType | []) {
+  public fillStatistics(statistics: gameStatisticsType[]) {
     /* itt ne csak így bebeszkodva legyen */
     this.statistics = statistics;
   }
@@ -94,7 +94,7 @@ class StatisticsHandler {
     return transposed;
   }
 
-  public getStatistics(): gameStatisticsType | [] {
+  public getStatistics(): gameStatisticsType[] {
     return this.statistics;
   }
 
@@ -131,35 +131,36 @@ class StatisticsHandler {
     timeDate: string | false;
   }) {
     if (!timeDate) timeDate = new Date().toISOString();
-    const sGame = this.statistics?.find((game) => game.gameName === gameName);
-    if (!sGame) {
-      const newGameRecord: gameStatisticsType = {
+
+    let gameRecord = this.statistics.find(
+      (game) => game.gameName === gameName
+    );
+    if (!gameRecord) {
+      gameRecord = {
         gameName: gameName as gameNames,
-        statistics: [
-          {
-            userName: userName as userNames,
-            results: [{ threwName, wins: [timeDate] }] as threwStatisticsType,
-          },
-        ],
+        statistics: [],
       };
-      this.statistics.push(newGameRecord);
-    }
-    const sUser = sGame?.statistics?.find((user) => user.userName === userName);
-    if (!sUser) {
-      const newUserRecord: userStatisticsType = {
-        userName: userName as userNames,
-        results: [{ threwName, wins: [timeDate] }] as threwStatisticsType,
-      };
-      sGame?.statistics?.push(newUserRecord);
+      this.statistics.push(gameRecord);
     }
 
-    const sThrew = sUser?.results.find(
+    let userRecord = gameRecord.statistics.find(
+      (user) => user.userName === userName
+    );
+    if (!userRecord) {
+      userRecord = {
+        userName: userName as userNames,
+        results: [],
+      };
+      gameRecord.statistics.push(userRecord);
+    }
+
+    const threwRecord = userRecord.results.find(
       (threw) => threw.threwName === threwName
     );
 
-    !sThrew
-      ? sUser?.results.push({ threwName, wins: [timeDate] })
-      : sThrew.wins.push(timeDate);
+    !threwRecord
+      ? userRecord.results.push({ threwName, wins: [timeDate] })
+      : threwRecord.wins.push(timeDate);
     return this.getScore({ gameName, userName });
   }
 }

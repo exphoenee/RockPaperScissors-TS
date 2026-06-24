@@ -13,7 +13,7 @@ export type stateType = {
   language: usedLangs;
   statisticMode: statCalcModes;
   statisticGameMode: string;
-  gameStatistics: gameStatisticsType | [];
+  gameStatistics: gameStatisticsType[];
   thema: themas;
 };
 
@@ -80,11 +80,11 @@ class StateHandler {
     this.setState(this.state);
   }
 
-  public getGameStatistics(): gameStatisticsType | [] {
+  public getGameStatistics(): gameStatisticsType[] {
     return this.state.gameStatistics;
   }
 
-  public setGameStatistics(value: gameStatisticsType | []): void {
+  public setGameStatistics(value: gameStatisticsType[]): void {
     this.state.gameStatistics = value;
     this.setState(this.state);
   }
@@ -122,7 +122,6 @@ class StateHandler {
   }
 
   private decodeState(value: string): stateType {
-    console.log(value);
     const decoded = Array.from(value)
       .map((code) => String.fromCharCode(this.secretKey - code.charCodeAt(0)))
       .join("")

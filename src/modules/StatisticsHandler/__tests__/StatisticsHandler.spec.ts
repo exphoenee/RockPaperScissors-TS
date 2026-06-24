@@ -11,17 +11,17 @@ describe("StatisticsHandler", () => {
 
   it("should be adding user: John, an normal RPS game a win with Rock", () => {
     statisticsHandler.addScore({
-      gameName: "Rock Paper Scissors",
+      gameName: "Classic",
       userName: "John",
       threwName: "Rock",
     });
 
     const statistics = statisticsHandler.getStatistics();
-    const table = statisticsHandler.getTable();
+    const table = statisticsHandler.getTable("Classic");
 
     expect(statistics).toStrictEqual([
       {
-        gameName: "Rock Paper Scissors",
+        gameName: "Classic",
         statistics: [
           {
             userName: "John",

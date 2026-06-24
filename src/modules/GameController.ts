@@ -18,7 +18,7 @@ import ruleType from "../types/ruleType";
 import { directions } from "../constants/directions";
 import { usedLangs } from "../constants/usedLangs";
 
-class GameContorller {
+class GameController {
   private appSettings: {
     gameType: "singleplayer" | "multiplayer";
     userName: string;
@@ -96,7 +96,7 @@ class GameContorller {
       )
     );
 
-    this.gameUI.updateStaisticsTable(
+        this.gameUI.updateStatisticsTable(
       this.statisticsHandler.getTable(
         this.state.statisticGameMode,
         this.state.statisticMode
@@ -236,7 +236,7 @@ class GameContorller {
         const gameStatistics = this.statisticsHandler.getStatistics();
         this.stateHandler.setGameStatistics(gameStatistics);
         this.gameUI.updateScore(winner as userNames, score);
-        this.gameUI.updateStaisticsTable(
+    this.gameUI.updateStatisticsTable(
           this.statisticsHandler.getTable(
             this.state.statisticGameMode,
             this.state.statisticMode
@@ -250,6 +250,9 @@ class GameContorller {
   }
 
   getChoice(index: number): ruleType {
+    if (index < 0 || index >= this.rules.length) {
+      throw new Error(`Invalid choice index: ${index}`);
+    }
     return this.rules[index];
   }
 
@@ -267,4 +270,4 @@ class GameContorller {
   }
 }
 
-export default GameContorller;
+export default GameController;

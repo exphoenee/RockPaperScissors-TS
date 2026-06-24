@@ -18,7 +18,7 @@ export const gameImages = ({
   });
   return images.map(({ alt, fileName }, i) => {
     return imageMap({
-      className: [i > 0 ? "hidden" : "showen", user, "image"].join(" "),
+      className: [i > 0 ? "hidden" : "shown", user, "image"].join(" "),
       alt,
       fileName,
       dataset: { choice: alt },

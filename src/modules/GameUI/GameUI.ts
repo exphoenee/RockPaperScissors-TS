@@ -104,9 +104,10 @@ export default class GameUI {
   private static instance: GameUI;
 
   public static getInstance({ rules, stateHandler }: GameUIType): GameUI {
-    if (!this.instance) {
-      this.instance = new GameUI({ rules, stateHandler });
+    if (this.instance) {
+      throw new Error("GameUI is a singleton and already initialized");
     }
+    this.instance = new GameUI({ rules, stateHandler });
     return this.instance;
   }
 
@@ -200,7 +201,7 @@ export default class GameUI {
   };
 
   // TODO: at initialization must the scores and the statistics table also set
-  public updateStaisticsTable = (tableDate: (number | string)[][]) => {
+  public updateStatisticsTable = (tableData: (number | string)[][]) => {
     // statisticTableMap(tableDate)
     const { modalBody: statModalBody } = this.getModal(modalNames.STAT);
 
@@ -213,7 +214,7 @@ export default class GameUI {
           tag: "table",
           attrs: { class: "statistics-table" },
           parent: tableContainer,
-          children: tableDate.map((row) => {
+          children: tableData.map((row) => {
             return {
               tag: "tr",
               children: row.map((cell) => {
@@ -269,7 +270,7 @@ export default class GameUI {
     this.initPlayersName();
     this.initScores();
     this.initFlaslight();
-    window.onload = () => this.loaderScreen.remove();
+      window.addEventListener("load", () => this.loaderScreen.remove());
   };
 
   private initFlaslight() {
@@ -306,8 +307,6 @@ export default class GameUI {
   }
 
   private initPlayersChoices() {
-    // this.stepImage(userNames.USER this.userChoice);
-    // this.stepImage(userNames.OPPONENT, this.opponentChoice);
   }
 
   private initScores() {
@@ -328,6 +327,7 @@ export default class GameUI {
     rules: ruleType[];
     lang: string;
   }) {
+    let previousFaviconUrl: string | null = null;
     setInterval(() => {
       const choice: ruleType = rules[Math.floor(Math.random() * rules.length)];
 
@@ -341,7 +341,12 @@ export default class GameUI {
         fetch(window.location.href + "/media/" + choice.image)
           .then((res) => res.blob())
           .then((blob) => {
-            this.favicon.href = URL.createObjectURL(blob);
+            if (previousFaviconUrl) {
+              URL.revokeObjectURL(previousFaviconUrl);
+            }
+            const newUrl = URL.createObjectURL(blob);
+            this.favicon.href = newUrl;
+            previousFaviconUrl = newUrl;
           });
       }
     }, 1000);
@@ -532,9 +537,8 @@ export default class GameUI {
   };
 
   public unfreezeUI = () => {
-    const to = setTimeout(() => {
+    setTimeout(() => {
       this.unfreezeUICore();
-      clearTimeout(to);
     }, 500);
   };
 
@@ -589,9 +593,8 @@ export default class GameUI {
     anim.push(choosen);
     let delay = 200;
     for (let i = 0; i < anim.length; i++) {
-      const to = setTimeout(() => {
+      setTimeout(() => {
         this.setImage(userNames.OPPONENT, anim[i]);
-        clearTimeout(to);
         if (i === anim.length - 1) {
           setTimeout(() => {
             callBack();
@@ -612,8 +615,8 @@ export default class GameUI {
       user === userNames.USER ? this.userImages : this.opponentImages;
 
     const changeClass = (elem: HTMLElement, action: "set" | "unset") => {
-      elem.classList.add(action === "set" ? "showen" : "hidden");
-      elem.classList.remove(action === "set" ? "hidden" : "showen");
+      elem.classList.add(action === "set" ? "shown" : "hidden");
+      elem.classList.remove(action === "set" ? "hidden" : "shown");
     };
 
     images.forEach((elem, i) =>
