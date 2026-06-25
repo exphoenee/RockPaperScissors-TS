@@ -73,13 +73,14 @@ class GameController {
     this.gameUI.setUserName(this.appSettings.userName);
     this.gameUI.setOpponentName(this.appSettings.opponentName);
 
-    this.gameUI.setChoice = this.setChoice.bind(this);
-    this.gameUI.changeChoice = this.setUserChoice.bind(this);
-
-    this.gameUI.setStatCalcMode = this.setStatCalcMode.bind(this);
-    this.gameUI.setStatGameMode = this.setStatGameMode.bind(this);
-    this.gameUI.setGameMode = this.setGameMode.bind(this);
-    this.gameUI.setLanguage = this.setLanguage.bind(this);
+    this.gameUI.bindHandlers({
+      setChoice: this.setChoice.bind(this),
+      changeChoice: this.setUserChoice.bind(this),
+      setStatCalcMode: this.setStatCalcMode.bind(this),
+      setStatGameMode: this.setStatGameMode.bind(this),
+      setGameMode: this.setGameMode.bind(this),
+      setLanguage: this.setLanguage.bind(this),
+    });
 
     this.gameUI.changeGameMode({
       rules: this.rules,
@@ -96,7 +97,7 @@ class GameController {
       )
     );
 
-        this.gameUI.updateStatisticsTable(
+    this.gameUI.updateStatisticsTable(
       this.statisticsHandler.getTable(
         this.state.statisticGameMode,
         this.state.statisticMode
@@ -236,7 +237,7 @@ class GameController {
         const gameStatistics = this.statisticsHandler.getStatistics();
         this.stateHandler.setGameStatistics(gameStatistics);
         this.gameUI.updateScore(winner as userNames, score);
-    this.gameUI.updateStatisticsTable(
+        this.gameUI.updateStatisticsTable(
           this.statisticsHandler.getTable(
             this.state.statisticGameMode,
             this.state.statisticMode

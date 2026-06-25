@@ -15,7 +15,6 @@ class StatisticsHandler {
   }
 
   public fillStatistics(statistics: gameStatisticsType[]) {
-    /* itt ne csak így bebeszkodva legyen */
     this.statistics = statistics;
   }
 
@@ -35,8 +34,10 @@ class StatisticsHandler {
     );
   }
 
-  // TODO: add here the enums not the strings!!!
-  public getTable(gameName = "Classic", _statisticMode = "value") {
+  public getTable(
+    gameName: string = gameNames.CLASSIC,
+    _statisticMode: string = statCalcModes.VALUE
+  ) {
     const gameStatistics: userStatisticsType[] | null =
       this.getGameStatistics(gameName)?.statistics || null;
     const threws = this.getThrewsFromGame(gameName);

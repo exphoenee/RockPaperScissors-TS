@@ -100,6 +100,27 @@ export default class GameUI {
   public setLanguage: (lang: string) => void = () => {
     throw new Error("The setLanguage is not defined");
   };
+
+  /**
+   * A GameController callbackjeinek egyszeri, egységes bekötése.
+   * Tisztább, mint a mezők egyenkénti felülírása kívülről.
+   */
+  public bindHandlers(handlers: {
+    setChoice: (isUserChoiceSet: boolean) => void;
+    changeChoice: (user: userNames, direction: directions) => number;
+    setStatCalcMode: (mode: statCalcModes) => void;
+    setStatGameMode: (mode: gameNames) => void;
+    setGameMode: () => void;
+    setLanguage: (lang: string) => void;
+  }): void {
+    this.setChoice = handlers.setChoice;
+    this.changeChoice = handlers.changeChoice;
+    this.setStatCalcMode = handlers.setStatCalcMode;
+    this.setStatGameMode = handlers.setStatGameMode;
+    this.setGameMode = handlers.setGameMode;
+    this.setLanguage = handlers.setLanguage;
+  }
+
   private static instance: GameUI;
 
   public static getInstance({ rules, stateHandler }: GameUIType): GameUI {
