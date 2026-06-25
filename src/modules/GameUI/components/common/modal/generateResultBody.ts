@@ -8,7 +8,7 @@ const modalBodyMap = ({ content }: modalBodyMapType) => {
     attrs: {
       class: "modal-body",
     },
-    children: content,
+    children: Array.isArray(content) ? content : [content],
   };
 };
 

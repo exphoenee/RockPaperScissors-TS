@@ -1,7 +1,7 @@
 {
   "name": "rockpaperscissors2",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,10 +10,11 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "vite": "^4.0.0",
-    "vitest": "^0.28.3"
+    "typescript": "^6.0.3",
+    "vite": "^8.1.0",
+    "vitest": "^4.1.9"
   },
   "dependencies": {
-    "domelemjs": "^1.2.3"
+    "domelemjs": "^2.0.1"
   }
 }

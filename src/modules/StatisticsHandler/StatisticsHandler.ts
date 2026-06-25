@@ -1,18 +1,17 @@
 import {
   gameStatisticsType,
-  threwStatisticsType,
   userStatisticsType,
 } from "../../types/gameStatisticsType";
 import { userNames } from "../../constants/userNames";
 import { gameNames } from "../../constants/gameNames";
-import { gameResultType } from "../../types/gameResultType";
+import { statCalcModes } from "../../constants/statCalcModes";
 import games from "../../constants/games";
 
 class StatisticsHandler {
   private statistics: gameStatisticsType[] = [];
 
-  constructor(statistics?: gameStatisticsType) {
-    if (statistics) this.statistics = statistics as gameStatisticsType;
+  constructor(statistics?: gameStatisticsType[]) {
+    if (statistics) this.statistics = statistics;
   }
 
   public fillStatistics(statistics: gameStatisticsType[]) {
@@ -37,8 +36,8 @@ class StatisticsHandler {
   }
 
   // TODO: add here the enums not the strings!!!
-  public getTable(gameName = "Classic", statisticMode = "value") {
-    const gameStatistics: userStatisticsType | null =
+  public getTable(gameName = "Classic", _statisticMode = "value") {
+    const gameStatistics: userStatisticsType[] | null =
       this.getGameStatistics(gameName)?.statistics || null;
     const threws = this.getThrewsFromGame(gameName);
 
@@ -105,7 +104,7 @@ class StatisticsHandler {
     gameName: string;
     userName: string;
   }): number {
-    const gameStatistics: userStatisticsType | null =
+    const gameStatistics: userStatisticsType[] | null =
       this.getGameStatistics(gameName)?.statistics || null;
 
     const userResults = gameStatistics?.find(
@@ -128,7 +127,7 @@ class StatisticsHandler {
     gameName: string;
     userName: string;
     threwName: string;
-    timeDate: string | false;
+    timeDate?: string | false;
   }) {
     if (!timeDate) timeDate = new Date().toISOString();
 

@@ -19,17 +19,19 @@ const buttonMap = ({
   dataset,
   id,
 }: buttonMapType) => {
+  const datasetAttr = target ? { target } : dataset;
+
   return {
     tag: "button",
     attrs: {
-      id,
-      class: className && `button ${className.join(" ")}`,
-      dataset: target ? { target } : dataset,
+      class: className ? `button ${className.join(" ")}` : "button",
+      ...(id && { id }),
+      ...(datasetAttr && { dataset: datasetAttr }),
     },
-    handleEvent,
+    ...(handleEvent && { handleEvent }),
     children: Array.isArray(fileName)
       ? fileName.map((fn, i) => buttonImageMap(fn, className[0], imageClass[i]))
-      : buttonImageMap(fileName, className[0], imageClass as string),
+      : [buttonImageMap(fileName, className[0], imageClass as string)],
   };
 };
 

@@ -1,4 +1,4 @@
-import domelemjs from "domelemjs";
+import { createDOMElem } from "domelemjs";
 import mediaFolder from "../../../../constants/mediaFolder";
 
 export type imageMapType = {
@@ -18,17 +18,17 @@ const imageMap = ({
   parent,
   dataset,
 }: imageMapType) => {
-  const img = domelemjs({
+  const img = createDOMElem({
     tag: "img",
     parent,
     attrs: {
       class: [className, `loader-image`].join(" "),
       alt,
-      dataset,
-      id,
       src: `${mediaFolder}/loader.svg`,
+      ...(id && { id }),
+      ...(dataset && { dataset }),
     },
-  });
+  }) as HTMLImageElement;
 
   const imgLoader = () =>
     fetch(`${mediaFolder}/${fileName}`).then((response) =>

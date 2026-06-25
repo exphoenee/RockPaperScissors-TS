@@ -9,10 +9,12 @@ const statisticsModal = [
     attrs: {
       id: "table-container",
     },
-    children: {
-      p: "tag",
-      text: "...loaging",
-    },
+    children: [
+      {
+        tag: "p",
+        text: "...loading",
+      },
+    ],
   },
   {
     tag: "div",

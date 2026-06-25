@@ -18,10 +18,12 @@ const licensingModal = [
       class: "w4s",
       target: "_blank",
     },
-    children: imageMap({
-      fileName: "webforsol.svg",
-      alt: "WebforSol logo",
-    }),
+    children: [
+      imageMap({
+        fileName: "webforsol.svg",
+        alt: "WebforSol logo",
+      }),
+    ],
   },
   {
     tag: "div",

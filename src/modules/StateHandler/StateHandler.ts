@@ -19,7 +19,12 @@ export type stateType = {
 
 class StateHandler {
   public state: stateType;
-  private secretKey: number = 512;
+  /**
+   * Karaktereltolás a localStorage-állapot OBFUSZKÁLÁSÁHOZ (NEM titkosítás!).
+   * Csak azt akadályozza meg, hogy az állapot csupasz szemmel olvasható legyen –
+   * semmilyen biztonsági garanciát nem nyújt, triviálisan visszafejthető.
+   */
+  private obfuscationOffset: number = 512;
   private defaultState: stateType = {
     developerMode: false,
     gamemode: getFirstValue(gameNames),
@@ -34,7 +39,6 @@ class StateHandler {
 
   constructor() {
     this.state = this.getState();
-    console.log(this.state);
     this.state.developerMode = this.checkRunsLocal();
   }
 
@@ -131,7 +135,9 @@ class StateHandler {
 
   private decodeState(value: string): stateType {
     const decoded = Array.from(value)
-      .map((code) => String.fromCharCode(this.secretKey - code.charCodeAt(0)))
+      .map((code) =>
+        String.fromCharCode(this.obfuscationOffset - code.charCodeAt(0))
+      )
       .join("")
       .replaceAll("Ǟ", "");
     return JSON.parse(decoded);
@@ -140,7 +146,9 @@ class StateHandler {
   private encodeState(value: stateType): string {
     const encoded = JSON.stringify(value)
       .split("")
-      .map((code) => String.fromCharCode(this.secretKey - code.charCodeAt(0)))
+      .map((code) =>
+        String.fromCharCode(this.obfuscationOffset - code.charCodeAt(0))
+      )
       .join("");
     return encoded.toString();
   }

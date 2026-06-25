@@ -14,11 +14,13 @@ const rulesModal = [
     attrs: {
       class: "rules-image",
     },
-    children: imageMap({
-      className: "rules",
-      alt: "rules",
-      fileName: "rulesdesc.png",
-    }),
+    children: [
+      imageMap({
+        className: "rules",
+        alt: "rules",
+        fileName: "rulesdesc.png",
+      }),
+    ],
   },
 ];
 

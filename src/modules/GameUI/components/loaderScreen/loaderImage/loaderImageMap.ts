@@ -3,8 +3,7 @@ const loaderImageMap = [
     tag: "img",
     attrs: {
       id: "loader-image",
-      // class: "loader-image",
-      src: "./media/loader.svg",
+      src: "/media/loader.svg",
       dataset: {
         filename: "media/loader.svg",
       },

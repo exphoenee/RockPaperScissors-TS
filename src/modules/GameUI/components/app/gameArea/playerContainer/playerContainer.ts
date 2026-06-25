@@ -20,7 +20,7 @@ const playerContainer = ({
       playerContainerTitle(user),
       playerResultDisplay(user),
       playerImageContainer({ user, rules }),
-      user === "user" && gameControls,
+      ...(user === "user" ? [gameControls] : []),
     ],
   };
 };

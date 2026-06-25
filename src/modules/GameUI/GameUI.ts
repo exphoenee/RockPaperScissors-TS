@@ -1,4 +1,7 @@
-import domelemjs from "domelemjs";
+import { createDOMElem } from "domelemjs";
+
+/* modules */
+import StateHandler from "../StateHandler/StateHandler";
 
 /* components */
 import loaderScreenMap from "./components/loaderScreen/loaderScreenMap";
@@ -13,7 +16,7 @@ import { resultMapType } from "./components/common/modal/resultMap";
 
 /* constants */
 import dictionary, { dictionaryType } from "../../constants/dictionary";
-import StateHandler from "../StateHandler/StateHandler";
+import mediaFolder from "../../constants/mediaFolder";
 
 /* enums */
 import { gameNames } from "../../constants/gameNames";
@@ -59,8 +62,6 @@ export default class GameUI {
   private prevButton: HTMLButtonElement;
   private themaButton: HTMLButtonElement;
   private gameModeButton: HTMLButtonElement;
-  private statisticsTable: Element;
-  private resultContainer: Element;
   private userImages: HTMLImageElement[];
   private opponentImages: HTMLImageElement[];
   private imageContainer: HTMLElement[];
@@ -69,8 +70,6 @@ export default class GameUI {
   private selects: HTMLSelectElement[];
   private flashlight: HTMLElement;
 
-  private userChoice: number;
-  private opponentChoice: number;
   private gameButtons: HTMLButtonElement[];
 
   private mouseX: number = 0;
@@ -104,17 +103,13 @@ export default class GameUI {
   private static instance: GameUI;
 
   public static getInstance({ rules, stateHandler }: GameUIType): GameUI {
-    if (this.instance) {
-      throw new Error("GameUI is a singleton and already initialized");
+    if (!this.instance) {
+      this.instance = new GameUI({ rules, stateHandler });
     }
-    this.instance = new GameUI({ rules, stateHandler });
     return this.instance;
   }
 
   private constructor({ rules, stateHandler }: GameUIType) {
-    this.userChoice = 0;
-    this.opponentChoice = 0;
-
     this.stateHandler = stateHandler;
     this.state = stateHandler.state;
 
@@ -155,12 +150,6 @@ export default class GameUI {
     this.gameModeButton = document.querySelector(
       "#gamemode-button"
     ) as HTMLButtonElement;
-    this.statisticsTable = document.querySelector(
-      "#statistics-table"
-    ) as Element;
-    this.resultContainer = document.querySelector(
-      "#result-container"
-    ) as Element;
     this.userImages = Array.from(
       document.querySelectorAll(".image.user")
     ) as HTMLImageElement[];
@@ -195,9 +184,9 @@ export default class GameUI {
   }
 
   private createUI = ({ rules }: { rules: ruleType[] }) => {
-    domelemjs(loaderScreenMap);
-    domelemjs(settingsMap);
-    domelemjs(appMap({ rules }));
+    createDOMElem(loaderScreenMap);
+    createDOMElem(settingsMap);
+    createDOMElem(appMap({ rules }));
   };
 
   // TODO: at initialization must the scores and the statistics table also set
@@ -206,11 +195,12 @@ export default class GameUI {
     const { modalBody: statModalBody } = this.getModal(modalNames.STAT);
 
     if (statModalBody) {
-      const tableContainer = statModalBody.querySelector("#table-container");
+      const tableContainer =
+        statModalBody.querySelector<HTMLElement>("#table-container");
       if (tableContainer) {
         tableContainer.innerHTML = "";
 
-        domelemjs({
+        createDOMElem({
           tag: "table",
           attrs: { class: "statistics-table" },
           parent: tableContainer,
@@ -218,7 +208,7 @@ export default class GameUI {
             return {
               tag: "tr",
               children: row.map((cell) => {
-                return { tag: "td", text: cell };
+                return { tag: "td", text: String(cell) };
               }),
             };
           }),
@@ -332,7 +322,7 @@ export default class GameUI {
         document.title =
           choiceName[0].toUpperCase() + choiceName.substring(1) + "!";
 
-        fetch(window.location.href + "/media/" + choice.image)
+        fetch(`${mediaFolder}/${choice.image}`)
           .then((res) => res.blob())
           .then((blob) => {
             if (previousFaviconUrl) {
@@ -587,9 +577,9 @@ export default class GameUI {
     let anim = new Array(animSteps).fill(0);
     let prevNumber = -1;
     for (let i = 0; i < animSteps; i++) {
-      let nextNumber = Math.floor(Math.random() * possibilties);
+      let nextNumber = Math.floor(Math.random() * possibilities);
       while (nextNumber === prevNumber) {
-        nextNumber = Math.floor(Math.random() * possibilties);
+        nextNumber = Math.floor(Math.random() * possibilities);
       }
       prevNumber = nextNumber;
       anim[i] = nextNumber;

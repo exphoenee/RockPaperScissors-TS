@@ -1,2 +1,2 @@
-const mediaFolder = "./media";
+const mediaFolder = "/media";
 export default mediaFolder;
