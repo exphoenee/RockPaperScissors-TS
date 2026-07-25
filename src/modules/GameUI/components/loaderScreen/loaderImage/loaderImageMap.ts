@@ -1,11 +1,13 @@
+import mediaFolder from "../../../../../constants/mediaFolder";
+
 const loaderImageMap = [
   {
     tag: "img",
     attrs: {
       id: "loader-image",
-      src: "/media/loader.svg",
+      src: `${mediaFolder}/loader.svg`,
       dataset: {
-        filename: "media/loader.svg",
+        filename: `${mediaFolder}/loader.svg`,
       },
       alt: "loader",
     },
