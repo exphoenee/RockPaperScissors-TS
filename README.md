@@ -2,7 +2,7 @@
 
 > 🇭🇺 Magyar nyelvű leírás: [README-hu.md](README-hu.md)
 
-**🌐 Live demo: [bozzayviktor.hu/rpsls](https://bozzayviktor.hu/rpsls/)**
+**🌐 Live demo: [exphoenee.github.io/RockPaperScissors-TS](https://exphoenee.github.io/RockPaperScissors-TS/)**
 
 A browser game of Rock, Paper, Scissors (and its expanded *Lizard–Spock* variant) written in **TypeScript** with a hand-rolled, declarative DOM layer. Play against the computer, track your wins with persistent local statistics, switch languages and themes — all client-side, no backend required.
 

@@ -10,9 +10,9 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "typescript": "^6.0.3",
-    "vite": "^8.1.0",
-    "vitest": "^4.1.9"
+    "typescript": "^7.0.2",
+    "vite": "^8.1.5",
+    "vitest": "^4.1.10"
   },
   "dependencies": {
     "domelemjs": "^2.0.1"

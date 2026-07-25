@@ -2,7 +2,7 @@
 
 > 🇬🇧 English description: [README.md](README.md)
 
-**🌐 Élő demó: [bozzayviktor.hu/rpsls](https://bozzayviktor.hu/rpsls/)**
+**🌐 Élő demó: [exphoenee.github.io/RockPaperScissors-TS](https://exphoenee.github.io/RockPaperScissors-TS/)**
 
 Böngészős Kő-Papír-Olló játék (és annak kibővített *Gyík–Spock* változata) **TypeScript**-ben, saját, deklaratív DOM-réteggel. Játssz a számítógép ellen, kövesd a győzelmeidet helyi, perzisztens statisztikával, válts nyelvet és témát — minden kliensoldalon, backend nélkül.
 
