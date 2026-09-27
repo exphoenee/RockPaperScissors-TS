@@ -483,6 +483,11 @@ tr:nth-child(odd):hover {
   #rps-ui {
     width: 66%;
   }
+  .image-container,
+  .vs-image-container {
+    width: 200px;
+    height: 200px;
+  }
   .image-container img {
     width: 200px;
   }
@@ -499,6 +504,12 @@ tr:nth-child(odd):hover {
 
   .button {
     width: 50px;
+  }
+
+  .image-container,
+  .vs-image-container {
+    width: 120px !important;
+    height: 120px !important;
   }
 
   .image-container img {
@@ -527,23 +538,33 @@ tr:nth-child(odd):hover {
 }
 
 @media screen and (max-width: 620px) {
+  .image-container,
+  .vs-image-container {
+    width: 64px !important;
+    height: 64px !important;
+  }
+
   .image-container img {
     width: 64px !important;
+  }
+
+  .vs-image-container img {
+    margin-top: 0 !important;
   }
 }
 
 @media screen and (max-width: 500px) {
   .game-area {
     flex-direction: column !important;
-    align-items: initial;
+    align-items: center;
   }
-  .vs {
-    margin: auto;
+  .vs-image-container {
+    margin: 0.5rem auto;
     display: flex;
     justify-content: center;
     align-items: center;
   }
-  .vs img {
+  .vs-image-container img {
     margin-top: 0;
   }
   h1 {
