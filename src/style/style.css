@@ -1,3 +1,53 @@
+:root {
+  --bg-grad-start: #eef4ff;
+  --bg-grad-end: #fdf3ff;
+  --card-bg: #fffdf9;
+  --card-border: #a9d4ec;
+  --card-shadow-hi: rgba(255, 255, 255, 0.75);
+  --card-shadow-lo: rgba(0, 0, 0, 0.04);
+  --card-shadow-out: rgba(88, 60, 160, 0.14);
+  --text: #2c2a45;
+  --text-muted: #6b6b85;
+  --accent: #7aa8c9;
+  --accent-strong: #5a86ab;
+  --settings-bg: #fffdf9;
+  --btn-bg: rgba(255, 255, 255, 0.65);
+  --btn-shadow-hi: rgba(255, 255, 255, 0.6);
+  --btn-shadow-lo: rgba(0, 0, 0, 0.06);
+  --btn-shadow-out: rgba(88, 60, 160, 0.14);
+  --table-even: #eef1f8;
+  --table-odd: #ffffff;
+  --table-hover: #e2e7f5;
+  --modal-bg: rgba(255, 253, 249, 0.9);
+  --ring: #a9d4ec;
+  color-scheme: light;
+}
+
+body.dark {
+  --bg-grad-start: #12101f;
+  --bg-grad-end: #1c1533;
+  --card-bg: #201c38;
+  --card-border: #7c5cd6;
+  --card-shadow-hi: rgba(255, 255, 255, 0.05);
+  --card-shadow-lo: rgba(0, 0, 0, 0.5);
+  --card-shadow-out: rgba(124, 92, 214, 0.35);
+  --text: #eae7f7;
+  --text-muted: #a6a1c4;
+  --accent: #9b7fe8;
+  --accent-strong: #b79ef2;
+  --settings-bg: #201c38;
+  --btn-bg: rgba(255, 255, 255, 0.06);
+  --btn-shadow-hi: rgba(255, 255, 255, 0.05);
+  --btn-shadow-lo: rgba(0, 0, 0, 0.5);
+  --btn-shadow-out: rgba(124, 92, 214, 0.3);
+  --table-even: #262143;
+  --table-odd: #201c38;
+  --table-hover: #2e2851;
+  --modal-bg: rgba(32, 28, 56, 0.9);
+  --ring: #7c5cd6;
+  color-scheme: dark;
+}
+
 * {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -7,7 +57,7 @@
 
 table {
   border-collapse: collapse;
-  box-shadow: 2px 5px 10px #eee;
+  box-shadow: 2px 5px 10px var(--card-shadow-out);
 }
 
 .disabled {
@@ -26,6 +76,7 @@ table {
   position: fixed;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -125,8 +176,8 @@ table {
   flex-direction: row-reverse;
   padding: 1rem;
   border-radius: 0 96px 96px 0;
-  background: #fefefe;
-  box-shadow: 2px 5px 10px gray;
+  background: var(--settings-bg);
+  box-shadow: 2px 5px 10px var(--card-shadow-out);
   transform: translateY(-50%);
   transition: all 0.3s ease-in-out;
   z-index: 99;
@@ -145,7 +196,8 @@ table {
 
 body {
   overflow: hidden;
-  background: linear-gradient(160deg, #F3F8FF 0%, #FDF6FF 100%);
+  background: linear-gradient(160deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%);
+  color: var(--text);
   font-family: "Nunito", sans-serif;
   flex-direction: column;
   display: flex;
@@ -153,6 +205,8 @@ body {
   align-items: center;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
+  transition: background 0.4s ease-in-out, color 0.4s ease-in-out;
 }
 
 body.flashlight, body.flashlight button {
@@ -162,12 +216,12 @@ body.flashlight, body.flashlight button {
 #rps-ui {
   width: 50%;
   padding: 5%;
-  background: #FFFDF9;
-  border: 3px solid #ADD8E6;
+  background: var(--card-bg);
+  border: 3px solid var(--card-border);
   box-shadow:
-    inset -2px -2px 8px rgba(255, 255, 255, 0.7),
-    inset 2px 2px 6px rgba(0, 0, 0, 0.04),
-    6px 10px 24px rgba(76, 29, 149, 0.12);
+    inset -2px -2px 8px var(--card-shadow-hi),
+    inset 2px 2px 6px var(--card-shadow-lo),
+    6px 10px 24px var(--card-shadow-out);
   border-radius: 2rem;
   display: flex;
   justify-content: center;
@@ -185,16 +239,10 @@ select {
   margin-top: 1rem;
   margin-left: 1rem;
   outline: none;
-  border: rgba(16, 16, 16, 0.8);
-  box-shadow: 1px 2px 5px gray;
-}
-
-.dark table,
-.dark {
-  background: rgba(16, 16, 16, 0.8) !important;
-  color: #eee !important;
-  box-shadow: 2px 5px 10px black !important;
-  border-color: #4C1D95 !important;
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--card-border);
+  box-shadow: 1px 2px 5px var(--card-shadow-out);
 }
 
 .modal.dark .close-button img {
@@ -206,22 +254,6 @@ select {
 #rules-modal.dark .rules-image img {
   -webkit-filter: invert(1);
   filter: invert(1);
-}
-
-.dark tr:nth-child(even) {
-  background-color: #222 !important;
-}
-
-.dark tr:nth-child(even):hover {
-  background-color: #111 !important;
-}
-
-.dark tr:nth-child(odd) {
-  background-color: #1a1a1a !important;
-}
-
-.dark tr:nth-child(odd):hover {
-  background-color: #2a2a2a !important;
 }
 
 .header {
@@ -237,6 +269,7 @@ h1 {
   font-size: 2rem;
   margin: 0 0 1rem 0;
   text-align: center;
+  color: var(--text);
 }
 
 h2 {
@@ -244,15 +277,18 @@ h2 {
   font-weight: 500;
   margin-bottom: 1rem;
   font-size: 1.3rem;
+  color: var(--text);
 }
 
 h3 {
   font-family: "Fredoka", sans-serif;
   font-weight: 500;
+  color: var(--text);
 }
 
 p {
   font-size: 1rem;
+  color: var(--text-muted);
 }
 
 .w4s {
@@ -347,8 +383,9 @@ img {
 }
 
 .button {
-  background: none;
+  background: var(--btn-bg);
   border: none;
+  border-radius: 50%;
   cursor: pointer;
   outline: none;
   transition: all 0.3s ease-in-out;
@@ -357,6 +394,10 @@ img {
   overflow: hidden;
   position: relative;
   margin: 0 0.5rem;
+  box-shadow:
+    inset -1px -1px 3px var(--btn-shadow-hi),
+    inset 1px 1px 3px var(--btn-shadow-lo),
+    2px 4px 8px var(--btn-shadow-out);
 }
 
 .button img {
@@ -387,6 +428,9 @@ img {
 .button:active {
   transform: scale(0.92);
   transition: all 0.1s ease-out;
+  box-shadow:
+    inset 2px 2px 5px var(--btn-shadow-lo),
+    inset -1px -1px 3px var(--btn-shadow-hi);
 }
 
 .prev img {
@@ -401,10 +445,11 @@ img {
   top: 150%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.3) skew(30deg, 30deg) rotate(270deg);
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: var(--modal-bg);
+  color: var(--text);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  box-shadow: 2px 5px 10px grey;
+  box-shadow: 2px 5px 10px var(--card-shadow-out);
   padding: 2rem;
   max-width: 75%;
   border-radius: 2rem;
@@ -488,15 +533,15 @@ td {
 }
 
 tr:nth-child(even) {
-  background-color: #eee;
+  background-color: var(--table-even);
 }
 
-tr:nth-child(even):hover {
-  background-color: #ddd;
+tr:nth-child(odd) {
+  background-color: var(--table-odd);
 }
 
-tr:nth-child(odd):hover {
-  background-color: #e8e8e8;
+tr:hover {
+  background-color: var(--table-hover);
 }
 
 @media screen and (max-width: 1350px) {
@@ -640,4 +685,84 @@ tr:nth-child(odd):hover {
 
 #flashlight.off {
   display: none;
+}
+
+/* Short/landscape phones: width-based breakpoints above assume portrait
+   proportions, so a landscape phone (wide but only ~320-430px tall) still
+   gets desktop-ish vertical spacing and doesn't fit inside 100vh, which
+   `overflow: hidden` on body then just clips. Compact everything by height
+   instead of width here. */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  #rps-ui {
+    width: 92% !important;
+    max-width: 640px;
+    padding: 1.2rem 3% !important;
+  }
+
+  .header {
+    margin-bottom: 0.15rem;
+  }
+
+  h1 {
+    font-size: 1.1rem !important;
+    margin: 0 0 0.15rem 0 !important;
+  }
+
+  h2 {
+    font-size: 0.85rem !important;
+    margin-bottom: 0.15rem !important;
+  }
+
+  p {
+    font-size: 0.7rem !important;
+  }
+
+  .game-area {
+    margin-top: 0.4rem !important;
+  }
+
+  .user-wins,
+  .opponent-wins {
+    margin-bottom: 0.4rem !important;
+  }
+
+  .image-container,
+  .vs-image-container {
+    width: 64px !important;
+    height: 64px !important;
+  }
+
+  .image-container img {
+    width: 64px !important;
+  }
+
+  .vs-image-container img {
+    margin-top: 0 !important;
+  }
+
+  .controls {
+    margin-top: 0.3rem !important;
+  }
+
+  .button {
+    width: 38px !important;
+    height: 38px !important;
+    margin: 0 0.25rem !important;
+  }
+
+  #settings {
+    padding: 0.35rem !important;
+  }
+
+  #menu .button {
+    width: 38px !important;
+    height: 38px !important;
+    margin: 0 0.2rem !important;
+  }
+
+  .modal {
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 1rem !important;
+  }
 }
