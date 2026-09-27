@@ -144,7 +144,7 @@ table {
 }
 
 body {
-  /* overflow: hidden; */
+  overflow: hidden;
   background: white;
   font-family: "Rammetto One", cursive;
   flex-direction: column;
