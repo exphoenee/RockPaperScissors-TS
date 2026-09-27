@@ -402,23 +402,21 @@ img {
 
 .button img {
   position: absolute;
-  width: 100%;
-  top: 0;
-  left: 0;
+  width: 62%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   transition: all 0.3s ease-in-out;
 }
 
 .button img.off {
   opacity: 0;
-  top: 0%;
-  left: 0%;
-  transform: rotateY(180deg);
+  transform: translate(-50%, -50%) rotateY(180deg);
 }
 
 .button img.on {
   opacity: 1;
-  top: 0%;
-  left: 0%;
+  transform: translate(-50%, -50%);
 }
 
 .button:hover {
@@ -434,7 +432,7 @@ img {
 }
 
 .prev img {
-  transform: rotate(180deg);
+  transform: translate(-50%, -50%) rotate(180deg);
   transform-origin: center;
 }
 
