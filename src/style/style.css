@@ -10,6 +10,10 @@
   --text-muted: #6b6b85;
   --accent: #7aa8c9;
   --accent-strong: #5a86ab;
+  --accent-player: #5a86ab;
+  --accent-player-bg: rgba(90, 134, 171, 0.08);
+  --accent-opponent: #c96a5a;
+  --accent-opponent-bg: rgba(201, 106, 90, 0.08);
   --settings-bg: #fffdf9;
   --btn-bg: rgba(255, 255, 255, 0.65);
   --btn-shadow-hi: rgba(255, 255, 255, 0.6);
@@ -23,28 +27,37 @@
   color-scheme: light;
 }
 
+/* "Arena" dark theme: a flat dark dashboard look (near-black card, thin
+   outlined circles, lime for the player / coral for the opponent)
+   instead of the light theme's soft claymorphism - deliberately a
+   different design language, not just a recolor, to match a reference
+   screenshot the user provided. */
 body.dark {
-  --bg-grad-start: #12101f;
-  --bg-grad-end: #1c1533;
-  --card-bg: #201c38;
-  --card-border: #7c5cd6;
-  --card-shadow-hi: rgba(255, 255, 255, 0.05);
+  --bg-grad-start: #0a0f0c;
+  --bg-grad-end: #0f1712;
+  --card-bg: #121a16;
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-shadow-hi: rgba(255, 255, 255, 0.02);
   --card-shadow-lo: rgba(0, 0, 0, 0.5);
-  --card-shadow-out: rgba(124, 92, 214, 0.35);
-  --text: #eae7f7;
-  --text-muted: #a6a1c4;
-  --accent: #9b7fe8;
-  --accent-strong: #b79ef2;
-  --settings-bg: #201c38;
+  --card-shadow-out: rgba(0, 0, 0, 0.4);
+  --text: #f2f5f2;
+  --text-muted: #8b968f;
+  --accent: #c6f135;
+  --accent-strong: #d9f76c;
+  --accent-player: #c6f135;
+  --accent-player-bg: rgba(198, 241, 53, 0.08);
+  --accent-opponent: #ff8a75;
+  --accent-opponent-bg: rgba(255, 138, 117, 0.08);
+  --settings-bg: #121a16;
   --btn-bg: rgba(255, 255, 255, 0.06);
-  --btn-shadow-hi: rgba(255, 255, 255, 0.05);
+  --btn-shadow-hi: rgba(255, 255, 255, 0.03);
   --btn-shadow-lo: rgba(0, 0, 0, 0.5);
-  --btn-shadow-out: rgba(124, 92, 214, 0.3);
-  --table-even: #262143;
-  --table-odd: #201c38;
-  --table-hover: #2e2851;
-  --modal-bg: rgba(32, 28, 56, 0.9);
-  --ring: #7c5cd6;
+  --btn-shadow-out: rgba(0, 0, 0, 0.35);
+  --table-even: #1a2420;
+  --table-odd: #121a16;
+  --table-hover: #202c26;
+  --modal-bg: rgba(18, 26, 22, 0.95);
+  --ring: rgba(255, 255, 255, 0.08);
   color-scheme: dark;
 }
 
@@ -366,8 +379,8 @@ img {
   margin-top: 8rem;
 }
 
-.user-wins,
-.opponent-wins {
+#user-wins,
+#opponent-wins {
   margin-bottom: 2rem;
 }
 .controls {
@@ -402,23 +415,21 @@ img {
 
 .button img {
   position: absolute;
-  width: 100%;
-  top: 0;
-  left: 0;
+  width: 62%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   transition: all 0.3s ease-in-out;
 }
 
 .button img.off {
   opacity: 0;
-  top: 0%;
-  left: 0%;
-  transform: rotateY(180deg);
+  transform: translate(-50%, -50%) rotateY(180deg);
 }
 
 .button img.on {
   opacity: 1;
-  top: 0%;
-  left: 0%;
+  transform: translate(-50%, -50%);
 }
 
 .button:hover {
@@ -434,7 +445,7 @@ img {
 }
 
 .prev img {
-  transform: rotate(180deg);
+  transform: translate(-50%, -50%) rotate(180deg);
   transform-origin: center;
 }
 
@@ -542,6 +553,88 @@ tr:nth-child(odd) {
 
 tr:hover {
   background-color: var(--table-hover);
+}
+
+/* --- Arena dark theme: shape & typography, on top of the shared
+   variables above. Flat, outlined, color-coded per side - deliberately
+   not a recolored version of the light theme's claymorphism. --- */
+body.dark h1,
+body.dark h2,
+body.dark h3 {
+  font-family: "Inter", sans-serif;
+}
+
+body.dark h1 {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+body.dark #rps-ui {
+  box-shadow: 0 16px 40px var(--card-shadow-out);
+}
+
+body.dark #user-name,
+body.dark #opponent-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.5rem;
+}
+
+body.dark .user #user-name {
+  color: var(--accent-player);
+}
+
+body.dark .opponent #opponent-name {
+  color: var(--accent-opponent);
+}
+
+body.dark #user-wins {
+  color: var(--accent-player);
+  font-family: "Inter", sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+
+body.dark #opponent-wins {
+  color: var(--accent-opponent);
+  font-family: "Inter", sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+
+body.dark .image-container {
+  border-radius: 50%;
+}
+
+body.dark .user .image-container {
+  box-shadow: 0 0 0 2px var(--accent-player) inset;
+  background: var(--accent-player-bg);
+}
+
+body.dark .opponent .image-container {
+  box-shadow: 0 0 0 2px var(--accent-opponent) inset;
+  background: var(--accent-opponent-bg);
+}
+
+body.dark .vs-image-container {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+body.dark .button.prev,
+body.dark .button.next {
+  border-radius: 16px;
+}
+
+body.dark .button.start {
+  background: var(--accent-player);
+  box-shadow: 0 6px 20px rgba(198, 241, 53, 0.35);
+}
+
+body.dark .button.start:hover {
+  background: var(--accent-strong);
 }
 
 @media screen and (max-width: 1350px) {
@@ -722,8 +815,8 @@ tr:hover {
     margin-top: 0.4rem !important;
   }
 
-  .user-wins,
-  .opponent-wins {
+  #user-wins,
+  #opponent-wins {
     margin-bottom: 0.4rem !important;
   }
 
